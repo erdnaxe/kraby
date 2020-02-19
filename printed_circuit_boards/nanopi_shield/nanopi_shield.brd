@@ -3,7 +3,7 @@
 <eagle version="9.5.1">
 <drawing>
 <settings>
-<setting alwaysvectorfont="no"/>
+<setting alwaysvectorfont="yes"/>
 <setting verticaltext="up"/>
 </settings>
 <grid distance="0.025" unitdist="inch" unit="inch" style="lines" multiple="1" display="no" altdistance="5" altunitdist="mil" altunit="mil"/>
@@ -359,7 +359,7 @@ Source: http://www.leotronics.co.uk/Conexcon/Data%20Sheets/sec.%20A/1364ing.pdf<
 <class number="0" name="default" width="0" drill="0">
 </class>
 </classes>
-<designrules name="default">
+<designrules name="default *">
 <description language="de">&lt;b&gt;EAGLE Design Rules&lt;/b&gt;
 &lt;p&gt;
 Die Standard-Design-Rules sind so gewählt, dass sie für 
@@ -389,9 +389,9 @@ design rules under a new name.</description>
 <param name="mdViaViaSameLayer" value="6mil"/>
 <param name="mnLayersViaInSmd" value="2"/>
 <param name="mdCopperDimension" value="40mil"/>
-<param name="mdDrill" value="6mil"/>
+<param name="mdDrill" value="12mil"/>
 <param name="mdSmdStop" value="0mil"/>
-<param name="msWidth" value="6mil"/>
+<param name="msWidth" value="12mil"/>
 <param name="msDrill" value="0.35mm"/>
 <param name="msMicroVia" value="9.99mm"/>
 <param name="msBlindViaRatio" value="0.5"/>
@@ -402,11 +402,11 @@ design rules under a new name.</description>
 <param name="rvViaInner" value="0.25"/>
 <param name="rvMicroViaOuter" value="0.25"/>
 <param name="rvMicroViaInner" value="0.25"/>
-<param name="rlMinPadTop" value="10mil"/>
+<param name="rlMinPadTop" value="20mil"/>
 <param name="rlMaxPadTop" value="20mil"/>
-<param name="rlMinPadInner" value="10mil"/>
+<param name="rlMinPadInner" value="20mil"/>
 <param name="rlMaxPadInner" value="20mil"/>
-<param name="rlMinPadBottom" value="10mil"/>
+<param name="rlMinPadBottom" value="20mil"/>
 <param name="rlMaxPadBottom" value="20mil"/>
 <param name="rlMinViaOuter" value="8mil"/>
 <param name="rlMaxViaOuter" value="20mil"/>
@@ -546,17 +546,14 @@ design rules under a new name.</description>
 <element name="JP1" library="pinhead" library_urn="urn:adsk.eagle:library:325" package="1X03" package3d_urn="urn:adsk.eagle:package:22458/2" value="UART" x="5.715" y="6.35" smashed="yes" rot="MR90">
 <attribute name="NAME" x="7.5438" y="2.4638" size="1.27" layer="26" ratio="10" rot="MR90"/>
 <attribute name="POPULARITY" value="92" x="-18.415" y="35.56" size="1.778" layer="28" rot="MR90" display="off"/>
-<attribute name="VALUE" x="2.54" y="2.54" size="1.27" layer="28" rot="MR90"/>
 </element>
 <element name="JP2" library="pinhead" library_urn="urn:adsk.eagle:library:325" package="1X04" package3d_urn="urn:adsk.eagle:package:22407/2" value="I2C" x="5.715" y="17.78" smashed="yes" rot="MR270">
 <attribute name="NAME" x="3.8862" y="22.9362" size="1.27" layer="26" ratio="10" rot="MR270"/>
 <attribute name="POPULARITY" value="91" x="29.845" y="-1.27" size="1.778" layer="28" rot="MR270" display="off"/>
-<attribute name="VALUE" x="12.065" y="22.86" size="1.27" layer="28" rot="MR270"/>
 </element>
 <element name="JP3" library="pinhead" library_urn="urn:adsk.eagle:library:325" package="2X05" package3d_urn="urn:adsk.eagle:package:22470/2" value="PWR" x="4.445" y="31.75" smashed="yes" rot="MR90">
 <attribute name="NAME" x="7.62" y="25.4" size="1.27" layer="26" ratio="10" rot="MR90"/>
 <attribute name="POPULARITY" value="35" x="-0.635" y="52.07" size="1.778" layer="28" rot="MR90" display="off"/>
-<attribute name="VALUE" x="0" y="25.4" size="1.27" layer="28" rot="MR90"/>
 </element>
 <element name="X1" library="con-leotronics" library_urn="urn:adsk.eagle:library:160" package="1365-40" package3d_urn="urn:adsk.eagle:package:7973/1" value="1365-40" x="34.29" y="34.29" smashed="yes" rot="MR180">
 <attribute name="MF" value="" x="62.23" y="49.53" size="1.778" layer="28" rot="MR180" display="off"/>
@@ -565,7 +562,6 @@ design rules under a new name.</description>
 <attribute name="OC_FARNELL" value="unknown" x="62.23" y="49.53" size="1.778" layer="28" rot="MR180" display="off"/>
 <attribute name="OC_NEWARK" value="unknown" x="62.23" y="49.53" size="1.778" layer="28" rot="MR180" display="off"/>
 <attribute name="POPULARITY" value="0" x="62.23" y="49.53" size="1.778" layer="28" rot="MR180" display="off"/>
-<attribute name="VALUE" x="48.895" y="38.1" size="1.27" layer="28" rot="MR270"/>
 </element>
 </elements>
 <signals>
@@ -613,25 +609,26 @@ design rules under a new name.</description>
 <contactref element="JP2" pad="4"/>
 <contactref element="X1" pad="7"/>
 <wire x1="10.16" y1="13.97" x2="12.7" y2="16.51" width="0.8128" layer="1"/>
-<wire x1="12.7" y1="35.56" x2="16.51" y2="39.37" width="0.8128" layer="1"/>
-<wire x1="16.51" y1="39.37" x2="26.035" y2="39.37" width="0.8128" layer="1"/>
-<wire x1="12.7" y1="16.51" x2="12.7" y2="35.56" width="0.8128" layer="1"/>
-<via x="26.035" y="39.37" extent="1-16" drill="0.35"/>
+<wire x1="12.7" y1="36.195" x2="15.875" y2="39.37" width="0.8128" layer="1"/>
+<wire x1="15.875" y1="39.37" x2="26.035" y2="39.37" width="0.8128" layer="1"/>
+<wire x1="12.7" y1="16.51" x2="12.7" y2="36.195" width="0.8128" layer="1"/>
+<via x="26.035" y="39.37" extent="1-16" drill="0.75" diameter="1.3"/>
 <wire x1="26.035" y1="39.37" x2="26.035" y2="37.24" width="0.8128" layer="16"/>
 <wire x1="10.16" y1="13.97" x2="5.715" y2="13.97" width="0.8128" layer="1"/>
 </signal>
 <signal name="I2C3_SDA">
 <contactref element="JP2" pad="3"/>
 <contactref element="X1" pad="9"/>
-<wire x1="11.43" y1="36.83" x2="11.43" y2="17.145" width="0.8128" layer="1"/>
-<wire x1="11.43" y1="17.145" x2="10.795" y2="16.51" width="0.8128" layer="1"/>
-<wire x1="11.43" y1="36.83" x2="15.24" y2="40.64" width="0.8128" layer="1"/>
-<wire x1="26.67" y1="40.64" x2="27.305" y2="40.005" width="0.8128" layer="1"/>
-<wire x1="27.305" y1="40.005" x2="27.305" y2="39.37" width="0.8128" layer="1"/>
-<wire x1="15.24" y1="40.64" x2="26.67" y2="40.64" width="0.8128" layer="1"/>
-<via x="27.305" y="39.37" extent="1-16" drill="0.35"/>
-<wire x1="27.305" y1="39.37" x2="27.305" y2="37.24" width="0.8128" layer="16"/>
-<wire x1="10.795" y1="16.51" x2="5.715" y2="16.51" width="0.8128" layer="1"/>
+<wire x1="10.795" y1="36.83" x2="10.795" y2="18.415" width="0.8128" layer="1"/>
+<wire x1="10.795" y1="18.415" x2="8.89" y2="16.51" width="0.8128" layer="1"/>
+<wire x1="10.795" y1="36.83" x2="15.24" y2="41.275" width="0.8128" layer="1"/>
+<wire x1="26.67" y1="41.275" x2="15.24" y2="41.275" width="0.8128" layer="1"/>
+<wire x1="27.94" y1="40.005" x2="26.67" y2="41.275" width="0.8128" layer="1"/>
+<wire x1="27.94" y1="40.005" x2="27.94" y2="39.37" width="0.8128" layer="1"/>
+<via x="27.94" y="39.37" extent="1-16" drill="0.75" diameter="1.3"/>
+<wire x1="27.94" y1="39.37" x2="27.305" y2="38.735" width="0.8128" layer="16"/>
+<wire x1="27.305" y1="38.735" x2="27.305" y2="37.24" width="0.8128" layer="16"/>
+<wire x1="8.89" y1="16.51" x2="5.715" y2="16.51" width="0.8128" layer="1"/>
 </signal>
 <signal name="N$23">
 <contactref element="X1" pad="12"/>
@@ -677,33 +674,33 @@ design rules under a new name.</description>
 <contactref element="X1" pad="18"/>
 <wire x1="32.385" y1="31.34" x2="32.385" y2="28.575" width="0.8128" layer="16"/>
 <wire x1="32.385" y1="28.575" x2="31.75" y2="27.94" width="0.8128" layer="16"/>
-<wire x1="31.75" y1="27.94" x2="13.97" y2="27.94" width="0.8128" layer="16"/>
-<wire x1="13.97" y1="27.94" x2="11.43" y2="25.4" width="0.8128" layer="16"/>
-<wire x1="11.43" y1="25.4" x2="11.43" y2="20.32" width="0.8128" layer="16"/>
-<wire x1="11.43" y1="20.32" x2="10.16" y2="19.05" width="0.8128" layer="16"/>
-<wire x1="10.16" y1="19.05" x2="5.715" y2="19.05" width="0.8128" layer="16"/>
+<wire x1="31.75" y1="27.94" x2="12.065" y2="27.94" width="0.8128" layer="16"/>
+<wire x1="12.065" y1="27.94" x2="10.16" y2="26.035" width="0.8128" layer="16"/>
+<wire x1="10.16" y1="26.035" x2="10.16" y2="20.32" width="0.8128" layer="16"/>
+<wire x1="10.16" y1="20.32" x2="8.89" y2="19.05" width="0.8128" layer="16"/>
+<wire x1="8.89" y1="19.05" x2="5.715" y2="19.05" width="0.8128" layer="16"/>
 </signal>
 <signal name="UART_TX">
 <contactref element="JP1" pad="3"/>
 <contactref element="X1" pad="20"/>
 <wire x1="33.655" y1="31.34" x2="33.655" y2="27.94" width="0.8128" layer="16"/>
 <wire x1="33.655" y1="27.94" x2="32.385" y2="26.67" width="0.8128" layer="16"/>
-<wire x1="32.385" y1="26.67" x2="14.605" y2="26.67" width="0.8128" layer="16"/>
-<wire x1="14.605" y1="26.67" x2="12.7" y2="24.765" width="0.8128" layer="16"/>
-<wire x1="12.7" y1="24.765" x2="12.7" y2="10.16" width="0.8128" layer="16"/>
-<wire x1="12.7" y1="10.16" x2="11.43" y2="8.89" width="0.8128" layer="16"/>
-<wire x1="11.43" y1="8.89" x2="5.715" y2="8.89" width="0.8128" layer="16"/>
+<wire x1="32.385" y1="26.67" x2="13.335" y2="26.67" width="0.8128" layer="16"/>
+<wire x1="13.335" y1="26.67" x2="12.065" y2="25.4" width="0.8128" layer="16"/>
+<wire x1="12.065" y1="25.4" x2="12.065" y2="11.43" width="0.8128" layer="16"/>
+<wire x1="12.065" y1="11.43" x2="9.525" y2="8.89" width="0.8128" layer="16"/>
+<wire x1="9.525" y1="8.89" x2="5.715" y2="8.89" width="0.8128" layer="16"/>
 </signal>
 <signal name="UART_RX">
 <contactref element="JP1" pad="2"/>
 <contactref element="X1" pad="22"/>
-<wire x1="5.715" y1="6.35" x2="10.795" y2="6.35" width="0.8128" layer="16"/>
-<wire x1="10.795" y1="6.35" x2="13.97" y2="9.525" width="0.8128" layer="16"/>
-<wire x1="13.97" y1="9.525" x2="13.97" y2="24.13" width="0.8128" layer="16"/>
-<wire x1="13.97" y1="24.13" x2="15.24" y2="25.4" width="0.8128" layer="16"/>
+<wire x1="5.715" y1="6.35" x2="10.16" y2="6.35" width="0.8128" layer="16"/>
+<wire x1="10.16" y1="6.35" x2="13.97" y2="10.16" width="0.8128" layer="16"/>
+<wire x1="13.97" y1="10.16" x2="13.97" y2="24.765" width="0.8128" layer="16"/>
+<wire x1="13.97" y1="24.765" x2="14.605" y2="25.4" width="0.8128" layer="16"/>
 <wire x1="33.02" y1="25.4" x2="34.925" y2="27.305" width="0.8128" layer="16"/>
 <wire x1="34.925" y1="27.305" x2="34.925" y2="31.34" width="0.8128" layer="16"/>
-<wire x1="15.24" y1="25.4" x2="33.02" y2="25.4" width="0.8128" layer="16"/>
+<wire x1="14.605" y1="25.4" x2="33.02" y2="25.4" width="0.8128" layer="16"/>
 </signal>
 <signal name="N$50">
 <contactref element="X1" pad="25"/>
