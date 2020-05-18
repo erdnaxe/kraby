@@ -9,6 +9,8 @@ CAD files for Kraby the Hexapod such as PCB designs.
   * `printed_circuit_boards/power_board` is a power distribution board
     and connects all servomotors to one UART bus.
 
+![Boards](doc/boards.png)
+
 ## How to connect all the electronics
 
 ![Connection diagram](doc/how_to_connect.png)
