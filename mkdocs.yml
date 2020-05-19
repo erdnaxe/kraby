@@ -1,0 +1,16 @@
+site_name: Kraby the Hexapod
+site_description: Open source hexapod robot that anyone can build.
+copyright: "This project is under GNU General Public License v3.0."
+
+nav:
+  - Home: index.md
+  - Build the structure: build_the_structure.md
+  - Build the electronics: build_the_electronics.md
+
+theme:
+  name: readthedocs
+
+markdown_extensions:
+  - attr_list
+  - smarty
+  - footnotes
