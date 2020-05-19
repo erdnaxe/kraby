@@ -4,6 +4,8 @@ Blender source files and STL are available
 at <https://github.com/erdnaxe/kraby>
 or on [Thingiverse](https://www.thingiverse.com/thing:4135774).
 
+![3D printed parts](img/3d_parts.jpg)
+
 To build the robot, you will need to print:
 
  * 6x `joint.stl`
