@@ -1,3 +1,5 @@
+[![Documentation Status](https://readthedocs.org/projects/kraby/badge/?version=latest)](https://kraby.readthedocs.io/en/latest/?badge=latest)
+
 # Kraby the Hexapod
 
 Documentation and ressource files for Kraby the Hexapod.
