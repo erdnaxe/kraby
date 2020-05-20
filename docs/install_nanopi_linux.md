@@ -1,10 +1,10 @@
 # Compile NanoPi linux kernel with MPU9250 module
 
 As of may 2020, only the official NanoPi kernel supports NanoPi Neo4 GPU and VPU.
-The downside is this kernel does not include `inv-mpu-iio` that supports the MPU9250,
+The downside is this kernel does not include `inv-mpu6050` that supports the MPU9250,
 so we are going to compile the kernel with this module.
 
-`inv-mpu-iio` is a Linux Industrial I/O (IIO) subsystem driver
+`inv-mpu6050` is part of Linux Industrial I/O (IIO) subsystem driver
 that provides an unified framework for sensors.
 
 Install an ARM64 toolchain and download NanoPi kernel source code,
@@ -17,31 +17,38 @@ cd kernel-rockchip
 Load NanoPi Linux configuration, `make ARCH=arm64 nanopi4_linux_defconfig`.
 
 Add MPU9250 module, `make ARCH=arm64 menuconfig` then
-`Device drivers > Staging drivers > IIO staging drivers > [*] Invensense MPU devices`.
+`Device drivers > Industrial I/O support > Inertial measurement units > <*> Invensense MPU6050 devices`.
 
 Add the MPU9250 to the board device-tree, edit `arch/arm64/boot/dts/rockchip/rk3399-nanopi4-common.dtsi`
 and change:
 ```C
 &i2c2 {
-    status = "okay";
+	status = "okay";
 
-    mpu9250: mpu@68 {
-        compatible = "invensense,mpu9250";
-        reg = <0x68>;
-        mpu-int_config = <0x00>;
-        mpu-level_shifter = <0>;
-        mpu-orientation = <1 0 0 0 1 0 0 0 1>;
-        orientation-x = <1>;
-        orientation-y = <1>;
-        orientation-z = <1>;
-        irq-gpio = <&gpio1 0 1>;
-        mpu-debug = <1>;
-    };
+	mpu9250@68 {
+		//compatible = "invensense,mpu9250";  // requires Linux 4.12
+		compatible = "invensense,mpu6050";
+		reg = <0x68>;
+		interrupt-parent = <&gpio1>;
+		interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
+		/* Commented because requires Linux 4.12
+		i2c-gate {
+			#address-cells = <1>;
+			#size-cells = <0>;
+			ax8975@c {
+				compatible = "ak,ak8975";
+				reg = <0x0c>;
+			};
+		};*/
+	};
 };
 ```
 
 Compile with `make ARCH=arm64 nanopi4-images`.
 This will generate `kernel.img` and `resource.img` files.
+
+*Note:* you may need to change `CONFIG_CROSS_COMPILE="aarch64-linux-gnu-"` in `.config`
+to point to the correct cross-compilation toolchain.
 
 *Note:* you can directly update the running kernel without reflashing rootfs with
 `sudo dd if=kernel.img of=/dev/mmcblk1p5` and `sudo dd if=resource.img of=/dev/mmcblk1p4`.
@@ -89,22 +96,20 @@ and NetworkManager will automatically use and share this connection.
 
 # Test the MPU9250
 
-The `inv_mpu_iio` kernel driver makes the MPU9250 available in
-`/sys/bus/iio/devices/iio:device0` and `/dev/iio:device0`.
+The iio kernel driver makes the MPU9250 available in
+`/sys/bus/iio/devices/iio:device1` and `/dev/iio:device1`.
 
+You can get the X-axis acceleration with
 ```bash
-cat "/sys/bus/iio/devices/iio:device0/self_test"
+cat "/sys/bus/iio/devices/iio:device1/in_accel_x_raw"
 ```
-
-If `3` appears, i.e. `11` in binary,
-then accelerometer and gyrometer work as expected.
 
 Then you can try to stream a gyrometer axis,
 
 ```bash
-echo 1 > /sys/bus/iio/devices/iio:device0/scan_elements/in_accel_x_en
-echo 1 > /sys/bus/iio/devices/iio:device0/buffer/enable
-hexdump -C /dev/iio\:device0
+echo 1 > "/sys/bus/iio/devices/iio:device1/scan_elements/in_accel_x_en"
+echo 1 > "/sys/bus/iio/devices/iio:device1/buffer/enable"
+hexdump -C /dev/iio\:device1
 ```
 
 ![X accelerometer streaming](img/iio_stream_axis.png)
