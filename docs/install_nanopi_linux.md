@@ -6,6 +6,7 @@ so we are going to compile the kernel with this module.
 
 `inv-mpu6050` is part of Linux Industrial I/O (IIO) subsystem driver
 that provides an unified framework for sensors.
+Learn more about IIO on [the official Linux Kernel documentation](https://www.kernel.org/doc/html/v4.14/driver-api/iio/index.html).
 
 Install an ARM64 toolchain and download NanoPi kernel source code,
 ```bash
@@ -104,7 +105,7 @@ You can get the X-axis acceleration with
 cat "/sys/bus/iio/devices/iio:device1/in_accel_x_raw"
 ```
 
-Then you can try to stream a gyrometer axis,
+Then you can try to stream a accelerometer axis,
 
 ```bash
 echo 1 > "/sys/bus/iio/devices/iio:device1/scan_elements/in_accel_x_en"
@@ -113,4 +114,31 @@ hexdump -C /dev/iio\:device1
 ```
 
 ![X accelerometer streaming](img/iio_stream_axis.png)
+
+# Use MPU9250 in Python
+
+Download and install iiod server on NanoPi,
+```bash
+sudo apt install iiod
+```
+
+Now any device on the network can interact with the inertial motion unit,
+install `python3-libiio` then,
+```python
+import iio
+
+ctx = iio.NetworkContext("10.42.0.1")
+print(f"Connected to {ctx.description}")
+
+d = ctx.find_device("mpu6050")
+print(f"Using device {d.id} called {d.name}")
+
+for c in d.channels:
+    print(f"Channel {c.id} enabled: {c.enabled}")
+```
+
+![IIO access in Python](img/iio_python.png)
+
+*Note:* You may install the documentation with the `libiio0-doc` package
+and explore it by opening `/usr/share/doc/libiio0-doc/html` in a web browser.
 
