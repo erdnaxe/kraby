@@ -6,7 +6,9 @@ nav:
   - Home: index.md
   - Build the structure: build_the_structure.md
   - Build the electronics: build_the_electronics.md
-  - Install NanoPi Linux: install_nanopi_linux.md
+  - Install NanoPi Linux with MPU9250 support: install_nanopi_linux.md
+  - Use the internal motion unit: use_mpu9250.md
+  - Use the servomotors: use_motors.md
 
 theme:
   name: readthedocs
