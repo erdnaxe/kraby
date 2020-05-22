@@ -115,26 +115,54 @@ hexdump -C /dev/iio\:device1
 
 ![X accelerometer streaming](img/iio_stream_axis.png)
 
-# Use MPU9250 in Python
+# Get raw data from MPU9250 in Python
 
-Download and install iiod server on NanoPi,
+Download, install and enable iiod server on NanoPi,
 ```bash
 sudo apt install iiod
+sudo systemctl enable iiod
 ```
 
 Now any device on the network can interact with the inertial motion unit,
-install `python3-libiio` then,
+install `python3-libiio` then use the following code to get data,
 ```python
 import iio
 
-ctx = iio.NetworkContext("10.42.0.1")
-print(f"Connected to {ctx.description}")
+class IMUBuffer:
+    channels = ["accel_x", "accel_y", "accel_z",
+                "anglvel_x", "anglvel_y", "anglvel_z"]
 
-d = ctx.find_device("mpu6050")
-print(f"Using device {d.id} called {d.name}")
+    def __init__(self, ip, device_name):
+        self.ip = ip
+        self.device_name = device_name
 
-for c in d.channels:
-    print(f"Channel {c.id} enabled: {c.enabled}")
+    def __enter__(self):
+        """
+        Connect to NanoPi and enable inertial motion unit device
+        """
+        context = iio.NetworkContext(self.ip)
+        self.device = context.find_device(self.device_name)
+        for c in self.channels:
+            self.device.find_channel(c).enabled = True
+        self.buffer = iio.Buffer(self.device, 1)
+        return self.buffer
+
+    def __exit__(self, *exc_info):
+        """
+        Properly close buffer and disable channels on exit
+        """
+        del self.buffer
+        for c in self.channels:
+            self.device.find_channel(c).enabled = True
+
+
+with IMUBuffer("10.42.0.1", "mpu6050") as buf:
+    for i in range(100):
+        buf.refill()  # Wait for buffer
+        h = buf.read()
+        acc = [int.from_bytes(h[i:i+2], byteorder='big', signed=True) for i in range(0, 6, 2)]
+        gyr = [int.from_bytes(h[i:i+2], byteorder='big', signed=True) for i in range(6, 12, 2)]
+        print("Acc:", acc, "Gyro:", gyr)
 ```
 
 ![IIO access in Python](img/iio_python.png)
