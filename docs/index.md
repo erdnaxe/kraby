@@ -1,5 +1,7 @@
 # Kraby the Hexapod
 
+![Hexapod robot](img/hexapod.jpg)
+
 Kraby is an hexapod robot.
 It is an open source development platform for educational purpose.
 It was designed for a Master 1

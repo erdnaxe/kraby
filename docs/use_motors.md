@@ -3,7 +3,7 @@
 The two printed circuit boards connect all
 Herkulex DRS-0101 on NanoPi serial port `/dev/ttyS4`.
 
-To easy development, `ser2net` can be used to publish
+To ease development, `ser2net` can be used to publish
 this TTY to a TCP socket.
 ```bash
 sudo apt install ser2net

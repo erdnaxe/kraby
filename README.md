@@ -1,8 +1,19 @@
-[![Documentation Status](https://readthedocs.org/projects/kraby/badge/?version=latest)](https://kraby.readthedocs.io/en/latest/?badge=latest)
+[![Documentation Status](https://img.shields.io/readthedocs/kraby?style=flat-square)](https://kraby.readthedocs.io/en/latest/)
+[![License](https://img.shields.io/github/license/erdnaxe/kraby?style=flat-square)](LICENSE)
 
-# Kraby the Hexapod
+# Kraby
 
-Documentation and ressource files for Kraby the Hexapod.
+![Hexapod robot](docs/img/hexapod.jpg)
+
+Kraby is an hexapod robot.
+It is an open source development platform for educational purpose.
+It was designed for a Master 1
+project at [ENS Paris-Saclay](https://ens-paris-saclay.fr/).
+
+To build it, you may read instructions at <https://kraby.readthedocs.io/>
+
+SDF description files for simulation in ROS/Gazebo or directly in BulletPhysics are available at
+<https://github.com/erdnaxe/kraby_sdf>.
 
 ## Build the documentation
 
@@ -10,7 +21,7 @@ Install `mkdocs` then run `mkdocs serve`.
 
 ## Software used
 
-PCB files were designed with Eagle 9.5.1.
+PCB files were designed with Eagle 9.
 
 ## License
 
