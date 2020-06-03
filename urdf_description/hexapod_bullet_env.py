@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 import pybullet as p
+import numpy as np
 from pybullet_data import getDataPath
-from gym import Env
-from math import pi
+from gym import Env, spaces
 
 
 class HexapodBulletEnv(Env):
@@ -12,8 +12,12 @@ class HexapodBulletEnv(Env):
     metadata = {'render.modes': ['human']}
 
     def __init__(self):
-        # Connect to Bullet GUI, can be DIRECT if no user inputs
-        self.physics_client = p.connect(p.GUI)
+        super().__init__()
+
+        high = np.ones([18])  # 18 actions
+        self.action_space = spaces.Box(-high, high)
+        high = np.inf * np.ones([1])  # 1 observations TODO
+        self.observation_space = spaces.Box(-high, high)
 
         # Add pybullet_data as search path
         p.setAdditionalSearchPath(getDataPath())
@@ -40,9 +44,13 @@ class HexapodBulletEnv(Env):
         for j in self.joint_list:
             p.enableJointForceTorqueSensor(self.robot_id, j)
 
+        # Return state
+        state = self.get_observation()
+        return state
+
     def step(self, action):
         # Update servomotors
-        transformed_action = [k * pi/2 for k in action]
+        transformed_action = [k * np.pi/2 for k in action]
         p.setJointMotorControlArray(bodyIndex=self.robot_id,
                                     jointIndices=self.joint_list,
                                     controlMode=p.VELOCITY_CONTROL,
@@ -54,7 +62,7 @@ class HexapodBulletEnv(Env):
         # Return state, reward and done
         reward, done = self.get_reward()
         state = self.get_observation()
-        return state, reward, done
+        return state, reward, done, {}
 
     def render(self, mode='human', close=False):
         pass
@@ -73,8 +81,10 @@ class HexapodBulletEnv(Env):
 
 
 if __name__ == '__main__':
+    # Connect to BulletPhysics GUI, can be DIRECT if no user inputs
+    p.connect(p.GUI)
     env = HexapodBulletEnv()
-    env.reset()
+    observation = env.reset()
 
     # Create user debug interface
     params = [p.addUserDebugParameter(p.getJointInfo(env.robot_id, j)[1].decode(), -1, 1, 0)
@@ -83,4 +93,5 @@ if __name__ == '__main__':
     while True:
         # Read user input and simulate motor
         a = [p.readUserDebugParameter(param) for param in params]
-        env.step(a)
+        observation, reward, done, _ = env.step(a)
+        print("reward", reward)
