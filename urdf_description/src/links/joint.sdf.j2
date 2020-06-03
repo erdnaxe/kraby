@@ -1,0 +1,24 @@
+{% macro joint(name) %}
+  <link name="{{ name }}">
+    <collision>
+      <origin xyz="0.02432 0 0" rpy="0 0 0" />
+      <geometry>
+        <box size="0.073 0.040 0.040" />
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="0.02432 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/joint.stl" scale="0.001 0.001 0.001" />
+      </geometry>
+      <material name="Blue">
+        <color rgba="0.0 0.0 1.0 1.0"/>
+      </material>
+    </visual>
+    <inertial>
+      <origin xyz="0.02432 0 0" rpy="0 0 0" />
+      <mass value="0.011" />
+      <inertia ixx="3.6847327982785196" ixy="0.02825382432278616" ixz="0.03247685512442882" iyy="4.033791250199519" iyz="-0.0006925945535502276" izz="4.027664100211282" />
+    </inertial>
+  </link>
+{%- endmacro %}

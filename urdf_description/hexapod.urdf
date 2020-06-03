@@ -1,0 +1,1077 @@
+<?xml version="1.0" ?>
+
+<robot name="hexapod">
+  <link name="box">
+    <!-- We count all component within the box as the box
+    (NanoPi, pcb, connectors included) -->
+    <collision>
+      <origin xyz="0 0 0.203" rpy="0 0 0" />
+      <geometry>
+        <!-- Putting here an octogone might be a nice optimization -->
+        <mesh filename="meshes/box.stl" scale="0.001 0.001 0.001" />
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="0 0 0.203" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/box.stl" scale="0.001 0.001 0.001" />
+      </geometry>
+      <material name="Green">
+        <color rgba="0.0 1.0 0.0 1.0"/>
+      </material>
+    </visual>
+    <inertial>
+      <origin xyz="0 0 0.203" rpy="0 0 0" />
+      <mass value="0.667" />
+      <inertia ixx="0.083" ixy="0.0" ixz="0.0" iyy="0.083" iyz="0.0" izz="0.083" /> <!-- TODO -->
+    </inertial>
+  </link>
+
+  
+  <!-- Leg 0 -->
+  <joint name="fixed_box_servomotor_0" type="fixed">
+    <origin xyz="0.06521292289492935 -0.06521292289492935 0.2041193" rpy="0 0 -0.78539" />
+    <parent link="box" />
+    <child link="servomotor_0" />
+  </joint>
+  <link name="servomotor_0">
+    <collision>
+      <origin xyz="0 -0.002 0" rpy="0 0 0" />
+      <geometry>
+        <box size="0.024 .0451 .0347" />
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/servomotor.dae" />
+      </geometry>
+      <material name="Grey">
+        <color rgba="0.5 0.5 0.5 1.0"/>
+      </material>
+    </visual>
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="0.047" />
+      <inertia ixx="0.083" ixy="0" ixz="0" iyy="0.083" iyz="0" izz="0.083" /> <!-- TODO -->
+    </inertial>
+  </link>
+  <joint name="revolute_servomotor_0_joint_0" type="revolute">
+    <origin xyz="0 0.011 0" rpy="0 0 0" />
+    <parent link="servomotor_0" />
+    <child link="joint_0" />
+    <axis xyz="0 0 1" />
+    <dynamics damping="0" friction="0" /> <!-- TODO -->
+    <limit effort="30" velocity="1.0" lower="-1.5708" upper="1.5708" /> <!-- TODO -->
+  </joint>
+  <link name="joint_0">
+    <collision>
+      <origin xyz="0.02432 0 0" rpy="0 0 0" />
+      <geometry>
+        <box size="0.073 0.040 0.040" />
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="0.02432 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/joint.stl" scale="0.001 0.001 0.001" />
+      </geometry>
+      <material name="Blue">
+        <color rgba="0.0 0.0 1.0 1.0"/>
+      </material>
+    </visual>
+    <inertial>
+      <origin xyz="0.02432 0 0" rpy="0 0 0" />
+      <mass value="0.011" />
+      <inertia ixx="3.6847327982785196" ixy="0.02825382432278616" ixz="0.03247685512442882" iyy="4.033791250199519" iyz="-0.0006925945535502276" izz="4.027664100211282" />
+    </inertial>
+  </link>
+  <joint name="revolute_joint_0_servomotor_1" type="revolute">
+    <origin xyz="0.049 0 0" rpy="1.5707963267948966 -0.7853981633974483 0" />
+    <parent link="joint_0" />
+    <child link="servomotor_1" />
+    <axis xyz="0 0 1" />
+    <dynamics damping="0" friction="0" /> <!-- TODO -->
+    <limit effort="30" velocity="1.0" lower="-1.5708" upper="1.5708" /> <!-- TODO -->
+  </joint>
+  <link name="servomotor_1">
+    <collision>
+      <origin xyz="0 -0.0127 0" rpy="0 0 0" />
+      <geometry>
+        <box size="0.024 .0451 .0347" />
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="0 -0.0107 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/servomotor.dae" />
+      </geometry>
+      <material name="Grey">
+        <color rgba="0.5 0.5 0.5 1.0"/>
+      </material>
+    </visual>
+    <inertial>
+      <origin xyz="0 -0.0107 0" rpy="0 0 0" />
+      <mass value="0.047" />
+      <inertia ixx="0.083" ixy="0" ixz="0" iyy="0.083" iyz="0" izz="0.083" /> <!-- TODO -->
+    </inertial>
+  </link>
+  <joint name="fixed_servomotor_1_servomotor_2" type="fixed">
+    <origin xyz="0 -0.0495 0" rpy="0 0 3.141592653589793" />
+    <parent link="servomotor_1" />
+    <child link="servomotor_2" />
+  </joint>
+  <link name="servomotor_2">
+    <collision>
+      <origin xyz="0 -0.002 0" rpy="0 0 0" />
+      <geometry>
+        <box size="0.024 .0451 .0347" />
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/servomotor.dae" />
+      </geometry>
+      <material name="Grey">
+        <color rgba="0.5 0.5 0.5 1.0"/>
+      </material>
+    </visual>
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="0.047" />
+      <inertia ixx="0.083" ixy="0" ixz="0" iyy="0.083" iyz="0" izz="0.083" /> <!-- TODO -->
+    </inertial>
+  </link>
+  <joint name="revolute_servomotor_2_foot_0" type="revolute">
+    <origin xyz="0 0.0107 0" rpy="0 0 -0.7853981633974483" />
+    <parent link="servomotor_2" />
+    <child link="foot_0" />
+    <axis xyz="0 0 1" />
+    <dynamics damping="0" friction="0" /> <!-- TODO -->
+    <limit effort="30" velocity="1.0" lower="-1.5708" upper="1.5708" /> <!-- TODO -->
+  </joint>
+  <link name="foot_0">
+    <collision>
+      <origin xyz="0 0.031 -0.006" rpy="1.5707963267948966 0 0" />
+      <geometry>
+        <box size="0.024 0.040 0.0993" />
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="0 0.031 0" rpy="1.5707963267948966 0 0" />
+      <geometry>
+        <mesh filename="meshes/foot.stl" scale="0.001 0.001 0.001" />
+      </geometry>
+      <material name="Blue">
+        <color rgba="0.0 0.0 1.0 1.0"/>
+      </material>
+    </visual>
+    <inertial>
+      <origin xyz="0 0.031 0" rpy="1.5707963267948966 0 0" />
+      <mass value="0.0105" />
+      <inertia ixx="5.624930021684789" ixy="-0.0007514028791903619" ixz="0.0005912555287889139" iyy="4.568350194084484" iyz="0.020270474186461353" izz="1.7085021792735104" />
+    </inertial>
+  </link>
+  <joint name="fixed_foot_0_endcap_0" type="fixed">
+    <origin xyz="0 0.0776 0" rpy="0 0 0" />
+    <parent link="foot_0" />
+    <child link="endcap_0" />
+  </joint>
+  <link name="endcap_0">
+    <collision>
+      <origin xyz="0 0 0" rpy="1.5707963267948966 0 0" />
+      <geometry>
+        <mesh filename="meshes/endcap.dae" />
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="0 0 0" rpy="1.5707963267948966 0 0" />
+      <geometry>
+        <mesh filename="meshes/endcap.dae" />
+      </geometry>
+      <material name="BlackRubber">
+        <color rgba="0.0 0.0 0.0 1.0"/>
+      </material>
+    </visual>
+    <inertial>
+      <origin xyz="0 0 0" rpy="1.5707963267948966 0 0" />
+      <mass value="0.0005" /> <!-- TODO -->
+      <!-- endcap has a negligeable inertia -->
+      <inertia ixx="0.0" ixy="0.0" ixz="0.0" iyy="0.0" iyz="0.0" izz="0.0" />
+    </inertial>
+  </link>
+  
+  <!-- Leg 1 -->
+  <joint name="fixed_box_servomotor_3" type="fixed">
+    <origin xyz="0.092225 0.0 0.2041193" rpy="0 0 0.0" />
+    <parent link="box" />
+    <child link="servomotor_3" />
+  </joint>
+  <link name="servomotor_3">
+    <collision>
+      <origin xyz="0 -0.002 0" rpy="0 0 0" />
+      <geometry>
+        <box size="0.024 .0451 .0347" />
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/servomotor.dae" />
+      </geometry>
+      <material name="Grey">
+        <color rgba="0.5 0.5 0.5 1.0"/>
+      </material>
+    </visual>
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="0.047" />
+      <inertia ixx="0.083" ixy="0" ixz="0" iyy="0.083" iyz="0" izz="0.083" /> <!-- TODO -->
+    </inertial>
+  </link>
+  <joint name="revolute_servomotor_3_joint_1" type="revolute">
+    <origin xyz="0 0.011 0" rpy="0 0 0" />
+    <parent link="servomotor_3" />
+    <child link="joint_1" />
+    <axis xyz="0 0 1" />
+    <dynamics damping="0" friction="0" /> <!-- TODO -->
+    <limit effort="30" velocity="1.0" lower="-1.5708" upper="1.5708" /> <!-- TODO -->
+  </joint>
+  <link name="joint_1">
+    <collision>
+      <origin xyz="0.02432 0 0" rpy="0 0 0" />
+      <geometry>
+        <box size="0.073 0.040 0.040" />
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="0.02432 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/joint.stl" scale="0.001 0.001 0.001" />
+      </geometry>
+      <material name="Blue">
+        <color rgba="0.0 0.0 1.0 1.0"/>
+      </material>
+    </visual>
+    <inertial>
+      <origin xyz="0.02432 0 0" rpy="0 0 0" />
+      <mass value="0.011" />
+      <inertia ixx="3.6847327982785196" ixy="0.02825382432278616" ixz="0.03247685512442882" iyy="4.033791250199519" iyz="-0.0006925945535502276" izz="4.027664100211282" />
+    </inertial>
+  </link>
+  <joint name="revolute_joint_1_servomotor_4" type="revolute">
+    <origin xyz="0.049 0 0" rpy="1.5707963267948966 -0.7853981633974483 0" />
+    <parent link="joint_1" />
+    <child link="servomotor_4" />
+    <axis xyz="0 0 1" />
+    <dynamics damping="0" friction="0" /> <!-- TODO -->
+    <limit effort="30" velocity="1.0" lower="-1.5708" upper="1.5708" /> <!-- TODO -->
+  </joint>
+  <link name="servomotor_4">
+    <collision>
+      <origin xyz="0 -0.0127 0" rpy="0 0 0" />
+      <geometry>
+        <box size="0.024 .0451 .0347" />
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="0 -0.0107 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/servomotor.dae" />
+      </geometry>
+      <material name="Grey">
+        <color rgba="0.5 0.5 0.5 1.0"/>
+      </material>
+    </visual>
+    <inertial>
+      <origin xyz="0 -0.0107 0" rpy="0 0 0" />
+      <mass value="0.047" />
+      <inertia ixx="0.083" ixy="0" ixz="0" iyy="0.083" iyz="0" izz="0.083" /> <!-- TODO -->
+    </inertial>
+  </link>
+  <joint name="fixed_servomotor_4_servomotor_5" type="fixed">
+    <origin xyz="0 -0.0495 0" rpy="0 0 3.141592653589793" />
+    <parent link="servomotor_4" />
+    <child link="servomotor_5" />
+  </joint>
+  <link name="servomotor_5">
+    <collision>
+      <origin xyz="0 -0.002 0" rpy="0 0 0" />
+      <geometry>
+        <box size="0.024 .0451 .0347" />
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/servomotor.dae" />
+      </geometry>
+      <material name="Grey">
+        <color rgba="0.5 0.5 0.5 1.0"/>
+      </material>
+    </visual>
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="0.047" />
+      <inertia ixx="0.083" ixy="0" ixz="0" iyy="0.083" iyz="0" izz="0.083" /> <!-- TODO -->
+    </inertial>
+  </link>
+  <joint name="revolute_servomotor_5_foot_1" type="revolute">
+    <origin xyz="0 0.0107 0" rpy="0 0 -0.7853981633974483" />
+    <parent link="servomotor_5" />
+    <child link="foot_1" />
+    <axis xyz="0 0 1" />
+    <dynamics damping="0" friction="0" /> <!-- TODO -->
+    <limit effort="30" velocity="1.0" lower="-1.5708" upper="1.5708" /> <!-- TODO -->
+  </joint>
+  <link name="foot_1">
+    <collision>
+      <origin xyz="0 0.031 -0.006" rpy="1.5707963267948966 0 0" />
+      <geometry>
+        <box size="0.024 0.040 0.0993" />
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="0 0.031 0" rpy="1.5707963267948966 0 0" />
+      <geometry>
+        <mesh filename="meshes/foot.stl" scale="0.001 0.001 0.001" />
+      </geometry>
+      <material name="Blue">
+        <color rgba="0.0 0.0 1.0 1.0"/>
+      </material>
+    </visual>
+    <inertial>
+      <origin xyz="0 0.031 0" rpy="1.5707963267948966 0 0" />
+      <mass value="0.0105" />
+      <inertia ixx="5.624930021684789" ixy="-0.0007514028791903619" ixz="0.0005912555287889139" iyy="4.568350194084484" iyz="0.020270474186461353" izz="1.7085021792735104" />
+    </inertial>
+  </link>
+  <joint name="fixed_foot_1_endcap_1" type="fixed">
+    <origin xyz="0 0.0776 0" rpy="0 0 0" />
+    <parent link="foot_1" />
+    <child link="endcap_1" />
+  </joint>
+  <link name="endcap_1">
+    <collision>
+      <origin xyz="0 0 0" rpy="1.5707963267948966 0 0" />
+      <geometry>
+        <mesh filename="meshes/endcap.dae" />
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="0 0 0" rpy="1.5707963267948966 0 0" />
+      <geometry>
+        <mesh filename="meshes/endcap.dae" />
+      </geometry>
+      <material name="BlackRubber">
+        <color rgba="0.0 0.0 0.0 1.0"/>
+      </material>
+    </visual>
+    <inertial>
+      <origin xyz="0 0 0" rpy="1.5707963267948966 0 0" />
+      <mass value="0.0005" /> <!-- TODO -->
+      <!-- endcap has a negligeable inertia -->
+      <inertia ixx="0.0" ixy="0.0" ixz="0.0" iyy="0.0" iyz="0.0" izz="0.0" />
+    </inertial>
+  </link>
+  
+  <!-- Leg 2 -->
+  <joint name="fixed_box_servomotor_6" type="fixed">
+    <origin xyz="0.06521292289492935 0.06521292289492935 0.2041193" rpy="0 0 0.78539" />
+    <parent link="box" />
+    <child link="servomotor_6" />
+  </joint>
+  <link name="servomotor_6">
+    <collision>
+      <origin xyz="0 -0.002 0" rpy="0 0 0" />
+      <geometry>
+        <box size="0.024 .0451 .0347" />
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/servomotor.dae" />
+      </geometry>
+      <material name="Grey">
+        <color rgba="0.5 0.5 0.5 1.0"/>
+      </material>
+    </visual>
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="0.047" />
+      <inertia ixx="0.083" ixy="0" ixz="0" iyy="0.083" iyz="0" izz="0.083" /> <!-- TODO -->
+    </inertial>
+  </link>
+  <joint name="revolute_servomotor_6_joint_2" type="revolute">
+    <origin xyz="0 0.011 0" rpy="0 0 0" />
+    <parent link="servomotor_6" />
+    <child link="joint_2" />
+    <axis xyz="0 0 1" />
+    <dynamics damping="0" friction="0" /> <!-- TODO -->
+    <limit effort="30" velocity="1.0" lower="-1.5708" upper="1.5708" /> <!-- TODO -->
+  </joint>
+  <link name="joint_2">
+    <collision>
+      <origin xyz="0.02432 0 0" rpy="0 0 0" />
+      <geometry>
+        <box size="0.073 0.040 0.040" />
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="0.02432 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/joint.stl" scale="0.001 0.001 0.001" />
+      </geometry>
+      <material name="Blue">
+        <color rgba="0.0 0.0 1.0 1.0"/>
+      </material>
+    </visual>
+    <inertial>
+      <origin xyz="0.02432 0 0" rpy="0 0 0" />
+      <mass value="0.011" />
+      <inertia ixx="3.6847327982785196" ixy="0.02825382432278616" ixz="0.03247685512442882" iyy="4.033791250199519" iyz="-0.0006925945535502276" izz="4.027664100211282" />
+    </inertial>
+  </link>
+  <joint name="revolute_joint_2_servomotor_7" type="revolute">
+    <origin xyz="0.049 0 0" rpy="1.5707963267948966 -0.7853981633974483 0" />
+    <parent link="joint_2" />
+    <child link="servomotor_7" />
+    <axis xyz="0 0 1" />
+    <dynamics damping="0" friction="0" /> <!-- TODO -->
+    <limit effort="30" velocity="1.0" lower="-1.5708" upper="1.5708" /> <!-- TODO -->
+  </joint>
+  <link name="servomotor_7">
+    <collision>
+      <origin xyz="0 -0.0127 0" rpy="0 0 0" />
+      <geometry>
+        <box size="0.024 .0451 .0347" />
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="0 -0.0107 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/servomotor.dae" />
+      </geometry>
+      <material name="Grey">
+        <color rgba="0.5 0.5 0.5 1.0"/>
+      </material>
+    </visual>
+    <inertial>
+      <origin xyz="0 -0.0107 0" rpy="0 0 0" />
+      <mass value="0.047" />
+      <inertia ixx="0.083" ixy="0" ixz="0" iyy="0.083" iyz="0" izz="0.083" /> <!-- TODO -->
+    </inertial>
+  </link>
+  <joint name="fixed_servomotor_7_servomotor_8" type="fixed">
+    <origin xyz="0 -0.0495 0" rpy="0 0 3.141592653589793" />
+    <parent link="servomotor_7" />
+    <child link="servomotor_8" />
+  </joint>
+  <link name="servomotor_8">
+    <collision>
+      <origin xyz="0 -0.002 0" rpy="0 0 0" />
+      <geometry>
+        <box size="0.024 .0451 .0347" />
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/servomotor.dae" />
+      </geometry>
+      <material name="Grey">
+        <color rgba="0.5 0.5 0.5 1.0"/>
+      </material>
+    </visual>
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="0.047" />
+      <inertia ixx="0.083" ixy="0" ixz="0" iyy="0.083" iyz="0" izz="0.083" /> <!-- TODO -->
+    </inertial>
+  </link>
+  <joint name="revolute_servomotor_8_foot_2" type="revolute">
+    <origin xyz="0 0.0107 0" rpy="0 0 -0.7853981633974483" />
+    <parent link="servomotor_8" />
+    <child link="foot_2" />
+    <axis xyz="0 0 1" />
+    <dynamics damping="0" friction="0" /> <!-- TODO -->
+    <limit effort="30" velocity="1.0" lower="-1.5708" upper="1.5708" /> <!-- TODO -->
+  </joint>
+  <link name="foot_2">
+    <collision>
+      <origin xyz="0 0.031 -0.006" rpy="1.5707963267948966 0 0" />
+      <geometry>
+        <box size="0.024 0.040 0.0993" />
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="0 0.031 0" rpy="1.5707963267948966 0 0" />
+      <geometry>
+        <mesh filename="meshes/foot.stl" scale="0.001 0.001 0.001" />
+      </geometry>
+      <material name="Blue">
+        <color rgba="0.0 0.0 1.0 1.0"/>
+      </material>
+    </visual>
+    <inertial>
+      <origin xyz="0 0.031 0" rpy="1.5707963267948966 0 0" />
+      <mass value="0.0105" />
+      <inertia ixx="5.624930021684789" ixy="-0.0007514028791903619" ixz="0.0005912555287889139" iyy="4.568350194084484" iyz="0.020270474186461353" izz="1.7085021792735104" />
+    </inertial>
+  </link>
+  <joint name="fixed_foot_2_endcap_2" type="fixed">
+    <origin xyz="0 0.0776 0" rpy="0 0 0" />
+    <parent link="foot_2" />
+    <child link="endcap_2" />
+  </joint>
+  <link name="endcap_2">
+    <collision>
+      <origin xyz="0 0 0" rpy="1.5707963267948966 0 0" />
+      <geometry>
+        <mesh filename="meshes/endcap.dae" />
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="0 0 0" rpy="1.5707963267948966 0 0" />
+      <geometry>
+        <mesh filename="meshes/endcap.dae" />
+      </geometry>
+      <material name="BlackRubber">
+        <color rgba="0.0 0.0 0.0 1.0"/>
+      </material>
+    </visual>
+    <inertial>
+      <origin xyz="0 0 0" rpy="1.5707963267948966 0 0" />
+      <mass value="0.0005" /> <!-- TODO -->
+      <!-- endcap has a negligeable inertia -->
+      <inertia ixx="0.0" ixy="0.0" ixz="0.0" iyy="0.0" iyz="0.0" izz="0.0" />
+    </inertial>
+  </link>
+  
+
+  
+  <!-- Leg 3 -->
+  <joint name="fixed_box_servomotor_9" type="fixed">
+    <origin xyz="-0.06521292289492935 0.06521292289492935 0.2041193" rpy="0 0 -0.78539" />
+    <parent link="box" />
+    <child link="servomotor_9" />
+  </joint>
+  <link name="servomotor_9">
+    <collision>
+      <origin xyz="0 -0.002 0" rpy="0 0 0" />
+      <geometry>
+        <box size="0.024 .0451 .0347" />
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/servomotor.dae" />
+      </geometry>
+      <material name="Grey">
+        <color rgba="0.5 0.5 0.5 1.0"/>
+      </material>
+    </visual>
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="0.047" />
+      <inertia ixx="0.083" ixy="0" ixz="0" iyy="0.083" iyz="0" izz="0.083" /> <!-- TODO -->
+    </inertial>
+  </link>
+  <joint name="revolute_servomotor_9_joint_3" type="revolute">
+    <origin xyz="0 0.011 0" rpy="0 0 3.141592653589793" />
+    <parent link="servomotor_9" />
+    <child link="joint_3" />
+    <axis xyz="0 0 1" />
+    <dynamics damping="0" friction="0" /> <!-- TODO -->
+    <limit effort="30" velocity="1.0" lower="-1.5708" upper="1.5708" /> <!-- TODO -->
+  </joint>
+  <link name="joint_3">
+    <collision>
+      <origin xyz="0.02432 0 0" rpy="0 0 0" />
+      <geometry>
+        <box size="0.073 0.040 0.040" />
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="0.02432 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/joint.stl" scale="0.001 0.001 0.001" />
+      </geometry>
+      <material name="Blue">
+        <color rgba="0.0 0.0 1.0 1.0"/>
+      </material>
+    </visual>
+    <inertial>
+      <origin xyz="0.02432 0 0" rpy="0 0 0" />
+      <mass value="0.011" />
+      <inertia ixx="3.6847327982785196" ixy="0.02825382432278616" ixz="0.03247685512442882" iyy="4.033791250199519" iyz="-0.0006925945535502276" izz="4.027664100211282" />
+    </inertial>
+  </link>
+  <joint name="revolute_joint_3_servomotor_10" type="revolute">
+    <origin xyz="0.049 0 0" rpy="1.5707963267948966 -0.7853981633974483 0" />
+    <parent link="joint_3" />
+    <child link="servomotor_10" />
+    <axis xyz="0 0 1" />
+    <dynamics damping="0" friction="0" /> <!-- TODO -->
+    <limit effort="30" velocity="1.0" lower="-1.5708" upper="1.5708" /> <!-- TODO -->
+  </joint>
+  <link name="servomotor_10">
+    <collision>
+      <origin xyz="0 -0.0127 0" rpy="0 0 0" />
+      <geometry>
+        <box size="0.024 .0451 .0347" />
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="0 -0.0107 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/servomotor.dae" />
+      </geometry>
+      <material name="Grey">
+        <color rgba="0.5 0.5 0.5 1.0"/>
+      </material>
+    </visual>
+    <inertial>
+      <origin xyz="0 -0.0107 0" rpy="0 0 0" />
+      <mass value="0.047" />
+      <inertia ixx="0.083" ixy="0" ixz="0" iyy="0.083" iyz="0" izz="0.083" /> <!-- TODO -->
+    </inertial>
+  </link>
+  <joint name="fixed_servomotor_10_servomotor_11" type="fixed">
+    <origin xyz="0 -0.0495 0" rpy="0 0 3.141592653589793" />
+    <parent link="servomotor_10" />
+    <child link="servomotor_11" />
+  </joint>
+  <link name="servomotor_11">
+    <collision>
+      <origin xyz="0 -0.002 0" rpy="0 0 0" />
+      <geometry>
+        <box size="0.024 .0451 .0347" />
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/servomotor.dae" />
+      </geometry>
+      <material name="Grey">
+        <color rgba="0.5 0.5 0.5 1.0"/>
+      </material>
+    </visual>
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="0.047" />
+      <inertia ixx="0.083" ixy="0" ixz="0" iyy="0.083" iyz="0" izz="0.083" /> <!-- TODO -->
+    </inertial>
+  </link>
+  <joint name="revolute_servomotor_11_foot_3" type="revolute">
+    <origin xyz="0 0.0107 0" rpy="0 0 -0.7853981633974483" />
+    <parent link="servomotor_11" />
+    <child link="foot_3" />
+    <axis xyz="0 0 1" />
+    <dynamics damping="0" friction="0" /> <!-- TODO -->
+    <limit effort="30" velocity="1.0" lower="-1.5708" upper="1.5708" /> <!-- TODO -->
+  </joint>
+  <link name="foot_3">
+    <collision>
+      <origin xyz="0 0.031 -0.006" rpy="1.5707963267948966 0 0" />
+      <geometry>
+        <box size="0.024 0.040 0.0993" />
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="0 0.031 0" rpy="1.5707963267948966 0 0" />
+      <geometry>
+        <mesh filename="meshes/foot.stl" scale="0.001 0.001 0.001" />
+      </geometry>
+      <material name="Blue">
+        <color rgba="0.0 0.0 1.0 1.0"/>
+      </material>
+    </visual>
+    <inertial>
+      <origin xyz="0 0.031 0" rpy="1.5707963267948966 0 0" />
+      <mass value="0.0105" />
+      <inertia ixx="5.624930021684789" ixy="-0.0007514028791903619" ixz="0.0005912555287889139" iyy="4.568350194084484" iyz="0.020270474186461353" izz="1.7085021792735104" />
+    </inertial>
+  </link>
+  <joint name="fixed_foot_3_endcap_3" type="fixed">
+    <origin xyz="0 0.0776 0" rpy="0 0 0" />
+    <parent link="foot_3" />
+    <child link="endcap_3" />
+  </joint>
+  <link name="endcap_3">
+    <collision>
+      <origin xyz="0 0 0" rpy="1.5707963267948966 0 0" />
+      <geometry>
+        <mesh filename="meshes/endcap.dae" />
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="0 0 0" rpy="1.5707963267948966 0 0" />
+      <geometry>
+        <mesh filename="meshes/endcap.dae" />
+      </geometry>
+      <material name="BlackRubber">
+        <color rgba="0.0 0.0 0.0 1.0"/>
+      </material>
+    </visual>
+    <inertial>
+      <origin xyz="0 0 0" rpy="1.5707963267948966 0 0" />
+      <mass value="0.0005" /> <!-- TODO -->
+      <!-- endcap has a negligeable inertia -->
+      <inertia ixx="0.0" ixy="0.0" ixz="0.0" iyy="0.0" iyz="0.0" izz="0.0" />
+    </inertial>
+  </link>
+  
+  <!-- Leg 4 -->
+  <joint name="fixed_box_servomotor_12" type="fixed">
+    <origin xyz="-0.092225 -0.0 0.2041193" rpy="0 0 0.0" />
+    <parent link="box" />
+    <child link="servomotor_12" />
+  </joint>
+  <link name="servomotor_12">
+    <collision>
+      <origin xyz="0 -0.002 0" rpy="0 0 0" />
+      <geometry>
+        <box size="0.024 .0451 .0347" />
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/servomotor.dae" />
+      </geometry>
+      <material name="Grey">
+        <color rgba="0.5 0.5 0.5 1.0"/>
+      </material>
+    </visual>
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="0.047" />
+      <inertia ixx="0.083" ixy="0" ixz="0" iyy="0.083" iyz="0" izz="0.083" /> <!-- TODO -->
+    </inertial>
+  </link>
+  <joint name="revolute_servomotor_12_joint_4" type="revolute">
+    <origin xyz="0 0.011 0" rpy="0 0 3.141592653589793" />
+    <parent link="servomotor_12" />
+    <child link="joint_4" />
+    <axis xyz="0 0 1" />
+    <dynamics damping="0" friction="0" /> <!-- TODO -->
+    <limit effort="30" velocity="1.0" lower="-1.5708" upper="1.5708" /> <!-- TODO -->
+  </joint>
+  <link name="joint_4">
+    <collision>
+      <origin xyz="0.02432 0 0" rpy="0 0 0" />
+      <geometry>
+        <box size="0.073 0.040 0.040" />
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="0.02432 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/joint.stl" scale="0.001 0.001 0.001" />
+      </geometry>
+      <material name="Blue">
+        <color rgba="0.0 0.0 1.0 1.0"/>
+      </material>
+    </visual>
+    <inertial>
+      <origin xyz="0.02432 0 0" rpy="0 0 0" />
+      <mass value="0.011" />
+      <inertia ixx="3.6847327982785196" ixy="0.02825382432278616" ixz="0.03247685512442882" iyy="4.033791250199519" iyz="-0.0006925945535502276" izz="4.027664100211282" />
+    </inertial>
+  </link>
+  <joint name="revolute_joint_4_servomotor_13" type="revolute">
+    <origin xyz="0.049 0 0" rpy="1.5707963267948966 -0.7853981633974483 0" />
+    <parent link="joint_4" />
+    <child link="servomotor_13" />
+    <axis xyz="0 0 1" />
+    <dynamics damping="0" friction="0" /> <!-- TODO -->
+    <limit effort="30" velocity="1.0" lower="-1.5708" upper="1.5708" /> <!-- TODO -->
+  </joint>
+  <link name="servomotor_13">
+    <collision>
+      <origin xyz="0 -0.0127 0" rpy="0 0 0" />
+      <geometry>
+        <box size="0.024 .0451 .0347" />
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="0 -0.0107 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/servomotor.dae" />
+      </geometry>
+      <material name="Grey">
+        <color rgba="0.5 0.5 0.5 1.0"/>
+      </material>
+    </visual>
+    <inertial>
+      <origin xyz="0 -0.0107 0" rpy="0 0 0" />
+      <mass value="0.047" />
+      <inertia ixx="0.083" ixy="0" ixz="0" iyy="0.083" iyz="0" izz="0.083" /> <!-- TODO -->
+    </inertial>
+  </link>
+  <joint name="fixed_servomotor_13_servomotor_14" type="fixed">
+    <origin xyz="0 -0.0495 0" rpy="0 0 3.141592653589793" />
+    <parent link="servomotor_13" />
+    <child link="servomotor_14" />
+  </joint>
+  <link name="servomotor_14">
+    <collision>
+      <origin xyz="0 -0.002 0" rpy="0 0 0" />
+      <geometry>
+        <box size="0.024 .0451 .0347" />
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/servomotor.dae" />
+      </geometry>
+      <material name="Grey">
+        <color rgba="0.5 0.5 0.5 1.0"/>
+      </material>
+    </visual>
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="0.047" />
+      <inertia ixx="0.083" ixy="0" ixz="0" iyy="0.083" iyz="0" izz="0.083" /> <!-- TODO -->
+    </inertial>
+  </link>
+  <joint name="revolute_servomotor_14_foot_4" type="revolute">
+    <origin xyz="0 0.0107 0" rpy="0 0 -0.7853981633974483" />
+    <parent link="servomotor_14" />
+    <child link="foot_4" />
+    <axis xyz="0 0 1" />
+    <dynamics damping="0" friction="0" /> <!-- TODO -->
+    <limit effort="30" velocity="1.0" lower="-1.5708" upper="1.5708" /> <!-- TODO -->
+  </joint>
+  <link name="foot_4">
+    <collision>
+      <origin xyz="0 0.031 -0.006" rpy="1.5707963267948966 0 0" />
+      <geometry>
+        <box size="0.024 0.040 0.0993" />
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="0 0.031 0" rpy="1.5707963267948966 0 0" />
+      <geometry>
+        <mesh filename="meshes/foot.stl" scale="0.001 0.001 0.001" />
+      </geometry>
+      <material name="Blue">
+        <color rgba="0.0 0.0 1.0 1.0"/>
+      </material>
+    </visual>
+    <inertial>
+      <origin xyz="0 0.031 0" rpy="1.5707963267948966 0 0" />
+      <mass value="0.0105" />
+      <inertia ixx="5.624930021684789" ixy="-0.0007514028791903619" ixz="0.0005912555287889139" iyy="4.568350194084484" iyz="0.020270474186461353" izz="1.7085021792735104" />
+    </inertial>
+  </link>
+  <joint name="fixed_foot_4_endcap_4" type="fixed">
+    <origin xyz="0 0.0776 0" rpy="0 0 0" />
+    <parent link="foot_4" />
+    <child link="endcap_4" />
+  </joint>
+  <link name="endcap_4">
+    <collision>
+      <origin xyz="0 0 0" rpy="1.5707963267948966 0 0" />
+      <geometry>
+        <mesh filename="meshes/endcap.dae" />
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="0 0 0" rpy="1.5707963267948966 0 0" />
+      <geometry>
+        <mesh filename="meshes/endcap.dae" />
+      </geometry>
+      <material name="BlackRubber">
+        <color rgba="0.0 0.0 0.0 1.0"/>
+      </material>
+    </visual>
+    <inertial>
+      <origin xyz="0 0 0" rpy="1.5707963267948966 0 0" />
+      <mass value="0.0005" /> <!-- TODO -->
+      <!-- endcap has a negligeable inertia -->
+      <inertia ixx="0.0" ixy="0.0" ixz="0.0" iyy="0.0" iyz="0.0" izz="0.0" />
+    </inertial>
+  </link>
+  
+  <!-- Leg 5 -->
+  <joint name="fixed_box_servomotor_15" type="fixed">
+    <origin xyz="-0.06521292289492935 -0.06521292289492935 0.2041193" rpy="0 0 0.78539" />
+    <parent link="box" />
+    <child link="servomotor_15" />
+  </joint>
+  <link name="servomotor_15">
+    <collision>
+      <origin xyz="0 -0.002 0" rpy="0 0 0" />
+      <geometry>
+        <box size="0.024 .0451 .0347" />
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/servomotor.dae" />
+      </geometry>
+      <material name="Grey">
+        <color rgba="0.5 0.5 0.5 1.0"/>
+      </material>
+    </visual>
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="0.047" />
+      <inertia ixx="0.083" ixy="0" ixz="0" iyy="0.083" iyz="0" izz="0.083" /> <!-- TODO -->
+    </inertial>
+  </link>
+  <joint name="revolute_servomotor_15_joint_5" type="revolute">
+    <origin xyz="0 0.011 0" rpy="0 0 3.141592653589793" />
+    <parent link="servomotor_15" />
+    <child link="joint_5" />
+    <axis xyz="0 0 1" />
+    <dynamics damping="0" friction="0" /> <!-- TODO -->
+    <limit effort="30" velocity="1.0" lower="-1.5708" upper="1.5708" /> <!-- TODO -->
+  </joint>
+  <link name="joint_5">
+    <collision>
+      <origin xyz="0.02432 0 0" rpy="0 0 0" />
+      <geometry>
+        <box size="0.073 0.040 0.040" />
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="0.02432 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/joint.stl" scale="0.001 0.001 0.001" />
+      </geometry>
+      <material name="Blue">
+        <color rgba="0.0 0.0 1.0 1.0"/>
+      </material>
+    </visual>
+    <inertial>
+      <origin xyz="0.02432 0 0" rpy="0 0 0" />
+      <mass value="0.011" />
+      <inertia ixx="3.6847327982785196" ixy="0.02825382432278616" ixz="0.03247685512442882" iyy="4.033791250199519" iyz="-0.0006925945535502276" izz="4.027664100211282" />
+    </inertial>
+  </link>
+  <joint name="revolute_joint_5_servomotor_16" type="revolute">
+    <origin xyz="0.049 0 0" rpy="1.5707963267948966 -0.7853981633974483 0" />
+    <parent link="joint_5" />
+    <child link="servomotor_16" />
+    <axis xyz="0 0 1" />
+    <dynamics damping="0" friction="0" /> <!-- TODO -->
+    <limit effort="30" velocity="1.0" lower="-1.5708" upper="1.5708" /> <!-- TODO -->
+  </joint>
+  <link name="servomotor_16">
+    <collision>
+      <origin xyz="0 -0.0127 0" rpy="0 0 0" />
+      <geometry>
+        <box size="0.024 .0451 .0347" />
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="0 -0.0107 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/servomotor.dae" />
+      </geometry>
+      <material name="Grey">
+        <color rgba="0.5 0.5 0.5 1.0"/>
+      </material>
+    </visual>
+    <inertial>
+      <origin xyz="0 -0.0107 0" rpy="0 0 0" />
+      <mass value="0.047" />
+      <inertia ixx="0.083" ixy="0" ixz="0" iyy="0.083" iyz="0" izz="0.083" /> <!-- TODO -->
+    </inertial>
+  </link>
+  <joint name="fixed_servomotor_16_servomotor_17" type="fixed">
+    <origin xyz="0 -0.0495 0" rpy="0 0 3.141592653589793" />
+    <parent link="servomotor_16" />
+    <child link="servomotor_17" />
+  </joint>
+  <link name="servomotor_17">
+    <collision>
+      <origin xyz="0 -0.002 0" rpy="0 0 0" />
+      <geometry>
+        <box size="0.024 .0451 .0347" />
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/servomotor.dae" />
+      </geometry>
+      <material name="Grey">
+        <color rgba="0.5 0.5 0.5 1.0"/>
+      </material>
+    </visual>
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="0.047" />
+      <inertia ixx="0.083" ixy="0" ixz="0" iyy="0.083" iyz="0" izz="0.083" /> <!-- TODO -->
+    </inertial>
+  </link>
+  <joint name="revolute_servomotor_17_foot_5" type="revolute">
+    <origin xyz="0 0.0107 0" rpy="0 0 -0.7853981633974483" />
+    <parent link="servomotor_17" />
+    <child link="foot_5" />
+    <axis xyz="0 0 1" />
+    <dynamics damping="0" friction="0" /> <!-- TODO -->
+    <limit effort="30" velocity="1.0" lower="-1.5708" upper="1.5708" /> <!-- TODO -->
+  </joint>
+  <link name="foot_5">
+    <collision>
+      <origin xyz="0 0.031 -0.006" rpy="1.5707963267948966 0 0" />
+      <geometry>
+        <box size="0.024 0.040 0.0993" />
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="0 0.031 0" rpy="1.5707963267948966 0 0" />
+      <geometry>
+        <mesh filename="meshes/foot.stl" scale="0.001 0.001 0.001" />
+      </geometry>
+      <material name="Blue">
+        <color rgba="0.0 0.0 1.0 1.0"/>
+      </material>
+    </visual>
+    <inertial>
+      <origin xyz="0 0.031 0" rpy="1.5707963267948966 0 0" />
+      <mass value="0.0105" />
+      <inertia ixx="5.624930021684789" ixy="-0.0007514028791903619" ixz="0.0005912555287889139" iyy="4.568350194084484" iyz="0.020270474186461353" izz="1.7085021792735104" />
+    </inertial>
+  </link>
+  <joint name="fixed_foot_5_endcap_5" type="fixed">
+    <origin xyz="0 0.0776 0" rpy="0 0 0" />
+    <parent link="foot_5" />
+    <child link="endcap_5" />
+  </joint>
+  <link name="endcap_5">
+    <collision>
+      <origin xyz="0 0 0" rpy="1.5707963267948966 0 0" />
+      <geometry>
+        <mesh filename="meshes/endcap.dae" />
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="0 0 0" rpy="1.5707963267948966 0 0" />
+      <geometry>
+        <mesh filename="meshes/endcap.dae" />
+      </geometry>
+      <material name="BlackRubber">
+        <color rgba="0.0 0.0 0.0 1.0"/>
+      </material>
+    </visual>
+    <inertial>
+      <origin xyz="0 0 0" rpy="1.5707963267948966 0 0" />
+      <mass value="0.0005" /> <!-- TODO -->
+      <!-- endcap has a negligeable inertia -->
+      <inertia ixx="0.0" ixy="0.0" ixz="0.0" iyy="0.0" iyz="0.0" izz="0.0" />
+    </inertial>
+  </link>
+  
+</robot>

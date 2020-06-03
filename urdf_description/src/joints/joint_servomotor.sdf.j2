@@ -1,0 +1,10 @@
+{% macro joint_servomotor(parent, child, x, y, z, r, p, ya, axis) %}
+  <joint name="revolute_{{ parent }}_{{ child }}" type="revolute">
+    <origin xyz="{{ x }} {{ y }} {{ z }}" rpy="{{ r }} {{ p }} {{ ya }}" />
+    <parent link="{{ parent }}" />
+    <child link="{{ child }}" />
+    <axis xyz="{{ axis }}" />
+    <dynamics damping="0" friction="0" /> <!-- TODO -->
+    <limit effort="30" velocity="1.0" lower="-1.5708" upper="1.5708" /> <!-- TODO -->
+  </joint>
+{%- endmacro %}

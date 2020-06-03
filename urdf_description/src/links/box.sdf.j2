@@ -1,0 +1,27 @@
+{% macro box(x, y, z, r, p, ya) %}
+  <link name="box">
+    <!-- We count all component within the box as the box
+    (NanoPi, pcb, connectors included) -->
+    <collision>
+      <origin xyz="{{ x }} {{ y }} {{ z }}" rpy="{{ r }} {{ p }} {{ ya }}" />
+      <geometry>
+        <!-- Putting here an octogone might be a nice optimization -->
+        <mesh filename="meshes/box.stl" scale="0.001 0.001 0.001" />
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="{{ x }} {{ y }} {{ z }}" rpy="{{ r }} {{ p }} {{ ya }}" />
+      <geometry>
+        <mesh filename="meshes/box.stl" scale="0.001 0.001 0.001" />
+      </geometry>
+      <material name="Green">
+        <color rgba="0.0 1.0 0.0 1.0"/>
+      </material>
+    </visual>
+    <inertial>
+      <origin xyz="{{ x }} {{ y }} {{ z }}" rpy="{{ r }} {{ p }} {{ ya }}" />
+      <mass value="0.667" />
+      <inertia ixx="0.083" ixy="0.0" ixz="0.0" iyy="0.083" iyz="0.0" izz="0.083" /> <!-- TODO -->
+    </inertial>
+  </link>
+{%- endmacro %}

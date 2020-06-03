@@ -1,0 +1,24 @@
+{% macro foot(name, x, y, z, r, p, ya) %}
+  <link name="{{ name }}">
+    <collision>
+      <origin xyz="{{ x }} {{ y }} {{ z-0.006 }}" rpy="{{ r }} {{ p }} {{ ya }}" />
+      <geometry>
+        <box size="0.024 0.040 0.0993" />
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="{{ x }} {{ y }} {{ z }}" rpy="{{ r }} {{ p }} {{ ya }}" />
+      <geometry>
+        <mesh filename="meshes/foot.stl" scale="0.001 0.001 0.001" />
+      </geometry>
+      <material name="Blue">
+        <color rgba="0.0 0.0 1.0 1.0"/>
+      </material>
+    </visual>
+    <inertial>
+      <origin xyz="{{ x }} {{ y }} {{ z }}" rpy="{{ r }} {{ p }} {{ ya }}" />
+      <mass value="0.0105" />
+      <inertia ixx="5.624930021684789" ixy="-0.0007514028791903619" ixz="0.0005912555287889139" iyy="4.568350194084484" iyz="0.020270474186461353" izz="1.7085021792735104" />
+    </inertial>
+  </link>
+{%- endmacro %}

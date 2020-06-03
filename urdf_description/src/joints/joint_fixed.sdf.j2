@@ -1,0 +1,7 @@
+{% macro joint_fixed(parent, child, x, y, z, r, p, ya) %}
+  <joint name="fixed_{{ parent }}_{{ child }}" type="fixed">
+    <origin xyz="{{ x }} {{ y }} {{ z }}" rpy="{{ r }} {{ p }} {{ ya }}" />
+    <parent link="{{ parent }}" />
+    <child link="{{ child }}" />
+  </joint>
+{%- endmacro %}

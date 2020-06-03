@@ -1,0 +1,24 @@
+{% macro servomotor(name, x, y, z) %}
+  <link name="{{ name }}">
+    <collision>
+      <origin xyz="{{ x }} {{ y-0.002 }} {{ z }}" rpy="0 0 0" />
+      <geometry>
+        <box size="0.024 .0451 .0347" />
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="{{ x }} {{ y }} {{ z }}" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/servomotor.dae" />
+      </geometry>
+      <material name="Grey">
+        <color rgba="0.5 0.5 0.5 1.0"/>
+      </material>
+    </visual>
+    <inertial>
+      <origin xyz="{{ x }} {{ y }} {{ z }}" rpy="0 0 0" />
+      <mass value="0.047" />
+      <inertia ixx="0.083" ixy="0" ixz="0" iyy="0.083" iyz="0" izz="0.083" /> <!-- TODO -->
+    </inertial>
+  </link>
+{%- endmacro %}

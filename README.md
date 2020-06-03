@@ -12,9 +12,6 @@ project at [ENS Paris-Saclay](https://ens-paris-saclay.fr/).
 
 To build it, you may read instructions at <https://kraby.readthedocs.io/>
 
-SDF description files for simulation in ROS/Gazebo or directly in BulletPhysics are available at
-<https://github.com/erdnaxe/kraby_sdf>.
-
 ## Build the documentation
 
 Install `mkdocs` then run `mkdocs serve`.
