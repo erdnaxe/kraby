@@ -1,25 +1,31 @@
-{% macro endcap(name, x, y, z, r, p, ya) %}
+{% macro endcap(name) %}
   <link name="{{ name }}">
     <collision>
-      <origin xyz="{{ x }} {{ y }} {{ z }}" rpy="{{ r }} {{ p }} {{ ya }}" />
+      <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <mesh filename="meshes/endcap.dae" />
+        <sphere radius="0.005" />
       </geometry>
     </collision>
     <visual>
-      <origin xyz="{{ x }} {{ y }} {{ z }}" rpy="{{ r }} {{ p }} {{ ya }}" />
+      <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <mesh filename="meshes/endcap.dae" />
+        <sphere radius="0.005" />
       </geometry>
       <material name="BlackRubber">
         <color rgba="0.0 0.0 0.0 1.0"/>
       </material>
     </visual>
     <inertial>
-      <origin xyz="{{ x }} {{ y }} {{ z }}" rpy="{{ r }} {{ p }} {{ ya }}" />
-      <mass value="0.0005" /> <!-- TODO -->
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="0.0005" />
       <!-- endcap has a negligeable inertia -->
       <inertia ixx="0.0" ixy="0.0" ixz="0.0" iyy="0.0" iyz="0.0" izz="0.0" />
     </inertial>
+    <contact>
+      <lateral_friction value="1.0"/> <!-- TODO -->
+      <rolling_friction value="1.0"/> <!-- TODO -->
+      <stiffness value="30000"/> <!-- TODO -->
+      <damping value="1000"/> <!-- TODO -->
+    </contact>
   </link>
 {%- endmacro %}
