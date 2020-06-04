@@ -7,6 +7,8 @@ Contributions can be made in a number of ways, a few examples are:
   * Design, simulation and documentation improvements via [pull requests](https://github.com/erdnaxe/kraby/pulls),
   * Bug reports and patch reviews.
 
+![Hexapod trying to climb](img/hexapod_devinci.jpg)
+
 ## Code of Conduct
 
 Everyone interacting in the this project's codebases,

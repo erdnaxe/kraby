@@ -20,12 +20,16 @@ The robot was designed using [Blender](https://www.blender.org/),
 a free and open-source 3D computer graphics editing software.
 Download and remix [Kraby Blender sources](https://github.com/erdnaxe/kraby/tree/master/3d_parts/Blender).
 
+![Blender in mesh edit mode](img/blender.png)
+
 ### Smart servo-motors
 
 Kraby uses 18 **Herkulex DRS-0101** servomotors from Dongbu to stay cost
 effective while offering reasonable performances.
 These includes a DC motor, a gear reducer, a control circuitry and
 serial communications capability.
+These servomotors are able to measure motor torque and speed, and are easy to
+use with a serial port.
 
 These servomotors are similar to the more popular **Dynamixel AX-12**.
 

@@ -13,6 +13,8 @@ Blender source files and STL are available
 at <https://github.com/erdnaxe/kraby/tree/master/3d_parts>
 or on [Thingiverse](https://www.thingiverse.com/thing:4135774).
 
+This chassis also reuses the parts that come with Herkulex servomotors.
+
 To build the robot, you will need to print:
 
  * 6x `joint.stl` : top part of one leg,
@@ -22,6 +24,10 @@ To build the robot, you will need to print:
    may be modified to adapt to different electronics.
 
 ![3D printed parts](img/3d_parts.jpg)
+
+If you are 3d-printing with a 0.2 layer height on a standard Cura profile,
+it should take around 22h30 of printing, and one quarter of a one-kilogram
+spool of plastic.
 
 ## Non-printed parts
 

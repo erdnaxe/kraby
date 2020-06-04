@@ -5,12 +5,15 @@ repo_url: https://github.com/erdnaxe/kraby
 
 nav:
   - Home: index.md
-  - Operative part:
+  - Building the robot:
       - Build the structure: build_the_structure.md
       - Build the electronics: build_the_electronics.md
       - Install NanoPi Linux with MPU9250 support: install_nanopi_linux.md
+  - Using the robot:
       - Use the internal motion unit: use_mpu9250.md
       - Use the servomotors: use_motors.md
+  - Simulation:
+      - URDF description: urdf_description.md
   - About:
       - Contributing: contributing.md
       - License: license.md
