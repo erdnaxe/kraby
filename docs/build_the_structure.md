@@ -1,16 +1,27 @@
-# 3D-printed parts
+# Build the structure
 
+This section focuses on building the base structure of the robot.
+
+![Structure and electronics](img/hexapod.jpg)
+
+---
+
+## 3d-printed parts
+
+This robot uses 3d-printed parts to be easily remixed.
 Blender source files and STL are available
-at <https://github.com/erdnaxe/kraby>
+at <https://github.com/erdnaxe/kraby/tree/master/3d_parts>
 or on [Thingiverse](https://www.thingiverse.com/thing:4135774).
-
-![3D printed parts](img/3d_parts.jpg)
 
 To build the robot, you will need to print:
 
- * 6x `joint.stl`
- * 6x `foot.stl`
- * 1x `box.stl`
+ * 6x `joint.stl` : top part of one leg,
+ * 6x `foot.stl` : bottom part of one leg,
+   may be modified to adapt to different rubber endcap or touch sensor,
+ * 1x `box.stl` : main body of the robot,
+   may be modified to adapt to different electronics.
+
+![3D printed parts](img/3d_parts.jpg)
 
 ## Non-printed parts
 

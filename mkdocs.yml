@@ -1,17 +1,25 @@
-site_name: Kraby the Hexapod
-site_description: Open source hexapod robot that anyone can build.
+site_name: Kraby
+site_description: Open source hexapod robot for deep learning research.
 copyright: "This project is under GNU General Public License v3.0."
+repo_url: https://github.com/erdnaxe/kraby
 
 nav:
   - Home: index.md
-  - Build the structure: build_the_structure.md
-  - Build the electronics: build_the_electronics.md
-  - Install NanoPi Linux with MPU9250 support: install_nanopi_linux.md
-  - Use the internal motion unit: use_mpu9250.md
-  - Use the servomotors: use_motors.md
+  - Operative part:
+      - Build the structure: build_the_structure.md
+      - Build the electronics: build_the_electronics.md
+      - Install NanoPi Linux with MPU9250 support: install_nanopi_linux.md
+      - Use the internal motion unit: use_mpu9250.md
+      - Use the servomotors: use_motors.md
+  - About:
+      - Contributing: contributing.md
+      - License: license.md
 
 theme:
   name: readthedocs
+
+extra_css:
+  - css/extra.css
 
 markdown_extensions:
   - attr_list

@@ -10,15 +10,11 @@ It is an open source development platform for educational purpose.
 It was designed for a Master 1
 project at [ENS Paris-Saclay](https://ens-paris-saclay.fr/).
 
-To build it, you may read instructions at <https://kraby.readthedocs.io/>
+You may read documentation at <https://kraby.readthedocs.io/>
 
 ## Build the documentation
 
 Install `mkdocs` then run `mkdocs serve`.
-
-## Software used
-
-PCB files were designed with Eagle 9.
 
 ## License
 
