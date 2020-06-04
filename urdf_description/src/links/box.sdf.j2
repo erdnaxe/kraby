@@ -21,7 +21,8 @@
     <inertial>
       <origin xyz="{{ x }} {{ y }} {{ z }}" rpy="{{ r }} {{ p }} {{ ya }}" />
       <mass value="0.667" />
-      <inertia ixx="0.083" ixy="0.0" ixz="0.0" iyy="0.083" iyz="0.0" izz="0.083" /> <!-- TODO -->
+      <!-- Let's consider the core of the robot homogeneous -->
+      <inertia ixx="0.0011546458242062" ixy="-0.0000000000020962" ixz="-0.0000000000002841" iyy="0.0011546459440935" iyz="-0.0000000000000000" izz="0.0021742915988320" />
     </inertial>
   </link>
 {%- endmacro %}
