@@ -16,11 +16,13 @@ class HexapodBulletEnv(Env):
         super().__init__()
 
         # 18 actions (servomotors)
-        high = np.ones([18])
+        self.nb_actions = 18
+        high = np.ones([self.nb_actions])
         self.action_space = spaces.Box(-high, high)
 
         # 18*(position,speed,torque) + robot positions observations
-        high = np.inf * np.ones([3*18+6])
+        self.nb_observation = 3*18+6
+        high = np.inf * np.ones([self.nb_observation])
         self.observation_space = spaces.Box(-high, high)
 
         # Add pybullet_data as search path
@@ -76,26 +78,45 @@ class HexapodBulletEnv(Env):
         pass
 
     def get_reward(self):
-        reward = 0
-        done = False
+        """
+        Compute reward function
+        """
+        # Get data
+        fallen = self._has_fallen()
+        #distance_to_goal =
+        #comsuption =
+
+        # Compute reward
+        reward = 0  # TODO
+        done = fallen or False  # TODO
         return reward, done
 
     def get_observation(self):
-        observation = []
+        """
+        Get the observation from BulletPhysics
+        """
+        observation = np.zeros(self.nb_observation)
 
         # Each servomotor position, speed and torque
-        for j in self.joint_list:
-            pos, vel, _, tor = p.getJointState(self.robot_id, j)
-            observation += [pos, vel, tor]
+        all_states = p.getJointStates(self.robot_id, self.joint_list)
+        for i, (pos, vel, _, tor) in enumerate(all_states):
+            observation[3*i:3*i+3] = [pos, vel, tor]
 
         # Robot position and orientation
         pos, ori = p.getBasePositionAndOrientation(self.robot_id)
-        observation += list(pos) + list(ori)
+        observation[-6:] = list(pos) + list(p.getEulerFromQuaternion(ori))
 
         return observation
 
-    def terminate(self):
+    def close(self):
         p.disconnect()
+
+    def _has_fallen(self):
+        """
+        Return True when body touch the ground
+        """
+        pos, _ = p.getBasePositionAndOrientation(self.robot_id)
+        return pos[-1] < 0.08
 
 
 if __name__ == '__main__':
@@ -103,12 +124,13 @@ if __name__ == '__main__':
     p.connect(p.GUI)
     env = HexapodBulletEnv()
     observation = env.reset()
+    done = False
 
     # Create user debug interface
     params = [p.addUserDebugParameter(p.getJointInfo(env.robot_id, j)[1].decode(), -1, 1, 0)
               for j in env.joint_list]
 
-    while True:
+    while not done:
         # Read user input and simulate motor
         a = [p.readUserDebugParameter(param) for param in params]
         observation, reward, done, _ = env.step(a)
@@ -116,3 +138,5 @@ if __name__ == '__main__':
         print("reward", reward)
         print("done", done)
         sleep(0.01)
+
+    print("[!] Robot has fallen")
