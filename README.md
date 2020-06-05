@@ -16,6 +16,14 @@ You may read documentation at <https://kraby.readthedocs.io/>
 
 Install `mkdocs` then run `mkdocs serve`.
 
+## Install OpenAI environment
+
+```
+cd kraby
+pip install -e . --user
+python -m gym_kraby.demo
+```
+
 ## License
 
 This project is under GNU General Public License v3.0 because we believe in

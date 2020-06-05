@@ -1,12 +1,13 @@
-#!/usr/bin/env python3
 import pybullet as p
 import numpy as np
+import gym
+import importlib.resources
+from gym import error, spaces, utils
+from gym.utils import seeding
 from pybullet_data import getDataPath
-from gym import Env, spaces
-from time import sleep
 
 
-class HexapodBulletEnv(Env):
+class HexapodBulletEnv(gym.Env):
     """
     Hexapod simulation OpenAI Gym environnement using PyBullet
     """
@@ -44,7 +45,9 @@ class HexapodBulletEnv(Env):
         flags = p.URDF_USE_SELF_COLLISION | p.URDF_USE_INERTIA_FROM_FILE
         #flags |= p.URDF_MERGE_FIXED_LINKS  # only pybullet>2.89
         #flags |= p.URDF_IGNORE_VISUAL_SHAPES  # see collision shapes
-        self.robot_id = p.loadURDF("hexapod.urdf", flags=flags)
+        with importlib.resources.path("gym_kraby.envs", "hexapod.urdf") as path:
+            print("[!]", path)
+            self.robot_id = p.loadURDF(str(path), flags=flags)
 
         # Get all motorized joints id and name (which are revolute joints)
         self.joint_list = [j for j in range(p.getNumJoints(self.robot_id))
@@ -55,7 +58,7 @@ class HexapodBulletEnv(Env):
             p.enableJointForceTorqueSensor(self.robot_id, j)
 
         # Return observation
-        observation = self.get_observation()
+        observation = self._get_observation()
         return observation
 
     def step(self, action):
@@ -70,19 +73,30 @@ class HexapodBulletEnv(Env):
         p.stepSimulation()
 
         # Return observation, reward and done
-        reward, done = self.get_reward()
-        observation = self.get_observation()
+        reward, done = self._get_reward()
+        observation = self._get_observation()
         return observation, reward, done, {}
 
     def render(self, mode='human', close=False):
+        """
+        Do nothing as PyBullet automatically renders
+        """
         pass
 
-    def get_reward(self):
+    def close(self):
+        """
+        OpenAIClose environment
+        """
+        p.disconnect()
+
+    def _get_reward(self):
         """
         Compute reward function
         """
-        # Get data
-        fallen = self._has_fallen()
+        # Has fallen?
+        pos, _ = p.getBasePositionAndOrientation(self.robot_id)
+        fallen = pos[-1] < 0.08
+
         #distance_to_goal =
         #comsuption =
 
@@ -91,7 +105,7 @@ class HexapodBulletEnv(Env):
         done = fallen or False  # TODO
         return reward, done
 
-    def get_observation(self):
+    def _get_observation(self):
         """
         Get the observation from BulletPhysics
         """
@@ -108,35 +122,3 @@ class HexapodBulletEnv(Env):
 
         return observation
 
-    def close(self):
-        p.disconnect()
-
-    def _has_fallen(self):
-        """
-        Return True when body touch the ground
-        """
-        pos, _ = p.getBasePositionAndOrientation(self.robot_id)
-        return pos[-1] < 0.08
-
-
-if __name__ == '__main__':
-    # Connect to BulletPhysics GUI, can be DIRECT if no user inputs
-    p.connect(p.GUI)
-    env = HexapodBulletEnv()
-    observation = env.reset()
-    done = False
-
-    # Create user debug interface
-    params = [p.addUserDebugParameter(p.getJointInfo(env.robot_id, j)[1].decode(), -1, 1, 0)
-              for j in env.joint_list]
-
-    while not done:
-        # Read user input and simulate motor
-        a = [p.readUserDebugParameter(param) for param in params]
-        observation, reward, done, _ = env.step(a)
-        print("\nobservation", observation)
-        print("reward", reward)
-        print("done", done)
-        sleep(0.01)
-
-    print("[!] Robot has fallen")

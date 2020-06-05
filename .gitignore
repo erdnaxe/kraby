@@ -2,3 +2,9 @@
 *.b#*
 *.s#*
 *.epf
+
+# Useless Python files
+*.egg-info
+*.pyc
+.idea
+*~
