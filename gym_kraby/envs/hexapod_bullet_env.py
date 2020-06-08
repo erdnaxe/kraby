@@ -118,7 +118,6 @@ class HexapodBulletEnv(gym.Env):
     def _get_observation(self):
         """
         Get the observation from BulletPhysics
-        TODO: normalize
         """
         observation = np.zeros(self.n_observation, dtype="float32")
 

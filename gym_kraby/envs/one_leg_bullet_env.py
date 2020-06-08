@@ -34,6 +34,10 @@ class OneLegBulletEnv(gym.Env):
         # Change simulation timestep
         p.setTimeStep(time_step)
 
+        # Some constants for normalization
+        self.servo_max_speed = 6.308  # rad/s
+        self.servo_max_torque = 1.57  # N.m
+
     def reset(self):
         p.resetSimulation()
 
@@ -65,10 +69,15 @@ class OneLegBulletEnv(gym.Env):
     def step(self, action):
         # Update servomotors
         transformed_action = [k * np.pi/2 for k in action]
-        p.setJointMotorControlArray(bodyIndex=self.robot_id,
-                                    jointIndices=self.joint_list,
+        # setJointMotorControlArray do not support maxVelocity
+        # Use a small margin (0.99) to keep it in range of -1, 1
+        for i in range(len(self.joint_list)):
+            p.setJointMotorControl2(bodyIndex=self.robot_id,
+                                    jointIndex=self.joint_list[i],
                                     controlMode=p.POSITION_CONTROL,
-                                    targetPositions=transformed_action)
+                                    targetPosition=transformed_action[i],
+                                    force=self.servo_max_torque*0.99,
+                                    maxVelocity=self.servo_max_speed*0.99)
 
         # Step simulation
         p.stepSimulation()
@@ -106,12 +115,16 @@ class OneLegBulletEnv(gym.Env):
         """
         Get the observation from BulletPhysics
         """
-        observation = np.zeros(self.n_observation)
+        observation = np.zeros(self.n_observation, dtype="float32")
 
         # Each servomotor position, speed and torque
         all_states = p.getJointStates(self.robot_id, self.joint_list)
         for i, (pos, vel, _, tor) in enumerate(all_states):
-            observation[3*i:3*i+3] = [pos, vel, tor]
+            observation[3*i:3*i+3] = [
+                2 * pos / np.pi,
+                vel / self.servo_max_speed,
+                tor / self.servo_max_torque
+            ]
 
         # Robot position and orientation
         pos, ori = p.getBasePositionAndOrientation(self.robot_id)
