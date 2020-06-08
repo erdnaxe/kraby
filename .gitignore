@@ -6,5 +6,6 @@
 # Useless Python files
 *.egg-info
 *.pyc
+.eggs
 .idea
 *~

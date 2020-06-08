@@ -2,7 +2,6 @@ from setuptools import setup, find_packages
 
 setup(
     name='gym_kraby',
-    version='0.0.1',
     author='Alexandre Iooss',
     author_email='erdnaxe@crans.org',
     license='GPLv3',
@@ -16,4 +15,6 @@ setup(
         'gym_kraby': ['data/*.urdf', 'data/meshes/*.stl'],
     },
     include_package_data=True,
+    use_scm_version=True,
+    setup_requires=['setuptools_scm'],
 )
