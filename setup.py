@@ -8,6 +8,7 @@ setup(
     url='https://kraby.readthedocs.io/',
     install_requires=[
         'gym',
+        'pybullet',
     ],
     packages=find_packages(),
     package_data = {
