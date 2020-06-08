@@ -17,14 +17,16 @@ class HexapodBulletEnv(gym.Env):
         super().__init__()
 
         # 18 actions (servomotors)
-        self.nb_actions = 18
-        high = np.ones([self.nb_actions])
-        self.action_space = spaces.Box(-high, high)
+        self.n_actions = 18
+        self.action_space = spaces.Box(low=-1, high=1,
+                                       shape=(self.n_actions,),
+                                       dtype="float32")
 
         # 18*(position,speed,torque) + robot positions observations
-        self.nb_observation = 3*18+6
-        high = np.inf * np.ones([self.nb_observation])
-        self.observation_space = spaces.Box(-high, high)
+        self.n_observation = 3*18+6
+        self.observation_space = spaces.Box(low=-1, high=1,
+                                            shape=(self.n_observation,),
+                                            dtype="float32")
 
         # Add pybullet_data as search path
         p.setAdditionalSearchPath(getDataPath())
@@ -45,9 +47,8 @@ class HexapodBulletEnv(gym.Env):
         flags = p.URDF_USE_SELF_COLLISION | p.URDF_USE_INERTIA_FROM_FILE
         #flags |= p.URDF_MERGE_FIXED_LINKS  # only pybullet>2.89
         #flags |= p.URDF_IGNORE_VISUAL_SHAPES  # see collision shapes
-        with importlib.resources.path("gym_kraby.envs", "hexapod.urdf") as path:
-            print("[!]", path)
-            self.robot_id = p.loadURDF(str(path), flags=flags)
+        with importlib.resources.path("gym_kraby", "data") as path:
+            self.robot_id = p.loadURDF(str(path / 'hexapod.urdf'), flags=flags)
 
         # Get all motorized joints id and name (which are revolute joints)
         self.joint_list = [j for j in range(p.getNumJoints(self.robot_id))
@@ -109,7 +110,7 @@ class HexapodBulletEnv(gym.Env):
         """
         Get the observation from BulletPhysics
         """
-        observation = np.zeros(self.nb_observation)
+        observation = np.zeros(self.n_observation)
 
         # Each servomotor position, speed and torque
         all_states = p.getJointStates(self.robot_id, self.joint_list)

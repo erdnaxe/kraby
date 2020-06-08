@@ -10,9 +10,10 @@ setup(
     install_requires=[
         'gym',
     ],
-    #data_files=[
-    #    ('share/gym_kraby', ['*.urdf', '*.stl'])
-    #],
     packages=find_packages(),
+    package_data = {
+        # Include URDF and associated STL
+        'gym_kraby': ['data/*.urdf', 'data/meshes/*.stl'],
+    },
     include_package_data=True,
 )
