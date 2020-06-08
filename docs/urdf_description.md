@@ -5,7 +5,7 @@ for representing a robot model. It has been developed
 by the Robotic Operating System project (ROS).
 
 Kraby URDF description is available at
-<https://github.com/erdnaxe/kraby/blob/master/urdf_description/hexapod.urdf>.
+<https://github.com/erdnaxe/kraby/blob/master/gym_kraby/data/hexapod.urdf>.
 
 ---
 
@@ -14,9 +14,9 @@ Kraby URDF description is available at
 To simplify URDF editing and to avoid input errors,
 the project uses Jinja2[^xacro] templates to generate the URDF.
 You may edit files under
-[urdf_description/src/](https://github.com/erdnaxe/kraby/tree/master/urdf_description/src)
+[gym_kraby/data/src/](https://github.com/erdnaxe/kraby/tree/master/gym_kraby/data/src)
 then execute
-[urdf_description/generate_urdf.py](https://github.com/erdnaxe/kraby/tree/master/urdf_description).
+[gym_kraby/data/generate_urdf.py](https://github.com/erdnaxe/kraby/tree/master/gym_kraby/data).
 
 [^xacro]: [Xacro](http://wiki.ros.org/xacro) could also be an option, but it
 requires to install the ROS toolchain.

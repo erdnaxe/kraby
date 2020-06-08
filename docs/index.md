@@ -37,7 +37,7 @@ These servomotors are similar to the more popular **Dynamixel AX-12**.
 
 An [OpenAI Gym](https://gym.openai.com/) environment is available.
 It uses [BulletPhysics](https://github.com/bulletphysics/bullet3) simulator
-with [an URDF description](https://github.com/erdnaxe/kraby/blob/master/urdf_description/hexapod.urdf) of the robot.
+with [an URDF description](https://github.com/erdnaxe/kraby/blob/master/gym_kraby/data/hexapod.urdf) of the robot.
 
 ---
 

@@ -8,5 +8,6 @@
 *.pyc
 .eggs
 .idea
+build
 dist
 *~
