@@ -1,8 +1,12 @@
 import gym
 import pybullet as p
 from time import sleep
+import numpy as np
 
 only_one_leg = False
+
+# Print float in decimal format
+np.set_printoptions(formatter={'float': lambda x: "{0:6.3f}".format(x)})
 
 # Connect to BulletPhysics GUI, can be DIRECT if no user inputs
 p.connect(p.GUI)
