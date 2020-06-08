@@ -5,3 +5,7 @@ register(
     entry_point='gym_kraby.envs:HexapodBulletEnv',
 )
 
+register(
+    id='OneLegBulletEnv-v0',
+    entry_point='gym_kraby.envs:OneLegBulletEnv',
+)

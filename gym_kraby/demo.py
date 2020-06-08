@@ -2,9 +2,14 @@ import gym
 import pybullet as p
 from time import sleep
 
+only_one_leg = False
+
 # Connect to BulletPhysics GUI, can be DIRECT if no user inputs
 p.connect(p.GUI)
-env = gym.make('gym_kraby:HexapodBulletEnv-v0')
+if only_one_leg:
+    env = gym.make('gym_kraby:OneLegBulletEnv-v0')
+else:
+    env = gym.make('gym_kraby:HexapodBulletEnv-v0')
 observation = env.reset()
 done = False
 

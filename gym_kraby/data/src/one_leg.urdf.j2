@@ -1,0 +1,27 @@
+<?xml version="1.0" ?>
+{%- from 'links/box.sdf.j2' import box %}
+{%- from 'links/endcap.sdf.j2' import endcap %}
+{%- from 'links/foot.sdf.j2' import foot %}
+{%- from 'links/joint.sdf.j2' import joint %}
+{%- from 'links/servomotor.sdf.j2' import servomotor %}
+{%- from 'joints/joint_fixed.sdf.j2' import joint_fixed %}
+{%- from 'joints/joint_servomotor.sdf.j2' import joint_servomotor %}
+
+<robot name="hexapod">
+  {{- box(0, 0, 0.203, 0, 0, 0) }}
+
+  <!-- One Leg -->
+  {{- joint_fixed('box', 'servomotor_' ~ 0, 0.092225*cos(pi/4*(-1)), 0.092225*sin(pi/4*(-1)), 0.2041193, 0, 0, 0.78539*(-1)) }}
+  {{- servomotor('servomotor_' ~ 0, 0, 0, 0) }}
+  {{- joint_servomotor(0, 'servomotor_' ~ 0, 'joint_' ~ 0, 0, 0.011, 0, 0, 0, 0, '0 0 1') }}
+  {{- joint('joint_' ~ 0) }}
+  {{- joint_servomotor(1, 'joint_' ~ 0, 'servomotor_' ~ 1, 0.049, 0, 0, pi/2, -pi/4, 0, '0 0 1') }}
+  {{- servomotor('servomotor_' ~ 1, 0, -0.0107, 0) }}
+  {{- joint_fixed('servomotor_' ~ 1, 'servomotor_' ~ 2, 0, -0.0495, 0, 0, 0, pi) }}
+  {{- servomotor('servomotor_' ~ 2, 0, 0, 0) }}
+  {{- joint_servomotor(2, 'servomotor_' ~ 2, 'foot_' ~ 0, 0, 0.0107, 0, 0, 0, -pi/4, '0 0 1') }}
+  {{- foot('foot_' ~ 0, 0, 0.031, 0, pi/2, 0, 0) }}
+  {{- joint_fixed('foot_' ~ 0, 'endcap_' ~ 0, 0, 0.088, 0, 0, 0, 0) }}
+  {{- endcap('endcap_' ~ 0) }}
+</robot>
+
