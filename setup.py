@@ -16,6 +16,8 @@ setup(
         'gym_kraby': ['data/*.urdf', 'data/meshes/*.stl'],
     },
     include_package_data=True,
-    use_scm_version=True,
+    use_scm_version = {
+        "local_scheme": "no-local-version"
+    },
     setup_requires=['setuptools_scm'],
 )
