@@ -12,6 +12,8 @@ setup(
     author_email='erdnaxe@crans.org',
     license='GPLv3',
     url='https://kraby.readthedocs.io/',
+    description="OpenAI Gym environment for Kraby, an open-source hexapod "
+                "robot",
     long_description=long_description,
     long_description_content_type='text/markdown',
     install_requires=[
@@ -30,5 +32,6 @@ setup(
     setup_requires=['setuptools_scm'],
     classifiers=[
         'Programming Language :: Python',
+        'Programming Language :: Python :: 3.8',
     ],
 )
