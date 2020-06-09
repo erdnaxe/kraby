@@ -2,15 +2,19 @@ import gym
 import pybullet as p
 from time import sleep
 import numpy as np
+import argparse
 
-only_one_leg = False
+# Some settings
+parser = argparse.ArgumentParser()
+parser.add_argument("--one-leg", action="store_true")
+args = parser.parse_args()
 
 # Print float in decimal format
 np.set_printoptions(formatter={'float': lambda x: "{0:6.3f}".format(x)})
 
 # Connect to BulletPhysics GUI, can be DIRECT if no user inputs
 p.connect(p.GUI)
-if only_one_leg:
+if args.one_leg:
     env = gym.make('gym_kraby:OneLegBulletEnv-v0')
 else:
     env = gym.make('gym_kraby:HexapodBulletEnv-v0')
