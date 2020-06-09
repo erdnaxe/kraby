@@ -1,9 +1,9 @@
 {% macro foot(name, x, y, z, r, p, ya) %}
   <link name="{{ name }}">
     <collision>
-      <origin xyz="{{ x }} {{ y }} {{ z }}" rpy="{{ r }} {{ p }} {{ ya }}" />
+      <origin xyz="{{ x }} {{ y+0.0096 }} {{ z }}" rpy="{{ r }} {{ p }} {{ ya }}" />
       <geometry>
-        <box size="0.024 0.040 0.0993" />
+        <box size="0.024 0.040 0.08" />
       </geometry>
     </collision>
     <visual>

@@ -39,13 +39,13 @@
     <collision>
       <origin xyz="0 -0.002 0" rpy="0 0 0" />
       <geometry>
-        <box size="0.024 .0451 .0347" />
+        <box size="0.024 0.0451 0.0347" />
       </geometry>
     </collision>
     <visual>
       <origin xyz="0 -0.002 0" rpy="0 0 0" />
       <geometry>
-        <box size="0.024 .0451 .0347" />
+        <box size="0.024 0.0451 0.0347" />
       </geometry>
       <material name="Grey">
         <color rgba="0.5 0.5 0.5 1.0"/>
@@ -65,13 +65,13 @@
     <axis xyz="0 0 1" />
     <dynamics damping="0" friction="0" /> <!-- TODO -->
     <!-- Herkulex : 361.4°/s i.e. 6.308rad/s, 12kg.cm i.e. 1.18Nm -->
-    <limit effort="1.18" velocity="6.308" lower="-1.57" upper="1.57" /> <!-- TODO -->
+    <limit effort="1.18" velocity="6.308" lower="-0.46" upper="0.46" /> <!-- TODO -->
   </joint>
   <link name="joint_0">
     <collision>
       <origin xyz="0.02432 0 0" rpy="0 0 0" />
       <geometry>
-        <box size="0.073 0.040 0.040" />
+        <box size="0.025 0.040 0.040" />
       </geometry>
     </collision>
     <visual>
@@ -102,13 +102,13 @@
     <collision>
       <origin xyz="0 -0.0127 0" rpy="0 0 0" />
       <geometry>
-        <box size="0.024 .0451 .0347" />
+        <box size="0.024 0.0451 0.0347" />
       </geometry>
     </collision>
     <visual>
       <origin xyz="0 -0.0127 0" rpy="0 0 0" />
       <geometry>
-        <box size="0.024 .0451 .0347" />
+        <box size="0.024 0.0451 0.0347" />
       </geometry>
       <material name="Grey">
         <color rgba="0.5 0.5 0.5 1.0"/>
@@ -130,13 +130,13 @@
     <collision>
       <origin xyz="0 -0.002 0" rpy="0 0 0" />
       <geometry>
-        <box size="0.024 .0451 .0347" />
+        <box size="0.024 0.0451 0.0347" />
       </geometry>
     </collision>
     <visual>
       <origin xyz="0 -0.002 0" rpy="0 0 0" />
       <geometry>
-        <box size="0.024 .0451 .0347" />
+        <box size="0.024 0.0451 0.0347" />
       </geometry>
       <material name="Grey">
         <color rgba="0.5 0.5 0.5 1.0"/>
@@ -160,9 +160,9 @@
   </joint>
   <link name="foot_0">
     <collision>
-      <origin xyz="0 0.031 0" rpy="1.5707963267948966 0 0" />
+      <origin xyz="0 0.0406 0" rpy="1.5707963267948966 0 0" />
       <geometry>
-        <box size="0.024 0.040 0.0993" />
+        <box size="0.024 0.040 0.08" />
       </geometry>
     </collision>
     <visual>
@@ -224,13 +224,13 @@
     <collision>
       <origin xyz="0 -0.002 0" rpy="0 0 0" />
       <geometry>
-        <box size="0.024 .0451 .0347" />
+        <box size="0.024 0.0451 0.0347" />
       </geometry>
     </collision>
     <visual>
       <origin xyz="0 -0.002 0" rpy="0 0 0" />
       <geometry>
-        <box size="0.024 .0451 .0347" />
+        <box size="0.024 0.0451 0.0347" />
       </geometry>
       <material name="Grey">
         <color rgba="0.5 0.5 0.5 1.0"/>
@@ -250,13 +250,13 @@
     <axis xyz="0 0 1" />
     <dynamics damping="0" friction="0" /> <!-- TODO -->
     <!-- Herkulex : 361.4°/s i.e. 6.308rad/s, 12kg.cm i.e. 1.18Nm -->
-    <limit effort="1.18" velocity="6.308" lower="-1.57" upper="1.57" /> <!-- TODO -->
+    <limit effort="1.18" velocity="6.308" lower="-0.46" upper="0.46" /> <!-- TODO -->
   </joint>
   <link name="joint_1">
     <collision>
       <origin xyz="0.02432 0 0" rpy="0 0 0" />
       <geometry>
-        <box size="0.073 0.040 0.040" />
+        <box size="0.025 0.040 0.040" />
       </geometry>
     </collision>
     <visual>
@@ -287,13 +287,13 @@
     <collision>
       <origin xyz="0 -0.0127 0" rpy="0 0 0" />
       <geometry>
-        <box size="0.024 .0451 .0347" />
+        <box size="0.024 0.0451 0.0347" />
       </geometry>
     </collision>
     <visual>
       <origin xyz="0 -0.0127 0" rpy="0 0 0" />
       <geometry>
-        <box size="0.024 .0451 .0347" />
+        <box size="0.024 0.0451 0.0347" />
       </geometry>
       <material name="Grey">
         <color rgba="0.5 0.5 0.5 1.0"/>
@@ -315,13 +315,13 @@
     <collision>
       <origin xyz="0 -0.002 0" rpy="0 0 0" />
       <geometry>
-        <box size="0.024 .0451 .0347" />
+        <box size="0.024 0.0451 0.0347" />
       </geometry>
     </collision>
     <visual>
       <origin xyz="0 -0.002 0" rpy="0 0 0" />
       <geometry>
-        <box size="0.024 .0451 .0347" />
+        <box size="0.024 0.0451 0.0347" />
       </geometry>
       <material name="Grey">
         <color rgba="0.5 0.5 0.5 1.0"/>
@@ -345,9 +345,9 @@
   </joint>
   <link name="foot_1">
     <collision>
-      <origin xyz="0 0.031 0" rpy="1.5707963267948966 0 0" />
+      <origin xyz="0 0.0406 0" rpy="1.5707963267948966 0 0" />
       <geometry>
-        <box size="0.024 0.040 0.0993" />
+        <box size="0.024 0.040 0.08" />
       </geometry>
     </collision>
     <visual>
@@ -409,13 +409,13 @@
     <collision>
       <origin xyz="0 -0.002 0" rpy="0 0 0" />
       <geometry>
-        <box size="0.024 .0451 .0347" />
+        <box size="0.024 0.0451 0.0347" />
       </geometry>
     </collision>
     <visual>
       <origin xyz="0 -0.002 0" rpy="0 0 0" />
       <geometry>
-        <box size="0.024 .0451 .0347" />
+        <box size="0.024 0.0451 0.0347" />
       </geometry>
       <material name="Grey">
         <color rgba="0.5 0.5 0.5 1.0"/>
@@ -435,13 +435,13 @@
     <axis xyz="0 0 1" />
     <dynamics damping="0" friction="0" /> <!-- TODO -->
     <!-- Herkulex : 361.4°/s i.e. 6.308rad/s, 12kg.cm i.e. 1.18Nm -->
-    <limit effort="1.18" velocity="6.308" lower="-1.57" upper="1.57" /> <!-- TODO -->
+    <limit effort="1.18" velocity="6.308" lower="-0.46" upper="0.46" /> <!-- TODO -->
   </joint>
   <link name="joint_2">
     <collision>
       <origin xyz="0.02432 0 0" rpy="0 0 0" />
       <geometry>
-        <box size="0.073 0.040 0.040" />
+        <box size="0.025 0.040 0.040" />
       </geometry>
     </collision>
     <visual>
@@ -472,13 +472,13 @@
     <collision>
       <origin xyz="0 -0.0127 0" rpy="0 0 0" />
       <geometry>
-        <box size="0.024 .0451 .0347" />
+        <box size="0.024 0.0451 0.0347" />
       </geometry>
     </collision>
     <visual>
       <origin xyz="0 -0.0127 0" rpy="0 0 0" />
       <geometry>
-        <box size="0.024 .0451 .0347" />
+        <box size="0.024 0.0451 0.0347" />
       </geometry>
       <material name="Grey">
         <color rgba="0.5 0.5 0.5 1.0"/>
@@ -500,13 +500,13 @@
     <collision>
       <origin xyz="0 -0.002 0" rpy="0 0 0" />
       <geometry>
-        <box size="0.024 .0451 .0347" />
+        <box size="0.024 0.0451 0.0347" />
       </geometry>
     </collision>
     <visual>
       <origin xyz="0 -0.002 0" rpy="0 0 0" />
       <geometry>
-        <box size="0.024 .0451 .0347" />
+        <box size="0.024 0.0451 0.0347" />
       </geometry>
       <material name="Grey">
         <color rgba="0.5 0.5 0.5 1.0"/>
@@ -530,9 +530,9 @@
   </joint>
   <link name="foot_2">
     <collision>
-      <origin xyz="0 0.031 0" rpy="1.5707963267948966 0 0" />
+      <origin xyz="0 0.0406 0" rpy="1.5707963267948966 0 0" />
       <geometry>
-        <box size="0.024 0.040 0.0993" />
+        <box size="0.024 0.040 0.08" />
       </geometry>
     </collision>
     <visual>
@@ -596,13 +596,13 @@
     <collision>
       <origin xyz="0 -0.002 0" rpy="0 0 0" />
       <geometry>
-        <box size="0.024 .0451 .0347" />
+        <box size="0.024 0.0451 0.0347" />
       </geometry>
     </collision>
     <visual>
       <origin xyz="0 -0.002 0" rpy="0 0 0" />
       <geometry>
-        <box size="0.024 .0451 .0347" />
+        <box size="0.024 0.0451 0.0347" />
       </geometry>
       <material name="Grey">
         <color rgba="0.5 0.5 0.5 1.0"/>
@@ -622,13 +622,13 @@
     <axis xyz="0 0 1" />
     <dynamics damping="0" friction="0" /> <!-- TODO -->
     <!-- Herkulex : 361.4°/s i.e. 6.308rad/s, 12kg.cm i.e. 1.18Nm -->
-    <limit effort="1.18" velocity="6.308" lower="-1.57" upper="1.57" /> <!-- TODO -->
+    <limit effort="1.18" velocity="6.308" lower="-0.46" upper="0.46" /> <!-- TODO -->
   </joint>
   <link name="joint_3">
     <collision>
       <origin xyz="0.02432 0 0" rpy="0 0 0" />
       <geometry>
-        <box size="0.073 0.040 0.040" />
+        <box size="0.025 0.040 0.040" />
       </geometry>
     </collision>
     <visual>
@@ -659,13 +659,13 @@
     <collision>
       <origin xyz="0 -0.0127 0" rpy="0 0 0" />
       <geometry>
-        <box size="0.024 .0451 .0347" />
+        <box size="0.024 0.0451 0.0347" />
       </geometry>
     </collision>
     <visual>
       <origin xyz="0 -0.0127 0" rpy="0 0 0" />
       <geometry>
-        <box size="0.024 .0451 .0347" />
+        <box size="0.024 0.0451 0.0347" />
       </geometry>
       <material name="Grey">
         <color rgba="0.5 0.5 0.5 1.0"/>
@@ -687,13 +687,13 @@
     <collision>
       <origin xyz="0 -0.002 0" rpy="0 0 0" />
       <geometry>
-        <box size="0.024 .0451 .0347" />
+        <box size="0.024 0.0451 0.0347" />
       </geometry>
     </collision>
     <visual>
       <origin xyz="0 -0.002 0" rpy="0 0 0" />
       <geometry>
-        <box size="0.024 .0451 .0347" />
+        <box size="0.024 0.0451 0.0347" />
       </geometry>
       <material name="Grey">
         <color rgba="0.5 0.5 0.5 1.0"/>
@@ -717,9 +717,9 @@
   </joint>
   <link name="foot_3">
     <collision>
-      <origin xyz="0 0.031 0" rpy="1.5707963267948966 0 0" />
+      <origin xyz="0 0.0406 0" rpy="1.5707963267948966 0 0" />
       <geometry>
-        <box size="0.024 0.040 0.0993" />
+        <box size="0.024 0.040 0.08" />
       </geometry>
     </collision>
     <visual>
@@ -781,13 +781,13 @@
     <collision>
       <origin xyz="0 -0.002 0" rpy="0 0 0" />
       <geometry>
-        <box size="0.024 .0451 .0347" />
+        <box size="0.024 0.0451 0.0347" />
       </geometry>
     </collision>
     <visual>
       <origin xyz="0 -0.002 0" rpy="0 0 0" />
       <geometry>
-        <box size="0.024 .0451 .0347" />
+        <box size="0.024 0.0451 0.0347" />
       </geometry>
       <material name="Grey">
         <color rgba="0.5 0.5 0.5 1.0"/>
@@ -807,13 +807,13 @@
     <axis xyz="0 0 1" />
     <dynamics damping="0" friction="0" /> <!-- TODO -->
     <!-- Herkulex : 361.4°/s i.e. 6.308rad/s, 12kg.cm i.e. 1.18Nm -->
-    <limit effort="1.18" velocity="6.308" lower="-1.57" upper="1.57" /> <!-- TODO -->
+    <limit effort="1.18" velocity="6.308" lower="-0.46" upper="0.46" /> <!-- TODO -->
   </joint>
   <link name="joint_4">
     <collision>
       <origin xyz="0.02432 0 0" rpy="0 0 0" />
       <geometry>
-        <box size="0.073 0.040 0.040" />
+        <box size="0.025 0.040 0.040" />
       </geometry>
     </collision>
     <visual>
@@ -844,13 +844,13 @@
     <collision>
       <origin xyz="0 -0.0127 0" rpy="0 0 0" />
       <geometry>
-        <box size="0.024 .0451 .0347" />
+        <box size="0.024 0.0451 0.0347" />
       </geometry>
     </collision>
     <visual>
       <origin xyz="0 -0.0127 0" rpy="0 0 0" />
       <geometry>
-        <box size="0.024 .0451 .0347" />
+        <box size="0.024 0.0451 0.0347" />
       </geometry>
       <material name="Grey">
         <color rgba="0.5 0.5 0.5 1.0"/>
@@ -872,13 +872,13 @@
     <collision>
       <origin xyz="0 -0.002 0" rpy="0 0 0" />
       <geometry>
-        <box size="0.024 .0451 .0347" />
+        <box size="0.024 0.0451 0.0347" />
       </geometry>
     </collision>
     <visual>
       <origin xyz="0 -0.002 0" rpy="0 0 0" />
       <geometry>
-        <box size="0.024 .0451 .0347" />
+        <box size="0.024 0.0451 0.0347" />
       </geometry>
       <material name="Grey">
         <color rgba="0.5 0.5 0.5 1.0"/>
@@ -902,9 +902,9 @@
   </joint>
   <link name="foot_4">
     <collision>
-      <origin xyz="0 0.031 0" rpy="1.5707963267948966 0 0" />
+      <origin xyz="0 0.0406 0" rpy="1.5707963267948966 0 0" />
       <geometry>
-        <box size="0.024 0.040 0.0993" />
+        <box size="0.024 0.040 0.08" />
       </geometry>
     </collision>
     <visual>
@@ -966,13 +966,13 @@
     <collision>
       <origin xyz="0 -0.002 0" rpy="0 0 0" />
       <geometry>
-        <box size="0.024 .0451 .0347" />
+        <box size="0.024 0.0451 0.0347" />
       </geometry>
     </collision>
     <visual>
       <origin xyz="0 -0.002 0" rpy="0 0 0" />
       <geometry>
-        <box size="0.024 .0451 .0347" />
+        <box size="0.024 0.0451 0.0347" />
       </geometry>
       <material name="Grey">
         <color rgba="0.5 0.5 0.5 1.0"/>
@@ -992,13 +992,13 @@
     <axis xyz="0 0 1" />
     <dynamics damping="0" friction="0" /> <!-- TODO -->
     <!-- Herkulex : 361.4°/s i.e. 6.308rad/s, 12kg.cm i.e. 1.18Nm -->
-    <limit effort="1.18" velocity="6.308" lower="-1.57" upper="1.57" /> <!-- TODO -->
+    <limit effort="1.18" velocity="6.308" lower="-0.46" upper="0.46" /> <!-- TODO -->
   </joint>
   <link name="joint_5">
     <collision>
       <origin xyz="0.02432 0 0" rpy="0 0 0" />
       <geometry>
-        <box size="0.073 0.040 0.040" />
+        <box size="0.025 0.040 0.040" />
       </geometry>
     </collision>
     <visual>
@@ -1029,13 +1029,13 @@
     <collision>
       <origin xyz="0 -0.0127 0" rpy="0 0 0" />
       <geometry>
-        <box size="0.024 .0451 .0347" />
+        <box size="0.024 0.0451 0.0347" />
       </geometry>
     </collision>
     <visual>
       <origin xyz="0 -0.0127 0" rpy="0 0 0" />
       <geometry>
-        <box size="0.024 .0451 .0347" />
+        <box size="0.024 0.0451 0.0347" />
       </geometry>
       <material name="Grey">
         <color rgba="0.5 0.5 0.5 1.0"/>
@@ -1057,13 +1057,13 @@
     <collision>
       <origin xyz="0 -0.002 0" rpy="0 0 0" />
       <geometry>
-        <box size="0.024 .0451 .0347" />
+        <box size="0.024 0.0451 0.0347" />
       </geometry>
     </collision>
     <visual>
       <origin xyz="0 -0.002 0" rpy="0 0 0" />
       <geometry>
-        <box size="0.024 .0451 .0347" />
+        <box size="0.024 0.0451 0.0347" />
       </geometry>
       <material name="Grey">
         <color rgba="0.5 0.5 0.5 1.0"/>
@@ -1087,9 +1087,9 @@
   </joint>
   <link name="foot_5">
     <collision>
-      <origin xyz="0 0.031 0" rpy="1.5707963267948966 0 0" />
+      <origin xyz="0 0.0406 0" rpy="1.5707963267948966 0 0" />
       <geometry>
-        <box size="0.024 0.040 0.0993" />
+        <box size="0.024 0.040 0.08" />
       </geometry>
     </collision>
     <visual>

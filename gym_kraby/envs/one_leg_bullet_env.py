@@ -49,8 +49,8 @@ class OneLegBulletEnv(gym.Env):
 
         # Load robot
         flags = p.URDF_USE_SELF_COLLISION | p.URDF_USE_INERTIA_FROM_FILE
-        #flags |= p.URDF_MERGE_FIXED_LINKS  # only pybullet>2.89
-        #flags |= p.URDF_IGNORE_VISUAL_SHAPES  # see collision shapes
+        #flags |= p.URDF_MERGE_FIXED_LINKS  # pybullet>2.89
+        #flags |= p.URDF_IGNORE_VISUAL_SHAPES  # pybullet>2.89, see collisions
         with importlib.resources.path("gym_kraby", "data") as path:
             self.robot_id = p.loadURDF(str(path / 'one_leg.urdf'), flags=flags,
                                        useFixedBase=True)
@@ -75,13 +75,13 @@ class OneLegBulletEnv(gym.Env):
 
     def step(self, action):
         # Update servomotors
-        transformed_action = [k * np.pi/2 for k in action]
+        transformed_action = action * np.array([0.46, 1.57, 1.57])
         # setJointMotorControlArray do not support maxVelocity
         # Use a small margin (0.99) to keep it in range of -1, 1
         for i in range(len(self.joint_list)):
             p.setJointMotorControl2(bodyIndex=self.robot_id,
                                     jointIndex=self.joint_list[i],
-                                    controlMode=p.POSITION_CONTROL,
+                                    controlMode=p.POSITION_CONTROL,  # TODO SPEED_CONTROL
                                     targetPosition=transformed_action[i],
                                     force=self.servo_max_torque,
                                     maxVelocity=self.servo_max_speed)

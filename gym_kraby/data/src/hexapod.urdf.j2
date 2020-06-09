@@ -14,13 +14,13 @@
   <!-- Leg {{ i }} -->
   {{- joint_fixed('box', 'servomotor_' ~ (3*i), 0.092225*cos(pi/4*(i-1)), 0.092225*sin(pi/4*(i-1)), 0.2041193, 0, 0, 0.78539*(i-1)) }}
   {{- servomotor('servomotor_' ~ (3*i), 0, 0, 0) }}
-  {{- joint_servomotor(3*i, 'servomotor_' ~ (3*i), 'joint_' ~ i, 0, 0.011, 0, 0, 0, 0, '0 0 1') }}
+  {{- joint_servomotor(3*i, 'servomotor_' ~ (3*i), 'joint_' ~ i, 0, 0.011, 0, 0, 0, 0, '0 0 1', 0.46) }}
   {{- joint('joint_' ~ i) }}
-  {{- joint_servomotor(3*i+1, 'joint_' ~ i, 'servomotor_' ~ (3*i+1), 0.049, 0, 0, pi/2, -pi/4, 0, '0 0 1') }}
+  {{- joint_servomotor(3*i+1, 'joint_' ~ i, 'servomotor_' ~ (3*i+1), 0.049, 0, 0, pi/2, -pi/4, 0, '0 0 1', 1.57) }}
   {{- servomotor('servomotor_' ~ (3*i+1), 0, -0.0107, 0) }}
   {{- joint_fixed('servomotor_' ~ (3*i+1), 'servomotor_' ~ (3*i+2), 0, -0.0495, 0, 0, 0, pi) }}
   {{- servomotor('servomotor_' ~ (3*i+2), 0, 0, 0) }}
-  {{- joint_servomotor(3*i+2, 'servomotor_' ~ (3*i+2), 'foot_' ~ i, 0, 0.0107, 0, 0, 0, -pi/4, '0 0 1') }}
+  {{- joint_servomotor(3*i+2, 'servomotor_' ~ (3*i+2), 'foot_' ~ i, 0, 0.0107, 0, 0, 0, -pi/4, '0 0 1', 1.57) }}
   {{- foot('foot_' ~ i, 0, 0.031, 0, pi/2, 0, 0) }}
   {{- joint_fixed('foot_' ~ i, 'endcap_' ~ i, 0, 0.088, 0, 0, 0, 0) }}
   {{- endcap('endcap_' ~ i) }}
@@ -30,13 +30,13 @@
   <!-- Leg {{ i }} -->
   {{- joint_fixed('box', 'servomotor_' ~ (3*i), -0.092225*cos(pi/4*(i-4)), -0.092225*sin(pi/4*(i-4)), 0.2041193, 0, 0, 0.78539*(i-4)) }}
   {{- servomotor('servomotor_' ~ (3*i), 0, 0, 0) }}
-  {{- joint_servomotor(3*i, 'servomotor_' ~ (3*i), 'joint_' ~ i, 0, 0.011, 0, 0, 0, pi, '0 0 1') }}
+  {{- joint_servomotor(3*i, 'servomotor_' ~ (3*i), 'joint_' ~ i, 0, 0.011, 0, 0, 0, pi, '0 0 1', 0.46) }}
   {{- joint('joint_' ~ i) }}
-  {{- joint_servomotor(3*i+1, 'joint_' ~ i, 'servomotor_' ~ (3*i+1), 0.049, 0, 0, pi/2, -pi/4, 0, '0 0 1') }}
+  {{- joint_servomotor(3*i+1, 'joint_' ~ i, 'servomotor_' ~ (3*i+1), 0.049, 0, 0, pi/2, -pi/4, 0, '0 0 1', 1.57) }}
   {{- servomotor('servomotor_' ~ (3*i+1), 0, -0.0107, 0) }}
   {{- joint_fixed('servomotor_' ~ (3*i+1), 'servomotor_' ~ (3*i+2), 0, -0.0495, 0, 0, 0, pi) }}
   {{- servomotor('servomotor_' ~ (3*i+2), 0, 0, 0) }}
-  {{- joint_servomotor(3*i+2, 'servomotor_' ~ (3*i+2), 'foot_' ~ i, 0, 0.0107, 0, 0, 0, -pi/4, '0 0 1') }}
+  {{- joint_servomotor(3*i+2, 'servomotor_' ~ (3*i+2), 'foot_' ~ i, 0, 0.0107, 0, 0, 0, -pi/4, '0 0 1', 1.57) }}
   {{- foot('foot_' ~ i, 0, 0.031, 0, pi/2, 0, 0) }}
   {{- joint_fixed('foot_' ~ i, 'endcap_' ~ i, 0, 0.088, 0, 0, 0, 0) }}
   {{- endcap('endcap_' ~ i) }}

@@ -1,4 +1,4 @@
-{% macro joint_servomotor(servo_id, parent, child, x, y, z, r, p, ya, axis) %}
+{% macro joint_servomotor(servo_id, parent, child, x, y, z, r, p, ya, axis, angle_limit) %}
   <joint name="servomotor_{{ servo_id }}" type="revolute">
     <origin xyz="{{ x }} {{ y }} {{ z }}" rpy="{{ r }} {{ p }} {{ ya }}" />
     <parent link="{{ parent }}" />
@@ -6,6 +6,6 @@
     <axis xyz="{{ axis }}" />
     <dynamics damping="0" friction="0" /> <!-- TODO -->
     <!-- Herkulex : 361.4°/s i.e. 6.308rad/s, 12kg.cm i.e. 1.18Nm -->
-    <limit effort="1.18" velocity="6.308" lower="-1.57" upper="1.57" /> <!-- TODO -->
+    <limit effort="1.18" velocity="6.308" lower="-{{ angle_limit }}" upper="{{ angle_limit }}" /> <!-- TODO -->
   </joint>
 {%- endmacro %}

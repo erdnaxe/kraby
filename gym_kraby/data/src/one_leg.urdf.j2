@@ -13,13 +13,13 @@
   <!-- One Leg -->
   {{- joint_fixed('box', 'servomotor_' ~ 0, 0.092225, 0, 0.2041193, 0, 0, 0) }}
   {{- servomotor('servomotor_' ~ 0, 0, 0, 0) }}
-  {{- joint_servomotor(0, 'servomotor_' ~ 0, 'joint_' ~ 0, 0, 0.011, 0, 0, 0, 0, '0 0 1') }}
+  {{- joint_servomotor(0, 'servomotor_' ~ 0, 'joint_' ~ 0, 0, 0.011, 0, 0, 0, 0, '0 0 1', 0.46) }}
   {{- joint('joint_' ~ 0) }}
-  {{- joint_servomotor(1, 'joint_' ~ 0, 'servomotor_' ~ 1, 0.049, 0, 0, pi/2, -pi/4, 0, '0 0 1') }}
+  {{- joint_servomotor(1, 'joint_' ~ 0, 'servomotor_' ~ 1, 0.049, 0, 0, pi/2, -pi/4, 0, '0 0 1', 1.57) }}
   {{- servomotor('servomotor_' ~ 1, 0, -0.0107, 0) }}
   {{- joint_fixed('servomotor_' ~ 1, 'servomotor_' ~ 2, 0, -0.0495, 0, 0, 0, pi) }}
   {{- servomotor('servomotor_' ~ 2, 0, 0, 0) }}
-  {{- joint_servomotor(2, 'servomotor_' ~ 2, 'foot_' ~ 0, 0, 0.0107, 0, 0, 0, -pi/4, '0 0 1') }}
+  {{- joint_servomotor(2, 'servomotor_' ~ 2, 'foot_' ~ 0, 0, 0.0107, 0, 0, 0, -pi/4, '0 0 1', 1.57) }}
   {{- foot('foot_' ~ 0, 0, 0.031, 0, pi/2, 0, 0) }}
   {{- joint_fixed('foot_' ~ 0, 'endcap_' ~ 0, 0, 0.088, 0, 0, 0, 0) }}
   {{- endcap('endcap_' ~ 0) }}
