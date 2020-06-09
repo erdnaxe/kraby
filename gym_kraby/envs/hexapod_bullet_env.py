@@ -82,8 +82,8 @@ class HexapodBulletEnv(gym.Env):
                                     jointIndex=self.joint_list[i],
                                     controlMode=p.POSITION_CONTROL,
                                     targetPosition=transformed_action[i],
-                                    force=self.servo_max_torque*0.99,
-                                    maxVelocity=self.servo_max_speed*0.99)
+                                    force=self.servo_max_torque,
+                                    maxVelocity=self.servo_max_speed)
 
         # Step simulation
         p.stepSimulation()
@@ -141,6 +141,9 @@ class HexapodBulletEnv(gym.Env):
                 vel / self.servo_max_speed,
                 tor / self.servo_max_torque
             ]
+
+        # Sometimes 1.0 is greater than 1
+        observation = np.clip(observation, -1., 1.)
 
         # Robot position and orientation
         pos, ori = p.getBasePositionAndOrientation(self.robot_id)
