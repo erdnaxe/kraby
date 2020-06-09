@@ -30,7 +30,7 @@
 
   <!-- One Leg -->
   <joint name="fixed_box_servomotor_0" type="fixed">
-    <origin xyz="0.06521292289492935 -0.06521292289492935 0.2041193" rpy="0 0 -0.78539" />
+    <origin xyz="0.092225 0 0.2041193" rpy="0 0 0" />
     <parent link="box" />
     <child link="servomotor_0" />
   </joint>

@@ -52,7 +52,8 @@ class OneLegBulletEnv(gym.Env):
         #flags |= p.URDF_MERGE_FIXED_LINKS  # only pybullet>2.89
         #flags |= p.URDF_IGNORE_VISUAL_SHAPES  # see collision shapes
         with importlib.resources.path("gym_kraby", "data") as path:
-            self.robot_id = p.loadURDF(str(path / 'one_leg.urdf'), flags=flags)
+            self.robot_id = p.loadURDF(str(path / 'one_leg.urdf'), flags=flags,
+                                       useFixedBase=True)
 
         # Get all motorized joints id and name (which are revolute joints)
         self.joint_list = [j for j in range(p.getNumJoints(self.robot_id))
