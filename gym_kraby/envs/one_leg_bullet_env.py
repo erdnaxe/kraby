@@ -59,7 +59,13 @@ class OneLegBulletEnv(gym.Env):
         self.joint_list = [j for j in range(p.getNumJoints(self.robot_id))
                            if p.getJointInfo(self.robot_id, j)[2] == p.JOINT_REVOLUTE]
 
+        # Reset all joint using normal distribution
+        m = np.pi/4
+        for j in self.joint_list:
+            p.resetJointState(self.robot_id, j, np.random.uniform(low=-m, high=m))
+
         # Add torque sensor on servomotors
+        # TODO: it might be deeply useless
         for j in self.joint_list:
             p.enableJointForceTorqueSensor(self.robot_id, j)
 
@@ -99,6 +105,12 @@ class OneLegBulletEnv(gym.Env):
         OpenAIClose environment
         """
         p.disconnect()
+
+    def seed(self, seed=None):
+        """
+        Sets the seed for this env's random number generator
+        """
+        np.random.seed(seed)
 
     def _get_reward(self):
         """

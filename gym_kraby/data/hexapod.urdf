@@ -208,6 +208,7 @@
       <inertia ixx="0.0" ixy="0.0" ixz="0.0" iyy="0.0" iyz="0.0" izz="0.0" />
     </inertial>
     <contact>
+      <lateral_friction value="1.0"/> <!-- TODO -->
       <stiffness value="30000"/> <!-- TODO -->
       <damping value="1000"/> <!-- TODO -->
     </contact>
@@ -392,6 +393,7 @@
       <inertia ixx="0.0" ixy="0.0" ixz="0.0" iyy="0.0" iyz="0.0" izz="0.0" />
     </inertial>
     <contact>
+      <lateral_friction value="1.0"/> <!-- TODO -->
       <stiffness value="30000"/> <!-- TODO -->
       <damping value="1000"/> <!-- TODO -->
     </contact>
@@ -576,6 +578,7 @@
       <inertia ixx="0.0" ixy="0.0" ixz="0.0" iyy="0.0" iyz="0.0" izz="0.0" />
     </inertial>
     <contact>
+      <lateral_friction value="1.0"/> <!-- TODO -->
       <stiffness value="30000"/> <!-- TODO -->
       <damping value="1000"/> <!-- TODO -->
     </contact>
@@ -762,6 +765,7 @@
       <inertia ixx="0.0" ixy="0.0" ixz="0.0" iyy="0.0" iyz="0.0" izz="0.0" />
     </inertial>
     <contact>
+      <lateral_friction value="1.0"/> <!-- TODO -->
       <stiffness value="30000"/> <!-- TODO -->
       <damping value="1000"/> <!-- TODO -->
     </contact>
@@ -946,6 +950,7 @@
       <inertia ixx="0.0" ixy="0.0" ixz="0.0" iyy="0.0" iyz="0.0" izz="0.0" />
     </inertial>
     <contact>
+      <lateral_friction value="1.0"/> <!-- TODO -->
       <stiffness value="30000"/> <!-- TODO -->
       <damping value="1000"/> <!-- TODO -->
     </contact>
@@ -1130,6 +1135,7 @@
       <inertia ixx="0.0" ixy="0.0" ixz="0.0" iyy="0.0" iyz="0.0" izz="0.0" />
     </inertial>
     <contact>
+      <lateral_friction value="1.0"/> <!-- TODO -->
       <stiffness value="30000"/> <!-- TODO -->
       <damping value="1000"/> <!-- TODO -->
     </contact>

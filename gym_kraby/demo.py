@@ -31,5 +31,5 @@ while not done:
     print("done", done)
     sleep(0.01)
 
-print("[!] Robot has fallen")
+print("[!] Env is done")
 env.close()
