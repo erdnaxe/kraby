@@ -9,7 +9,7 @@ from pybullet_data import getDataPath
 
 class HexapodBulletEnv(gym.Env):
     """
-    Hexapod simulation OpenAI Gym environnement using PyBullet
+    Hexapod OpenAI Gym environnement using PyBullet
     """
     metadata = {'render.modes': ['human']}
 
@@ -28,10 +28,14 @@ class HexapodBulletEnv(gym.Env):
                                             shape=(self.n_observation,),
                                             dtype="float32")
 
+        # Init observation space
+        self.observation = np.zeros(self.n_observation, dtype="float32")
+
         # Add pybullet_data as search path
         p.setAdditionalSearchPath(getDataPath())
 
         # Change simulation timestep
+        self.dt = time_step
         p.setTimeStep(time_step)
 
         # Some constants for normalization
@@ -63,35 +67,27 @@ class HexapodBulletEnv(gym.Env):
         for j in self.joint_list:
             p.resetJointState(self.robot_id, j, np.random.uniform(low=-m, high=m))
 
-        # Add torque sensor on servomotors
-        # TODO: it might be deeply useless
-        for j in self.joint_list:
-            p.enableJointForceTorqueSensor(self.robot_id, j)
-
         # Return observation
-        observation = self._get_observation()
-        return observation
+        self._update_observation()
+        return self.observation
 
     def step(self, action):
         # Update servomotors
-        transformed_action = action * np.array([0.46, 1.57, 1.57]*6)
-        # setJointMotorControlArray do not support maxVelocity
-        # Use a small margin (0.99) to keep it in range of -1, 1
-        for i in range(len(self.joint_list)):
-            p.setJointMotorControl2(bodyIndex=self.robot_id,
-                                    jointIndex=self.joint_list[i],
-                                    controlMode=p.POSITION_CONTROL,  # TODO SPEED_CONTROL
-                                    targetPosition=transformed_action[i],
-                                    force=self.servo_max_torque,
-                                    maxVelocity=self.servo_max_speed)
+        transformed_action = np.array(action) * self.servo_max_speed
+        max_torques = [self.servo_max_torque] * self.n_actions
+        p.setJointMotorControlArray(bodyIndex=self.robot_id,
+                                    jointIndices=self.joint_list,
+                                    controlMode=p.VELOCITY_CONTROL,
+                                    targetVelocities=transformed_action,
+                                    forces=max_torques)
 
         # Step simulation
-        p.stepSimulation()
+        p.stepSimulation()  # step self.dt
 
         # Return observation, reward and done
+        self._update_observation()
         reward, done = self._get_reward()
-        observation = self._get_observation()
-        return observation, reward, done, {}
+        return self.observation, reward, done, {}
 
     def render(self, mode='human', close=False):
         """
@@ -114,40 +110,41 @@ class HexapodBulletEnv(gym.Env):
     def _get_reward(self):
         """
         Compute reward function
+        TODO: take into account the inclinaison of base
         """
         # Has fallen?
         pos, _ = p.getBasePositionAndOrientation(self.robot_id)
         fallen = pos[-1] < 0.08
 
-        #distance_to_goal =
-        #comsuption =
+        # Distance progress toward goal
+        distance_progress = 0  # TODO
+
+        # Comsuption is speed * torque
+        comsuption = self.dt * abs(sum(self.observation[1:-6:3] * self.observation[2:-6:3]))
+        w = 0.008  # comsuption weight
 
         # Compute reward
-        reward = 0  # TODO
+        reward = distance_progress - w * comsuption
         done = fallen or False  # TODO
         return reward, done
 
-    def _get_observation(self):
+    def _update_observation(self):
         """
-        Get the observation from BulletPhysics
+        Update the observation from BulletPhysics
         """
-        observation = np.zeros(self.n_observation, dtype="float32")
-
         # Each servomotor position, speed and torque
         all_states = p.getJointStates(self.robot_id, self.joint_list)
         for i, (pos, vel, _, tor) in enumerate(all_states):
-            observation[3*i:3*i+3] = [
+            self.observation[3*i:3*i+3] = [
                 2 * pos / np.pi,
                 vel / self.servo_max_speed,
                 tor / self.servo_max_torque
             ]
 
         # Sometimes 1.0 is greater than 1
-        observation = np.clip(observation, -1., 1.)
+        self.observation = np.clip(self.observation, -1., 1.)
 
         # Robot position and orientation
         pos, ori = p.getBasePositionAndOrientation(self.robot_id)
-        observation[-6:] = list(pos) + list(p.getEulerFromQuaternion(ori))
-
-        return observation
+        self.observation[-6:] = list(pos) + list(p.getEulerFromQuaternion(ori))
 
