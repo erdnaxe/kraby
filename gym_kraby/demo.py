@@ -7,6 +7,7 @@ import argparse
 # Some settings
 parser = argparse.ArgumentParser()
 parser.add_argument("--one-leg", action="store_true")
+parser.add_argument("--random", action="store_true")
 args = parser.parse_args()
 
 # Print float in decimal format
@@ -21,15 +22,19 @@ else:
 observation = env.reset()
 done = False
 
-# Create user debug interface
-params = [p.addUserDebugParameter(p.getJointInfo(env.robot_id, j)[1].decode(), -1, 1, 0)
-          for j in env.joint_list]
+if not args.random:
+    # Create user debug interface
+    params = [p.addUserDebugParameter(p.getJointInfo(env.robot_id, j)[1].decode(), -1, 1, 0)
+              for j in env.joint_list]
 
 while not done:
-    # Read user input and simulate motor
-    a = [p.readUserDebugParameter(param) for param in params]
+    if not args.random:
+        # Read user input and simulate motor
+        a = [p.readUserDebugParameter(param) for param in params]
+    else:
+        a = env.action_space.sample()
+
     observation, reward, done, _ = env.step(a)
-    #observation, reward, done, _ = env.step(env.action_space.sample())
     print("\nobservation", observation)
     print("reward", reward)
     print("done", done)
