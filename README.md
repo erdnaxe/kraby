@@ -1,7 +1,8 @@
-[![Documentation Status](https://img.shields.io/readthedocs/kraby?style=flat-square)](https://kraby.readthedocs.io/en/latest/)
 [![License](https://img.shields.io/github/license/erdnaxe/kraby?style=flat-square)](LICENSE)
+[![Documentation Status](https://img.shields.io/readthedocs/kraby?style=flat-square)](https://kraby.readthedocs.io/en/latest/)
 [![Travis (.com)](https://img.shields.io/travis/com/erdnaxe/kraby?style=flat-square)](https://travis-ci.com/github/erdnaxe/kraby)
 [![PyPI](https://img.shields.io/pypi/v/gym_kraby?style=flat-square)](https://pypi.org/project/gym-kraby/)
+[![Codacy grade](https://img.shields.io/codacy/grade/537008118a7948f3bb3e596fcae9d4db?style=flat-square)](https://www.codacy.com/manual/erdnaxe/kraby)
 
 # Kraby
 
