@@ -6,6 +6,16 @@ register(
 )
 
 register(
+    id='HexapodRealEnv-v0',
+    entry_point='gym_kraby.envs:HexapodRealEnv',
+)
+
+register(
     id='OneLegBulletEnv-v0',
     entry_point='gym_kraby.envs:OneLegBulletEnv',
+)
+
+register(
+    id='OneLegRealEnv-v0',
+    entry_point='gym_kraby.envs:OneLegRealEnv',
 )

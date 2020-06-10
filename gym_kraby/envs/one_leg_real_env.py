@@ -1,18 +1,16 @@
-import pybullet as p
 import numpy as np
 import gym
 import importlib.resources
 from gym import error, spaces, utils
-from pybullet_data import getDataPath
 
 
-class OneLegBulletEnv(gym.Env):
+class OneLegRealEnv(gym.Env):
     """
-    One leg of Hexapod environnement using PyBullet
+    One leg of Hexapod OpenAI Gym environnement for transfer to real robot
     """
     metadata = {'render.modes': ['human']}
 
-    def __init__(self, time_step=0.01):
+    def __init__(self):
         super().__init__()
 
         # 3 actions (servomotors)
@@ -30,42 +28,24 @@ class OneLegBulletEnv(gym.Env):
         # Init observation space
         self.observation = np.zeros(self.n_observation, dtype="float32")
 
-        # Add pybullet_data as search path
-        p.setAdditionalSearchPath(getDataPath())
-
-        # Change simulation timestep
-        self.dt = time_step
-        p.setTimeStep(time_step)
+        # Change timestep according to datarate
+        self.dt = 0.01  # TODO
 
         # Some constants for normalization
         self.servo_max_speed = 6.308  # rad/s
         self.servo_max_torque = 1.57  # N.m
 
     def reset(self):
-        p.resetSimulation()
+        # TODO implement user prompt to put robot back in steady state
 
-        # Newton's apple
-        p.setGravity(0, 0, -9.81)
-
-        # Load a ground
-        p.loadURDF("plane.urdf")
-
-        # Load robot
-        flags = p.URDF_USE_SELF_COLLISION | p.URDF_USE_INERTIA_FROM_FILE
-        #flags |= p.URDF_MERGE_FIXED_LINKS  # pybullet>2.89
-        #flags |= p.URDF_IGNORE_VISUAL_SHAPES  # pybullet>2.89, see collisions
-        with importlib.resources.path("gym_kraby", "data") as path:
-            self.robot_id = p.loadURDF(str(path / 'one_leg.urdf'), flags=flags,
-                                       useFixedBase=True)
-
-        # Get all motorized joints id and name (which are revolute joints)
-        self.joint_list = [j for j in range(p.getNumJoints(self.robot_id))
-                           if p.getJointInfo(self.robot_id, j)[2] == p.JOINT_REVOLUTE]
+        # Get all motorized joints id and name (which are servomotors)
+        self.joint_list = []  # TODO
 
         # Reset all joint using normal distribution
         m = np.pi/4
         for j in self.joint_list:
-            p.resetJointState(self.robot_id, j, np.random.uniform(low=-m, high=m))
+            pass
+            # TODO move(self.robot_id, j, np.random.uniform(low=-m, high=m))
 
         # Return observation
         self._update_observation()
@@ -75,14 +55,7 @@ class OneLegBulletEnv(gym.Env):
         # Update servomotors
         transformed_action = np.array(action) * self.servo_max_speed
         max_torques = [self.servo_max_torque] * self.n_actions
-        p.setJointMotorControlArray(bodyIndex=self.robot_id,
-                                    jointIndices=self.joint_list,
-                                    controlMode=p.VELOCITY_CONTROL,
-                                    targetVelocities=transformed_action,
-                                    forces=max_torques)
-
-        # Step simulation
-        p.stepSimulation()  # step self.dt
+        # TODO send transformed_action and set max_torques
 
         # Return observation, reward and done
         self._update_observation()
@@ -91,15 +64,15 @@ class OneLegBulletEnv(gym.Env):
 
     def render(self, mode='human', close=False):
         """
-        Do nothing as PyBullet automatically renders
+        Do nothing as reality automatically renders
         """
         pass
 
     def close(self):
         """
-        OpenAIClose environment
+        Close running environment
         """
-        p.disconnect()
+        # TODO close robot connection
 
     def seed(self, seed=None):
         """
@@ -126,21 +99,11 @@ class OneLegBulletEnv(gym.Env):
 
     def _update_observation(self):
         """
-        Update the observation from BulletPhysics
+        Update the observation from sensors
         """
         # Each servomotor position, speed and torque
-        all_states = p.getJointStates(self.robot_id, self.joint_list)
-        for i, (pos, vel, _, tor) in enumerate(all_states):
-            self.observation[3*i:3*i+3] = [
-                2 * pos / np.pi,
-                vel / self.servo_max_speed,
-                tor / self.servo_max_torque
-            ]
-
-        # Sometimes 1.0 is greater than 1
-        self.observation = np.clip(self.observation, -1., 1.)
+        # TODO
 
         # Robot position and orientation
-        pos, ori = p.getBasePositionAndOrientation(self.robot_id)
-        self.observation[-6:] = list(pos) + list(p.getEulerFromQuaternion(ori))
+        # TODO
 
