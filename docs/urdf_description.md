@@ -47,17 +47,19 @@ print(f"""\n<inertia ixx="{j[0][0]:.16f}" ixy="{j[0][1]:.16f}" ixz="{j[0][2]:.16
 
 For example, this is the input and output to computer a foot inertia.
 
-    % python3 compute_inertia.py
-    Object Mass is : 0.0105
-    Mesh Volume is : 15253.618164
-    Inertia Tensor is :
-      8171479.500000 -1091.582153 858.932007
-      -1091.582153 6636559.000000 29447.435547
-      858.932007 29447.435547 2481984.750000    
+```bash
+% python3 compute_inertia.py
+Object Mass is : 0.0105
+Mesh Volume is : 15253.618164
+Inertia Tensor is :
+  8171479.500000 -1091.582153 858.932007
+  -1091.582153 6636559.000000 29447.435547
+  858.932007 29447.435547 2481984.750000    
 
-    <inertia ixx="0.0000056249300217" ixy="-0.0000000007514029"
-             ixz="0.0000000005912555" iyy="0.0000045683501941"
-             iyz="0.0000000202704742" izz="0.0000017085021793" />
+<inertia ixx="0.0000056249300217" ixy="-0.0000000007514029"
+          ixz="0.0000000005912555" iyy="0.0000045683501941"
+          iyz="0.0000000202704742" izz="0.0000017085021793" />
+```
 
 For more information, see
 <http://gazebosim.org/tutorials?tut=inertia&cat=build_robot>.
