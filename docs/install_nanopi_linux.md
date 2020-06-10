@@ -9,6 +9,7 @@ that provides an unified framework for sensors.
 Learn more about IIO on [the official Linux Kernel documentation](https://www.kernel.org/doc/html/v4.14/driver-api/iio/index.html).
 
 Install an ARM64 toolchain and download NanoPi kernel source code,
+
 ```bash
 sudo apt install build-essential gcc-aarch64-linux-gnu gcc-arm-none-eabi
 git clone https://github.com/friendlyarm/kernel-rockchip --depth 1 -b nanopi4-linux-v4.4.y
@@ -22,6 +23,7 @@ Add MPU9250 module, `make ARCH=arm64 menuconfig` then
 
 Add the MPU9250 to the board device-tree, edit `arch/arm64/boot/dts/rockchip/rk3399-nanopi4-common.dtsi`
 and change:
+
 ```C
 &i2c2 {
 	status = "okay";
@@ -48,10 +50,10 @@ and change:
 Compile with `make ARCH=arm64 nanopi4-images`.
 This will generate `kernel.img` and `resource.img` files.
 
-*Note:* you may need to change `CONFIG_CROSS_COMPILE="aarch64-linux-gnu-"` in `.config`
+_Note:_ you may need to change `CONFIG_CROSS_COMPILE="aarch64-linux-gnu-"` in `.config`
 to point to the correct cross-compilation toolchain.
 
-*Note:* you can directly update the running kernel without reflashing rootfs with
+_Note:_ you can directly update the running kernel without reflashing rootfs with
 `sudo dd if=kernel.img of=/dev/mmcblk1p5` and `sudo dd if=resource.img of=/dev/mmcblk1p4`.
 Please use with caution, you may brick your device!
 
@@ -77,12 +79,14 @@ Disable PWM Fan service, udisk, polkit, Bluetooth and ModemManager,
 Also block Bluetooth `sudo rfkill block 0`.
 
 Edit `/etc/rc.local` to:
+
 ```bash
 #!/bin/sh -e
 exit 0
 ```
 
 Add Hotspot WiFi network,
+
 ```bash
 sudo nmcli dev wifi hotspot ifname wlan0 ssid Hexapod password "tfpopcorns"
 sudo nmcli connection modify Hotspot autoconnect yes
@@ -92,7 +96,7 @@ sudo nmcli connection up Hotspot
 Reboot and connect to WiFi "Hexapod" with password "tfpopcorns",
 then `ssh pi@10.42.0.1`.
 
-*Note:* you can plug wired Internet access
+_Note:_ you can plug wired Internet access
 and NetworkManager will automatically use and share this connection.
 
 ## Test the MPU9250
@@ -101,6 +105,7 @@ The iio kernel driver makes the MPU9250 available in
 `/sys/bus/iio/devices/iio:device1` and `/dev/iio:device1`.
 
 You can get the X-axis acceleration with
+
 ```bash
 cat "/sys/bus/iio/devices/iio:device1/in_accel_x_raw"
 ```

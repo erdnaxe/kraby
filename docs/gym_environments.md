@@ -3,16 +3,17 @@
 The [gym_kraby](https://pypi.org/project/gym-kraby/) Python package includes
 four OpenAI Gym environments:
 
-  * `gym_kraby:HexapodBulletEnv-v0`: simulate full robot with BulletPhysics,
+-   `gym_kraby:HexapodBulletEnv-v0`: simulate full robot with BulletPhysics,
 
-  * `gym_kraby:HexapodRealEnv-v0`: command the full real robot,
+-   `gym_kraby:HexapodRealEnv-v0`: command the full real robot,
 
-  * `gym_kraby:OneLegBulletEnv-v0`: simulate only one leg of the robot with
+-   `gym_kraby:OneLegBulletEnv-v0`: simulate only one leg of the robot with
     BulletPhysics,
 
-  * `gym_kraby:OneLegRealEnv-v0`: command only one leg of the robot.
+-   `gym_kraby:OneLegRealEnv-v0`: command only one leg of the robot.
 
 You may install and test those environments by running in a Python environment:
+
 ```bash
 pip install gym-kraby
 python -m gym_kraby.demo --help

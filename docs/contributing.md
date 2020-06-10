@@ -4,8 +4,8 @@ This project project welcomes, and depends,
 on contributions from developers and users in the open source community.
 Contributions can be made in a number of ways, a few examples are:
 
-  * Design, simulation and documentation improvements via [pull requests](https://github.com/erdnaxe/kraby/pulls),
-  * Bug reports and patch reviews.
+-   Design, simulation and documentation improvements via [pull requests](https://github.com/erdnaxe/kraby/pulls),
+-   Bug reports and patch reviews.
 
 ![Hexapod trying to climb](img/hexapod_devinci.jpg)
 
@@ -26,4 +26,3 @@ Once you are happy with your changes or you are ready for some feedback,
 push it to your fork and send a pull request.
 For a change to be accepted it will most likely need to have documentation
 if it is a new feature.
-

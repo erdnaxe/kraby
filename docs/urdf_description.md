@@ -7,7 +7,7 @@ by the Robotic Operating System project (ROS).
 Kraby URDF description is available at
 <https://github.com/erdnaxe/kraby/blob/master/gym_kraby/data/hexapod.urdf>.
 
----
+* * *
 
 ## Editing and building the URDF
 
@@ -18,15 +18,15 @@ You may edit files under
 then execute
 [gym_kraby/data/generate_urdf.py](https://github.com/erdnaxe/kraby/tree/master/gym_kraby/data).
 
-[^xacro]: [Xacro](http://wiki.ros.org/xacro) could also be an option, but it
+[^xacro]&#x3A; [Xacro](http://wiki.ros.org/xacro) could also be an option, but it
 requires to install the ROS toolchain.
 
----
+* * *
 
 ## Computing 3d-printed part inertia
 
 [Meshlab](http://www.meshlab.net/) is able to compute a inertia tensor from
-a STL file with the "*Compute Geometric Measures*" filter.
+a STL file with the "_Compute Geometric Measures_" filter.
 Nevertheless the STL is in millimeter and Meshlab implies a density of 1.
 The following Python script is able to take MeshLab output and print the
 corresponding inertia URDF tag.
@@ -47,19 +47,17 @@ print(f"""\n<inertia ixx="{j[0][0]:.16f}" ixy="{j[0][1]:.16f}" ixz="{j[0][2]:.16
 
 For example, this is the input and output to computer a foot inertia.
 
-```
-% python3 compute_inertia.py
-Object Mass is : 0.0105
-Mesh Volume is : 15253.618164
-Inertia Tensor is :
-  8171479.500000 -1091.582153 858.932007
-  -1091.582153 6636559.000000 29447.435547
-  858.932007 29447.435547 2481984.750000    
+    % python3 compute_inertia.py
+    Object Mass is : 0.0105
+    Mesh Volume is : 15253.618164
+    Inertia Tensor is :
+      8171479.500000 -1091.582153 858.932007
+      -1091.582153 6636559.000000 29447.435547
+      858.932007 29447.435547 2481984.750000    
 
-<inertia ixx="0.0000056249300217" ixy="-0.0000000007514029"
-         ixz="0.0000000005912555" iyy="0.0000045683501941"
-         iyz="0.0000000202704742" izz="0.0000017085021793" />
-```
+    <inertia ixx="0.0000056249300217" ixy="-0.0000000007514029"
+             ixz="0.0000000005912555" iyy="0.0000045683501941"
+             iyz="0.0000000202704742" izz="0.0000017085021793" />
 
 For more information, see
 <http://gazebosim.org/tutorials?tut=inertia&cat=build_robot>.

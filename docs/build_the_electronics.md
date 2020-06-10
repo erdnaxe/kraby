@@ -4,14 +4,14 @@ PCB were designed using Eagle 9, which demo version is sufficient.
 PCB design files are available here :
 <https://github.com/erdnaxe/kraby/tree/master/printed_circuit_boards>.
 
-  * `printed_circuit_boards/nanopi_shield` is a shield that connects on NanoPi
+-   `printed_circuit_boards/nanopi_shield` is a shield that connects on NanoPi
     Neo4 expansion header and provides headers for UART, I2C and 5v power.
-  * `printed_circuit_boards/power_board` is a power distribution board
+-   `printed_circuit_boards/power_board` is a power distribution board
     and connects all servomotors to one UART bus.
 
 ![Boards](img/boards.png)
 
----
+* * *
 
 ## Battery
 
@@ -36,12 +36,11 @@ and then connect onto the large battery connector of the power board.
 
 The embedded computer requires a 5 V DC voltage and can draw up to 3 A
 peak current.
-We choose *Texas Instrument LM2596* Buck regulator as breakout boards exist and are simple to
+We choose _Texas Instrument LM2596_ Buck regulator as breakout boards exist and are simple to
 use.
 
----
+* * *
 
 ## How to wire it up
 
 ![Connection diagram](img/how_to_connect.jpg)
-

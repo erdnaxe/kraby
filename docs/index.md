@@ -4,7 +4,7 @@ Open-source hexapod robot.
 
 ![Hexapod robot top view](img/hexapod_top.jpg)
 
----
+* * *
 
 ## Overview
 
@@ -39,7 +39,7 @@ An [OpenAI Gym](https://gym.openai.com/) environment is available.
 It uses [BulletPhysics](https://github.com/bulletphysics/bullet3) simulator
 with [an URDF description](https://github.com/erdnaxe/kraby/blob/master/gym_kraby/data/hexapod.urdf) of the robot.
 
----
+* * *
 
 ## Build instructions
 
@@ -47,7 +47,7 @@ To build a fully featured robot you will need to
 [build the structure](build_the_structure)
 then [build the electronics](build_the_electronics).
 
----
+* * *
 
 ## Getting help
 
