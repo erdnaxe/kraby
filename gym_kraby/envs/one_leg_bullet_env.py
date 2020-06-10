@@ -11,7 +11,7 @@ class OneLegBulletEnv(gym.Env):
     """One leg Hexapod environnement using PyBullet"""
     metadata = {'render.modes': ['human']}
 
-    def __init__(self, time_step=0.01, render=False):
+    def __init__(self, time_step=0.01, render=False, max_step=1000):
         """Init environment"""
         super().__init__()
 
@@ -42,9 +42,11 @@ class OneLegBulletEnv(gym.Env):
         # Add pybullet_data as search path
         p.setAdditionalSearchPath(getDataPath())
 
-        # Change simulation timestep
+        # Simulation timestep and max step
         self.dt = time_step
         p.setTimeStep(time_step)
+        self.counting_step = 0
+        self.max_step = max_step
 
         # Some constants for normalization
         self.servo_max_speed = 6.308  # rad/s
@@ -59,6 +61,7 @@ class OneLegBulletEnv(gym.Env):
 
     def reset(self):
         p.resetSimulation()
+        self.counting_step = 0
 
         # Newton's apple
         p.setGravity(0, 0, -9.81)
@@ -98,6 +101,7 @@ class OneLegBulletEnv(gym.Env):
                                     forces=max_torques)
 
         # Step simulation
+        self.counting_step += 1
         p.stepSimulation()  # step self.dt
         if self.render:
             sleep(self.dt)  # realtime
@@ -117,6 +121,7 @@ class OneLegBulletEnv(gym.Env):
         """
         Close running environment
         """
+        # TODO: buggy in multithreaded tranning
         p.disconnect()
 
     def seed(self, seed=None):
@@ -143,7 +148,7 @@ class OneLegBulletEnv(gym.Env):
 
         # Compute reward
         reward = distance_progress - w * comsuption
-        done = goal_distance < 0.001  # done if <1mm of target
+        done = self.counting_step > self.max_step
         return reward, done
 
     def _update_observation(self):

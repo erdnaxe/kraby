@@ -11,7 +11,7 @@ class HexapodBulletEnv(gym.Env):
     """Hexapod environnement using PyBullet"""
     metadata = {'render.modes': ['human']}
 
-    def __init__(self, time_step=0.01, render=False):
+    def __init__(self, time_step=0.01, render=False, max_step=1000):
         """Init environment"""
         super().__init__()
 
@@ -42,16 +42,26 @@ class HexapodBulletEnv(gym.Env):
         # Add pybullet_data as search path
         p.setAdditionalSearchPath(getDataPath())
 
-        # Change simulation timestep
+        # Simulation timestep and max step
         self.dt = time_step
         p.setTimeStep(time_step)
+        self.counting_step = 0
+        self.max_step = max_step
 
         # Some constants for normalization
         self.servo_max_speed = 6.308  # rad/s
         self.servo_max_torque = 1.57  # N.m
 
+        # Goal and last distance
+        self.goal_position = [0.264, 0.016, 0.285]
+        self.last_goal_distance = None
+
+        # Seed random number generator
+        self.seed()
+
     def reset(self):
         p.resetSimulation()
+        self.counting_step = 0
 
         # Newton's apple
         p.setGravity(0, 0, -9.81)
@@ -90,6 +100,7 @@ class HexapodBulletEnv(gym.Env):
                                     forces=max_torques)
 
         # Step simulation
+        self.counting_step += 1
         p.stepSimulation()  # step self.dt
         if self.render:
             sleep(self.dt)  # realtime
@@ -109,6 +120,7 @@ class HexapodBulletEnv(gym.Env):
         """
         Close running environment
         """
+        # TODO: buggy in multithreaded tranning
         p.disconnect()
 
     def seed(self, seed=None):
@@ -126,7 +138,12 @@ class HexapodBulletEnv(gym.Env):
         fallen = self.observation[-4] < 0.08
 
         # Distance progress toward goal
-        distance_progress = 0  # TODO
+        goal_distance = np.linalg.norm(self.observation[-6:-3] - self.goal_position)
+        if self.last_goal_distance is None:
+            distance_progress = 0
+        else:
+            distance_progress = self.last_goal_distance - goal_distance
+        self.last_goal_distance = goal_distance
 
         # Comsuption is speed * torque
         comsuption = self.dt * abs(sum(self.observation[1:-6:3] * self.observation[2:-6:3]))
@@ -134,7 +151,7 @@ class HexapodBulletEnv(gym.Env):
 
         # Compute reward
         reward = distance_progress - w * comsuption
-        done = fallen or False  # TODO
+        done = fallen or self.counting_step > self.max_step
         return reward, done
 
     def _update_observation(self):
