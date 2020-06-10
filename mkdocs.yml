@@ -14,6 +14,7 @@ nav:
       - Use the servomotors: use_motors.md
   - Simulation:
       - URDF description: urdf_description.md
+      - OpenAI Gym environments: gym_environments.md
   - About:
       - Contributing: contributing.md
       - License: license.md

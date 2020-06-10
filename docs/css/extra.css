@@ -1,3 +1,16 @@
 .icon-home {
     content: url("../img/logo.png");
 }
+
+.wy-side-nav-search {
+    background-color: #6db8ce;
+}
+
+.wy-side-nav-search > a:hover {
+    background: none;
+}
+
+.toctree-l1 > .caption-text {
+    text-transform: uppercase;
+    margin-top: 1em;
+}
