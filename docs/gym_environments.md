@@ -29,18 +29,14 @@ You may use these environments as any other OpenAI Gym
 PyBullet environment:
 
 ```Python
-import pybullet as p
 import gym
-from time import sleep
 
-p.connect(p.GUI)
-env = gym.make('gym_kraby:HexapodBulletEnv-v0')
+env = gym.make('gym_kraby:HexapodBulletEnv-v0', render=True)
 observation = env.reset()
 
 for _ in range(10000):
     a = env.action_space.sample()
     observation, reward, done, _ = env.step(a)
-    sleep(env.dt)  # Realtime
 
 env.close()
 ```

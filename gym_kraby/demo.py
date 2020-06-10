@@ -1,16 +1,16 @@
 import gym
-from time import sleep
 import numpy as np
 import argparse
 
 
 def play(env_name: str, manual_control: bool):
     # Make environment
-    env = gym.make(env_name)
+    env = gym.make(env_name, render=True)
     observation = env.reset()
 
     if manual_control:
         # Create user debug interface
+        import pybullet as p
         params = [p.addUserDebugParameter(p.getJointInfo(env.robot_id, j)[1].decode(), -1, 1, 0)
                   for j in env.joint_list]
 
@@ -33,9 +33,6 @@ def play(env_name: str, manual_control: bool):
         if done:
             observation = env.reset()
             reward_sum = 0
-
-        # Realtime
-        sleep(env.dt)
 
     env.close()
 
@@ -67,12 +64,6 @@ if __name__ == "__main__":
     model = 'OneLeg' if args.one_leg else 'Hexapod'
     variant = 'Real' if args.real else 'Bullet'
     env_name = 'gym_kraby:' + model + variant + 'Env-v0'
-
-    # Connect to BulletPhysics GUI if required
-    # can be DIRECT if no user inputs
-    if not args.real:
-        import pybullet as p
-        p.connect(p.GUI)
 
     # Play environment
     play(env_name, not args.random)

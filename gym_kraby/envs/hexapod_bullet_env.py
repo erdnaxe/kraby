@@ -4,15 +4,25 @@ import gym
 import importlib.resources
 from gym import spaces
 from pybullet_data import getDataPath
+from time import sleep
 
 
 class HexapodBulletEnv(gym.Env):
     """Hexapod environnement using PyBullet"""
     metadata = {'render.modes': ['human']}
 
-    def __init__(self, time_step=0.01):
+    def __init__(self, time_step=0.01, render=False):
         """Init environment"""
         super().__init__()
+
+        # Init PyBullet in GUI or DIRECT mode
+        self.render = render
+        if self.render:
+            cid = p.connect(p.SHARED_MEMORY)
+            if (cid < 0):
+                cid = p.connect(p.GUI)
+        else:
+            p.connect(p.DIRECT)
 
         # 18 actions (servomotors)
         self.n_actions = 18
@@ -81,6 +91,8 @@ class HexapodBulletEnv(gym.Env):
 
         # Step simulation
         p.stepSimulation()  # step self.dt
+        if self.render:
+            sleep(self.dt)  # realtime
 
         # Return observation, reward and done
         self._update_observation()
