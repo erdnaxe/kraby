@@ -60,4 +60,3 @@ with IMUConnection("10.42.0.1", "mpu6050") as imu:
 
 *Note:* You may install the documentation with the `libiio0-doc` package
 and explore it by opening `/usr/share/doc/libiio0-doc/html` in a web browser.
-

@@ -16,4 +16,3 @@ Then edit `/etc/ser2net.conf` and replace the last lines with
 ```
 
 Now, you may restart the service with `sudo systemctl restart ser2net`.
-

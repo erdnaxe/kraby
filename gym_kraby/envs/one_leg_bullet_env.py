@@ -2,17 +2,16 @@ import pybullet as p
 import numpy as np
 import gym
 import importlib.resources
-from gym import error, spaces, utils
+from gym import spaces
 from pybullet_data import getDataPath
 
 
 class OneLegBulletEnv(gym.Env):
-    """
-    One leg of Hexapod environnement using PyBullet
-    """
+    """One leg Hexapod environnement using PyBullet"""
     metadata = {'render.modes': ['human']}
 
     def __init__(self, time_step=0.01):
+        """Init environment"""
         super().__init__()
 
         # 3 actions (servomotors)
@@ -101,7 +100,7 @@ class OneLegBulletEnv(gym.Env):
 
     def close(self):
         """
-        OpenAIClose environment
+        Close running environment
         """
         p.disconnect()
 

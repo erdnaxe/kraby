@@ -29,7 +29,7 @@ def play(env_name: str, manual_control: bool):
         print("total reward", reward_sum)
         print("done", done)
 
-        # Reset when done    
+        # Reset when done
         if done:
             observation = env.reset()
             reward_sum = 0
@@ -61,7 +61,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     # Print float in decimal format
-    np.set_printoptions(formatter={'float': lambda x: "{0:6.3f}".format(x)})
+    np.set_printoptions(formatter={'float': "{0:6.3f}".format})
 
     # Select corresponding environment
     model = 'OneLeg' if args.one_leg else 'Hexapod'

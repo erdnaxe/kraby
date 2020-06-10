@@ -54,4 +54,3 @@ then [build the electronics](build_the_electronics).
 To get help with Kraby,
 please join [#kraby:auro.re](https://matrix.to/#/#kraby:auro.re) Matrix room or
 use [GitHub issues](https://github.com/erdnaxe/kraby/issues).
-

@@ -1,16 +1,14 @@
 import numpy as np
 import gym
-import importlib.resources
-from gym import error, spaces, utils
+from gym import spaces
 
 
 class HexapodRealEnv(gym.Env):
-    """
-    Hexapod OpenAI Gym environnement for transfer to real robot
-    """
+    """Hexapod environnement for transfer to real robot"""
     metadata = {'render.modes': ['human']}
 
     def __init__(self):
+        """Init environment"""
         super().__init__()
 
         # 18 actions (servomotors)

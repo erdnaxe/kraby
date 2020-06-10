@@ -2,17 +2,16 @@ import pybullet as p
 import numpy as np
 import gym
 import importlib.resources
-from gym import error, spaces, utils
+from gym import spaces
 from pybullet_data import getDataPath
 
 
 class HexapodBulletEnv(gym.Env):
-    """
-    Hexapod OpenAI Gym environnement using PyBullet
-    """
+    """Hexapod environnement using PyBullet"""
     metadata = {'render.modes': ['human']}
 
     def __init__(self, time_step=0.01):
+        """Init environment"""
         super().__init__()
 
         # 18 actions (servomotors)
@@ -96,7 +95,7 @@ class HexapodBulletEnv(gym.Env):
 
     def close(self):
         """
-        OpenAIClose environment
+        Close running environment
         """
         p.disconnect()
 

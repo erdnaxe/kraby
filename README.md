@@ -21,9 +21,8 @@ Install `mkdocs` then run `mkdocs serve`.
 
 ## Install OpenAI environment
 
-```
-cd kraby
-pip install -e . --user
+```bash
+pip install gym_kraby --user
 python -m gym_kraby.demo
 ```
 

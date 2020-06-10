@@ -61,8 +61,5 @@ Inertia Tensor is :
          iyz="0.0000000202704742" izz="0.0000017085021793" />
 ```
 
-
 For more information, see
 <http://gazebosim.org/tutorials?tut=inertia&cat=build_robot>.
-
-

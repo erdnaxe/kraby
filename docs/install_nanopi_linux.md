@@ -55,7 +55,7 @@ to point to the correct cross-compilation toolchain.
 `sudo dd if=kernel.img of=/dev/mmcblk1p5` and `sudo dd if=resource.img of=/dev/mmcblk1p4`.
 Please use with caution, you may brick your device!
 
-# Install modified FriendlyCore
+## Install modified FriendlyCore
 
 FriendlyCore uses an overlay filesystem, so removing software such as xorg after the flashing is useless.
 
@@ -95,7 +95,7 @@ then `ssh pi@10.42.0.1`.
 *Note:* you can plug wired Internet access
 and NetworkManager will automatically use and share this connection.
 
-# Test the MPU9250
+## Test the MPU9250
 
 The iio kernel driver makes the MPU9250 available in
 `/sys/bus/iio/devices/iio:device1` and `/dev/iio:device1`.
@@ -114,4 +114,3 @@ hexdump -C /dev/iio\:device1
 ```
 
 ![X accelerometer streaming](img/iio_stream_axis.png)
-
