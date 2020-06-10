@@ -35,6 +35,10 @@ class OneLegRealEnv(gym.Env):
         self.servo_max_speed = 6.308  # rad/s
         self.servo_max_torque = 1.57  # N.m
 
+        # Goal and last distance
+        self.goal_position = [0.264, 0.016, 0.285]
+        self.last_goal_distance = None
+
     def reset(self):
         # TODO implement user prompt to put robot back in steady state
 
@@ -83,10 +87,14 @@ class OneLegRealEnv(gym.Env):
     def _get_reward(self):
         """
         Compute reward function
-        TODO: take into account the inclinaison of base
         """
         # Distance progress toward goal
-        distance_progress = 0  # TODO
+        goal_distance = np.linalg.norm(self.observation[-6:-3] - self.goal_position)
+        if self.last_goal_distance is None:
+            distance_progress = 0
+        else:
+            distance_progress = self.last_goal_distance - goal_distance
+        self.last_goal_distance = goal_distance
 
         # Comsuption is speed * torque
         comsuption = self.dt * abs(sum(self.observation[1:-6:3] * self.observation[2:-6:3]))
@@ -94,7 +102,7 @@ class OneLegRealEnv(gym.Env):
 
         # Compute reward
         reward = distance_progress - w * comsuption
-        done = False  # TODO
+        done = goal_distance < 0.001  # done if <1mm of target
         return reward, done
 
     def _update_observation(self):

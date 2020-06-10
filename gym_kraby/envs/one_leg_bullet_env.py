@@ -41,6 +41,10 @@ class OneLegBulletEnv(gym.Env):
         self.servo_max_speed = 6.308  # rad/s
         self.servo_max_torque = 1.57  # N.m
 
+        # Goal and last distance
+        self.goal_position = [0.264, 0.016, 0.285]
+        self.last_goal_distance = None
+
     def reset(self):
         p.resetSimulation()
 
@@ -110,10 +114,14 @@ class OneLegBulletEnv(gym.Env):
     def _get_reward(self):
         """
         Compute reward function
-        TODO: take into account the inclinaison of base
         """
         # Distance progress toward goal
-        distance_progress = 0  # TODO
+        goal_distance = np.linalg.norm(self.observation[-6:-3] - self.goal_position)
+        if self.last_goal_distance is None:
+            distance_progress = 0
+        else:
+            distance_progress = self.last_goal_distance - goal_distance
+        self.last_goal_distance = goal_distance
 
         # Comsuption is speed * torque
         comsuption = self.dt * abs(sum(self.observation[1:-6:3] * self.observation[2:-6:3]))
@@ -121,7 +129,7 @@ class OneLegBulletEnv(gym.Env):
 
         # Compute reward
         reward = distance_progress - w * comsuption
-        done = False  # TODO
+        done = goal_distance < 0.001  # done if <1mm of target
         return reward, done
 
     def _update_observation(self):
@@ -140,7 +148,8 @@ class OneLegBulletEnv(gym.Env):
         # Sometimes 1.0 is greater than 1
         self.observation = np.clip(self.observation, -1., 1.)
 
-        # Robot position and orientation
-        pos, ori = p.getBasePositionAndOrientation(self.robot_id)
+        # Endcap position and orientation
+        endcap_id = 5
+        pos, ori, _, _, _, _ = p.getLinkState(self.robot_id, endcap_id)
         self.observation[-6:] = list(pos) + list(p.getEulerFromQuaternion(ori))
 
