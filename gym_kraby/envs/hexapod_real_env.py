@@ -90,7 +90,9 @@ class HexapodRealEnv(gym.Env):
         distance_progress = 0  # TODO
 
         # Comsuption is speed * torque
-        comsuption = self.dt * abs(sum(self.observation[1:-6:3] * self.observation[2:-6:3]))
+        speeds = self.observation[1:-6:3]
+        torques = self.observation[2:-6:3]
+        comsuption = self.dt * abs(sum(speeds * torques))
         w = 0.008  # comsuption weight
 
         # Compute reward

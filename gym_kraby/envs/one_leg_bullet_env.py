@@ -11,7 +11,7 @@ class OneLegBulletEnv(gym.Env):
     """One leg Hexapod environnement using PyBullet"""
     metadata = {'render.modes': ['human']}
 
-    def __init__(self, time_step=0.01, render=False, max_step=1000):
+    def __init__(self, time_step=0.01, render=False, max_step=200):
         """Init environment"""
         super().__init__()
 
@@ -140,8 +140,10 @@ class OneLegBulletEnv(gym.Env):
         goal_distance = np.linalg.norm(self.observation[-6:-3] - self.goal_position)
 
         # Comsuption is speed * torque
-        comsuption = self.dt * abs(sum(self.observation[1:-6:3] * self.observation[2:-6:3]))
-        w = 0  # comsuption weight, 0 to disable
+        speeds = self.observation[1:-6:3]
+        torques = self.observation[2:-6:3]
+        comsuption = self.dt * abs(sum(speeds * torques))
+        w = 0.008  # comsuption weight
 
         # Compute reward
         reward = -goal_distance - w * comsuption
@@ -168,4 +170,3 @@ class OneLegBulletEnv(gym.Env):
         endcap_id = 5
         pos, ori, _, _, _, _ = p.getLinkState(self.robot_id, endcap_id)
         self.observation[-6:] = list(pos) + list(p.getEulerFromQuaternion(ori))
-

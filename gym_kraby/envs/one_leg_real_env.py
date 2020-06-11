@@ -88,18 +88,15 @@ class OneLegRealEnv(gym.Env):
         """
         # Distance progress toward goal
         goal_distance = np.linalg.norm(self.observation[-6:-3] - self.goal_position)
-        if self.last_goal_distance is None:
-            distance_progress = 0
-        else:
-            distance_progress = self.last_goal_distance - goal_distance
-        self.last_goal_distance = goal_distance
 
         # Comsuption is speed * torque
-        comsuption = self.dt * abs(sum(self.observation[1:-6:3] * self.observation[2:-6:3]))
+        speeds = self.observation[1:-6:3]
+        torques = self.observation[2:-6:3]
+        comsuption = self.dt * abs(sum(speeds * torques))
         w = 0.008  # comsuption weight
 
         # Compute reward
-        reward = distance_progress - w * comsuption
+        reward = -goal_distance - w * comsuption
         done = goal_distance < 0.001  # done if <1mm of target
         return reward, done
 

@@ -143,7 +143,9 @@ class HexapodBulletEnv(gym.Env):
         goal_distance = np.linalg.norm(self.observation[-6:-3] - self.goal_position)
 
         # Comsuption is speed * torque
-        comsuption = self.dt * abs(sum(self.observation[1:-6:3] * self.observation[2:-6:3]))
+        speeds = self.observation[1:-6:3]
+        torques = self.observation[2:-6:3]
+        comsuption = self.dt * abs(sum(speeds * torques))
         w = 0.008  # comsuption weight
 
         # Compute reward
@@ -170,4 +172,3 @@ class HexapodBulletEnv(gym.Env):
         # Robot position and orientation
         pos, ori = p.getBasePositionAndOrientation(self.robot_id)
         self.observation[-6:] = list(pos) + list(p.getEulerFromQuaternion(ori))
-
