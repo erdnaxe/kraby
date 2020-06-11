@@ -18,8 +18,10 @@ class OneLegBulletEnv(gym.Env):
         # Init PyBullet in GUI or DIRECT mode
         self.render = render
         if self.render:
+            # Try to connect to PyBullet render server
             cid = p.connect(p.SHARED_MEMORY)
             if (cid < 0):
+                # Fail to connect, so launch a new server
                 cid = p.connect(p.GUI)
         else:
             p.connect(p.DIRECT)
@@ -52,9 +54,8 @@ class OneLegBulletEnv(gym.Env):
         self.servo_max_speed = 6.308  # rad/s
         self.servo_max_torque = 1.57  # N.m
 
-        # Goal and last distance
+        # Goal
         self.goal_position = [0.264, 0.016, 0.285]
-        self.last_goal_distance = None
 
         # Seed random number generator
         self.seed()
@@ -113,16 +114,17 @@ class OneLegBulletEnv(gym.Env):
 
     def render(self, mode='human', close=False):
         """
+        Render environment
         Do nothing as PyBullet automatically renders
         """
         pass
 
     def close(self):
         """
-        Close running environment
+        Close environment
+        Do nothing as PyBullet automatically closes
         """
-        # TODO: buggy in multithreaded tranning
-        p.disconnect()
+        pass
 
     def seed(self, seed=None):
         """
@@ -136,18 +138,13 @@ class OneLegBulletEnv(gym.Env):
         """
         # Distance progress toward goal
         goal_distance = np.linalg.norm(self.observation[-6:-3] - self.goal_position)
-        if self.last_goal_distance is None:
-            distance_progress = 0
-        else:
-            distance_progress = self.last_goal_distance - goal_distance
-        self.last_goal_distance = goal_distance
 
         # Comsuption is speed * torque
         comsuption = self.dt * abs(sum(self.observation[1:-6:3] * self.observation[2:-6:3]))
-        w = 0.008  # comsuption weight
+        w = 0  # comsuption weight, 0 to disable
 
         # Compute reward
-        reward = distance_progress - w * comsuption
+        reward = -goal_distance - w * comsuption
         done = self.counting_step > self.max_step
         return reward, done
 
