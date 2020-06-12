@@ -55,7 +55,7 @@ class OneLegBulletEnv(gym.Env):
         self.servo_max_torque = 1.57  # N.m
 
         # Goal
-        self.goal_position = [0.264, 0.016, 0.285]
+        self.goal_position = np.array([0.264, 0.016, 0.285])
 
         # Seed random number generator
         self.seed()
@@ -86,6 +86,13 @@ class OneLegBulletEnv(gym.Env):
         m = np.pi/4
         for j in self.joint_list:
             p.resetJointState(self.robot_id, j, np.random.uniform(low=-m, high=m))
+
+        # Show goal as a crosshair
+        if self.render:
+            p.addUserDebugLine(self.goal_position - [0, 0, 0.01],
+                            self.goal_position + [0, 0, 0.01], [0, 0, 0], 2)
+            p.addUserDebugLine(self.goal_position - [0, 0.01, 0],
+                            self.goal_position + [0, 0.01, 0], [0, 0, 0], 2)
 
         # Return observation
         self._update_observation()
