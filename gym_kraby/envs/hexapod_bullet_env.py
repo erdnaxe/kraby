@@ -55,7 +55,7 @@ class HexapodBulletEnv(gym.Env):
         self.servo_max_torque = 1.57  # N.m
 
         # Goal
-        self.goal_position = np.array([0.264, 0.016, 0.285])
+        self.goal_position = np.array([1., 0., 0.1])
 
         # Seed random number generator
         self.seed()
@@ -156,7 +156,10 @@ class HexapodBulletEnv(gym.Env):
         w = 0.008  # comsuption weight
 
         # Compute reward
-        reward = -goal_distance - w * comsuption
+        # +200 to keep it positiv,
+        # else the agent will learn how to end the episode quickly
+        # 200 > max_comsuption + max_distance
+        reward = 200 - goal_distance - w * comsuption
         done = fallen or self.counting_step > self.max_step
         return reward, done
 
