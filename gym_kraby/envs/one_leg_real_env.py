@@ -1,15 +1,17 @@
 import numpy as np
 import gym
 from gym import spaces
+from ..utils.herkulex_socket import HerkulexSocket
 
 
 class OneLegRealEnv(gym.Env):
     """One leg Hexapod environnement for transfer to real robot"""
     metadata = {'render.modes': ['human']}
 
-    def __init__(self):
+    def __init__(self, max_step=200):
         """Init environment"""
         super().__init__()
+        self.servomotors = HerkulexSocket()
 
         # 3 actions (servomotors)
         self.n_actions = 3
@@ -29,25 +31,19 @@ class OneLegRealEnv(gym.Env):
         # Change timestep according to datarate
         self.dt = 0.01  # TODO
 
+        # Environment max step
+        self.counting_step = 0
+        self.max_step = max_step
+
         # Some constants for normalization
         self.servo_max_speed = 6.308  # rad/s
         self.servo_max_torque = 1.57  # N.m
 
-        # Goal and last distance
-        self.goal_position = [0.264, 0.016, 0.285]
-        self.last_goal_distance = None
+        # Goal
+        self.goal_position = np.array([1., 0., 0.1])
 
     def reset(self):
-        # TODO implement user prompt to put robot back in steady state
-
-        # Get all motorized joints id and name (which are servomotors)
-        self.joint_list = []  # TODO
-
-        # Reset all joint using normal distribution
-        m = np.pi/4
-        for j in self.joint_list:
-            pass
-            # TODO move(self.robot_id, j, np.random.uniform(low=-m, high=m))
+        self.servomotors.reset()
 
         # Return observation
         self._update_observation()
@@ -66,6 +62,7 @@ class OneLegRealEnv(gym.Env):
 
     def render(self, mode='human', close=False):
         """
+        Render environment
         Do nothing as reality automatically renders
         """
         pass
@@ -97,7 +94,7 @@ class OneLegRealEnv(gym.Env):
 
         # Compute reward
         reward = -goal_distance - w * comsuption
-        done = goal_distance < 0.001  # done if <1mm of target
+        done = self.counting_step > self.max_step
         return reward, done
 
     def _update_observation(self):
@@ -105,7 +102,7 @@ class OneLegRealEnv(gym.Env):
         Update the observation from sensors
         """
         # Each servomotor position, speed and torque
-        # TODO
+        positions, speeds = self.servomotors.get_observations()
 
         # Robot position and orientation
         # TODO
