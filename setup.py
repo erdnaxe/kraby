@@ -27,7 +27,8 @@ setup(
     },
     include_package_data=True,
     use_scm_version = {
-        "local_scheme": "no-local-version"
+        "local_scheme": "no-local-version",
+        "fallback_version": "0.0.1",
     },
     setup_requires=['setuptools_scm'],
     classifiers=[
