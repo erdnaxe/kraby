@@ -4,7 +4,7 @@
 
 This section details how to use
 [pytorch-a2c-ppo-acktr-gail](https://github.com/ikostrikov/pytorch-a2c-ppo-acktr-gail)
-PPO implementation.
+PPO implementation with PyTorch.
 
 The defaults hyperparameters given in the
 [README](https://github.com/ikostrikov/pytorch-a2c-ppo-acktr-gail/blob/master/README.md)
@@ -97,8 +97,40 @@ index f67f055..da50bde 100644
 +        pass #render_func('human')
 ```
 
+Then launch a demo with:
+
+```bash
+python enjoy.py --load-dir trained_models/ppo --env-name "gym_kraby:OneLegBulletEnv-v0"
+```
+
 You may also use
 [visualize.ipynb](https://github.com/ikostrikov/pytorch-a2c-ppo-acktr-gail/blob/master/visualize.ipynb)
 to plot the average episode reward by the step (with standard deviation of this average).
 
 ![Training results](img/training_one_leg_pytorch-a2c-ppo-acktr-gail.png)
+
+## With StableBaselines
+
+As StableBaselines current stable version supports only Tensorflow 1,
+you may use Docker to isolate the requirements.
+More detailed instructions are available at
+[Tensorflow documentation](https://www.tensorflow.org/install/docker).
+Install `docker` and `nvidia-container-toolkit`,
+restart `docker` daemon then run:
+
+```bash
+docker pull stablebaselines/stable-baselines
+git clone https://github.com/hill-a/stable-baselines -b v2.10.0
+cd stable-baselines
+docker run -it --gpus all --rm -v $(pwd):/root/code/stable-baselines \
+    stablebaselines/stable-baselines:v2.10.0 \
+    bash -c "cd /root/code/stable-baselines/ && pytest tests/"  # test
+```
+
+Then you may start a Jupyter Notebook environment
+as your user and with GPU support with:
+
+```bash
+docker build . -t kraby
+docker run -it -u $(id -u):$(id -g) --gpus all --rm -v $(pwd):/tf/kraby kraby
+```
