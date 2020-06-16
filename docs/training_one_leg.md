@@ -132,5 +132,7 @@ as your user and with GPU support with:
 
 ```bash
 docker build . -t kraby
-docker run -it -u $(id -u):$(id -g) --gpus all --rm -v $(pwd):/tf/kraby kraby
+docker run -it -u $(id -u):$(id -g) --gpus all --rm -v $(pwd):/tf/kraby -p 8888:8888 kraby
 ```
+
+Some notebooks are available in `kraby/notebooks/`.

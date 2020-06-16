@@ -21,16 +21,17 @@ setup(
         'pybullet',
     ],
     packages=['gym_kraby'],
-    package_data = {
+    package_data={
         # Include URDF and associated STL
         'gym_kraby': ['data/*.urdf', 'data/meshes/*.stl'],
     },
     include_package_data=True,
-    use_scm_version = {
+    use_scm_version={
         "local_scheme": "no-local-version",
         "fallback_version": "0.0.1",
     },
     setup_requires=['setuptools_scm'],
+    extras_require={':python_version<"3.7"': ['importlib-resources']},
     classifiers=[
         'Programming Language :: Python',
         'Programming Language :: Python :: 3.8',

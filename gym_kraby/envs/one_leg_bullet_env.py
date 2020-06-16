@@ -1,10 +1,14 @@
 import pybullet as p
 import numpy as np
 import gym
-import importlib.resources
 from gym import spaces
 from pybullet_data import getDataPath
 from time import sleep
+try:
+    import importlib.resources as pkg_resources
+except ImportError:
+    # backported to python<3.7
+    import importlib_resources as pkg_resources
 
 
 class OneLegBulletEnv(gym.Env):
@@ -74,7 +78,7 @@ class OneLegBulletEnv(gym.Env):
         flags = p.URDF_USE_SELF_COLLISION | p.URDF_USE_INERTIA_FROM_FILE
         #flags |= p.URDF_MERGE_FIXED_LINKS  # pybullet>2.89
         #flags |= p.URDF_IGNORE_VISUAL_SHAPES  # pybullet>2.89, see collisions
-        with importlib.resources.path("gym_kraby", "data") as path:
+        with pkg_resources.path("gym_kraby", "data") as path:
             self.robot_id = p.loadURDF(str(path / 'one_leg.urdf'), flags=flags,
                                        useFixedBase=True)
 
@@ -177,3 +181,4 @@ class OneLegBulletEnv(gym.Env):
         endcap_id = 5
         pos, ori, _, _, _, _ = p.getLinkState(self.robot_id, endcap_id)
         self.observation[-6:] = list(pos) + list(p.getEulerFromQuaternion(ori))
+        self.observation[-3:] /= np.pi  # normalization
