@@ -131,8 +131,25 @@ Then you may start a Jupyter Notebook environment
 as your user and with GPU support with:
 
 ```bash
-docker build . -t kraby
-docker run -it -u $(id -u):$(id -g) --gpus all --rm -v $(pwd):/tf/kraby -p 8888:8888 kraby
+docker build -f Dockerfile.stablebaselines -t kraby-stablebaselines .
+docker run -it -u $(id -u):$(id -g) --gpus all --rm \
+    -v $(pwd):/tf/kraby -p 8888:8888 kraby-stablebaselines
 ```
 
-Some notebooks are available in `kraby/notebooks/`.
+Some notebooks are available in `kraby/notebooks/stablebaselines/`.
+
+## With OpenAI Spinning Up and PyTorch
+
+For an easier setup you may use Docker to isolate the requirements.
+Install `docker` and `nvidia-container-toolkit`,
+restart `docker` daemon then start a Jupyter Notebook environment
+as your user and with GPU support by running in repository folder:
+
+```bash
+docker build -f Dockerfile.spinningup -t kraby-spinningup .
+docker run -it -u $(id -u):$(id -g) --gpus all --rm \
+    -v $(pwd):/workdir -p 8888:8888 kraby-spinningup
+```
+
+Some notebooks are available in `kraby/notebooks/spinningup/`.
+

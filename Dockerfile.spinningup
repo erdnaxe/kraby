@@ -1,0 +1,36 @@
+# Build a docker image containing:
+# * PyTorch with Cuda support
+# * OpenAI Spinning Up
+# * Kraby Gym environments
+# * Jupyter Notebook
+
+FROM pytorch/pytorch:1.3-cuda10.1-cudnn7-runtime
+
+# Install Git and OpenMPI
+RUN apt-get update && \
+    apt-get install -y git libopenmpi-dev && \
+    rm -rf /var/lib/apt/lists/*
+
+# Install requirements
+RUN pip install cloudpickle==1.2.1 gym[atari,box2d,classic_control]~=0.15.3 ipython joblib matplotlib==3.1.1 mpi4py numpy pandas pytest psutil scipy seaborn==0.8.1 tqdm
+
+# Install OpenAI Spinning Up
+RUN git clone --depth=1 https://github.com/openai/spinningup.git /opt/spinningup && \
+    cd /opt/spinningup && \
+    pip install . --no-deps && \
+    rm -rfv /opt/spinningup
+
+# Install Jupyter Notebook
+RUN pip install --no-cache-dir jupyter matplotlib
+# Pin ipykernel and nbformat; see https://github.com/ipython/ipykernel/issues/422
+RUN pip install --no-cache-dir ipykernel==5.1.1 nbformat==4.4.0
+RUN mkdir /.local && chmod a+rwx /.local
+
+# Copy and install gym_kraby
+WORKDIR /workdir
+COPY . /workdir
+RUN pip install -e .
+
+# Launch Jupyter Notebook by default on :8888
+EXPOSE 8888
+CMD jupyter notebook --ip 0.0.0.0 --no-browser --notebook-dir=/workdir/notebooks/spinningup
