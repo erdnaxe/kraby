@@ -147,8 +147,9 @@ as your user and with GPU support by running in repository folder:
 
 ```bash
 docker build -f Dockerfile.spinningup -t kraby-spinningup .
-docker run -it -u $(id -u):$(id -g) --gpus all --rm \
-    -v $(pwd):/workdir -p 8888:8888 kraby-spinningup
+docker run -it -u $(id -u):$(id -g) --gpus all --ipc=host --rm \
+    -v $(pwd):/workdir -v $(pwd)/spinningup_data:/opt/spinningup/data \
+    -p 8888:8888 kraby-spinningup
 ```
 
 Some notebooks are available in `kraby/notebooks/spinningup/`.
