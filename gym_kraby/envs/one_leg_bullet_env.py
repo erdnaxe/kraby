@@ -148,7 +148,7 @@ class OneLegBulletEnv(gym.Env):
         Compute reward function
         """
         # Distance progress toward goal
-        goal_distance = np.linalg.norm(self.observation[-6:-3] - self.goal_position)
+        goal_distance = np.linalg.norm(self.observation[-6:-3] - self.goal_position)**2
 
         # Comsuption is speed * torque
         speeds = self.observation[1:-6:3]

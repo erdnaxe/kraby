@@ -8,7 +8,7 @@ class HexapodRealEnv(gym.Env):
     """Hexapod environnement for transfer to real robot"""
     metadata = {'render.modes': ['human']}
 
-    def __init__(self, max_step=1000):
+    def __init__(self, max_step=1000, render=False):
         """Init environment"""
         super().__init__()
         self.servomotors = HerkulexSocket()
@@ -88,7 +88,7 @@ class HexapodRealEnv(gym.Env):
         fallen = self.observation[-4] < 0.08
 
         # Distance progress toward goal
-        goal_distance = np.linalg.norm(self.observation[-6:-3] - self.goal_position)
+        goal_distance = np.linalg.norm(self.observation[-6:-3] - self.goal_position)**2
 
         # Comsuption is speed * torque
         speeds = self.observation[1:-6:3]
