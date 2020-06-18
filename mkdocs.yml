@@ -15,6 +15,7 @@ nav:
   - Simulation:
       - URDF description: urdf_description.md
       - OpenAI Gym environments: gym_environments.md
+      - Using different implementations of PPO: implementations_ppo.md
       - Traning one leg: training_one_leg.md
   - About:
       - Contributing: contributing.md
