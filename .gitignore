@@ -15,3 +15,5 @@ dist
 
 # Training logs
 tensorboard_log
+trained_models
+video

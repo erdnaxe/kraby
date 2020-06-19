@@ -4,9 +4,13 @@
 
 FROM tensorflow/tensorflow:1.15.2-gpu-py3-jupyter
 RUN apt-get update && \
-    apt-get install -y libsm6 libxext6 libxrender-dev cmake zlib1g-dev && \
+    apt-get install -y libsm6 libxext6 libxrender-dev cmake zlib1g-dev ffmpeg && \
     rm -rf /var/lib/apt/lists/*
-RUN pip install gym stable-baselines
+RUN pip install gym stable-baselines imageio
 WORKDIR /tf/kraby
 COPY . /tf/kraby
 RUN pip install -e .
+
+# Launch Jupyter Notebook by default on :8888
+EXPOSE 8888
+CMD jupyter notebook --ip 0.0.0.0 --no-browser --notebook-dir=/tf/kraby/notebooks/stablebaselines

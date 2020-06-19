@@ -112,7 +112,8 @@ to plot the average episode reward by the step (with standard deviation of this 
 ## With StableBaselines
 
 Start StableBaselines Docker as explained in [previous page](implementations_ppo.md).
-Then in Jupyter web interface go to `kraby/notebooks/stablebaselines/`.
+Then in Jupyter web interface,
 
 -   `check_env.ipynb` will check that OpenAI Gym environments are working as expected,
--   `one_leg_training.ipynb` is an example of PPO training on one leg.
+-   `one_leg_training.ipynb` is an example of PPO training on one leg,
+-   `render.ipynb` will render the agent to a MP4 video or a GIF.
