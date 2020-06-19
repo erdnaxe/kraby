@@ -1,10 +1,37 @@
 # Send and receive data from motors
 
-The two printed circuit boards connect all
-Herkulex DRS-0101 on NanoPi serial port `/dev/ttyS4`.
+The NanoPi NEO4 has five 3.3V UART that can go up to 1.5 Mbauds/s.
+Two of these UART are used by the gigabit Ethernet controler
+and one is used by the Bluetooth[^nanopi_wiki].
+
+The [printed circuit boards](build_the_electronics.md) connect all
+Herkulex DRS-0101 on NanoPi serial port `/dev/ttyS4` (UART4, 40-pin, GPIO1).
+The debug UART (UART2, 8-pin, GPIO3) is unused.
+
+## Initial set-up
+
+To make everything go smoothly, you need to set each servomotors identifier
+and make sure they are communicating at 115 200 bauds/s.
+This can be done manually by connecting one servomotor at a time.
+You may want to use a software like
+[Herkulex Manager](http://hovis.co.kr/guide/herkulex_manager_eng.html)
+to ease this process.
+
+This indexing is the same in the URDF
+and offers an easier way
+to transfer a simulated control agent to the real robot.
+
+![servomotors id](img/servomotors_id.jpg)
+
+The Herkulex DRS-0101 are able to communicate in serie as fast as 0.667 Mbauds/s.
+
+<!-- TODO Test herkulex at that speed -->
+
+## Server-side
 
 To ease development, `ser2net` can be used to publish
-this TTY to a TCP socket.
+this serial port to a TCP socket.
+Then, this TCP socket can be used one the same network, on a computer connected to the robot or locally.
 
 ```bash
 sudo apt install ser2net
@@ -17,4 +44,34 @@ Then edit `/etc/ser2net.conf` and replace the last lines with
 2000:raw:600:/dev/ttyS4:115200 8DATABITS NONE 1STOPBIT
 ```
 
+This will publish `/dev/ttyS4` with a baudrate of 115 200 baud/s,
+and some common serial configuration to `0.0.0.0:2000`.
+
 Now, you may restart the service with `sudo systemctl restart ser2net`.
+
+**Notice**: if you improperly disconnect the socket too many times,
+then you may need to restart `ser2net` service to clean up dead sockets.
+
+It is also possible to use `socat` or `netcat` to achieve the same result,
+but you may have to write a Systemd service unit and make sure that the
+connection persist after ending an instance.
+
+## Client-side
+
+A client implementation is available at
+<https://github.com/erdnaxe/kraby/blob/master/gym_kraby/utils/herkulex_socket.py>.
+
+This client is able to control the robot and get positions,
+velocities and speeds from all servomotors.
+
+### How slow is it?
+
+The biggest bottleneck in this implementation is the data collecting.
+All servomotors need to be manually pulled one at a time to get all positions,
+velocities and torques.
+This takes approximatively between 100 and 140 ms at 115 200 bauds/s.
+
+For the command it is much faster as it can be done using only one
+`S_JOG` packet.
+
+[^nanopi_wiki]: "[NanoPi NEO4.](http://wiki.friendlyarm.com/wiki/index.php/NanoPi_NEO4)" FriendlyARM Wiki. October 2019.
