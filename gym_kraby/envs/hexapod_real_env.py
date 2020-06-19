@@ -12,7 +12,10 @@ class HexapodRealEnv(HexapodBulletEnv):
         """Init environment
         """
         super().__init__(time_step, max_step, render)
-        self.servomotors = HerkulexSocket()
+        self.servomotors = HerkulexSocket(
+            max_velocity=6.308,  # rad/s
+            max_torque=1.57,  # N.m
+        )
 
     def reset(self):
         """Override reset to reset servomotors
@@ -30,13 +33,7 @@ class HexapodRealEnv(HexapodBulletEnv):
         """Override to get observation from real sensors
         """
         # Each servomotor position, speed and torque
-        all_states = self.servomotors.get_observations()
-        for i, (pos, vel, _, tor) in enumerate(all_states):
-            self.observation[3*i:3*i+3] = [
-                2 * pos / np.pi,
-                vel / self.servo_max_speed,
-                tor / self.servo_max_torque
-            ]
+        self.observation[0:3*18] = self.servomotors.get_observations()
 
         # Sometimes 1.0 is greater than 1
         self.observation = np.clip(self.observation, -1., 1.)

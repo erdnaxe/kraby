@@ -1,4 +1,5 @@
 import socket
+import numpy as np
 from time import sleep
 
 
@@ -12,13 +13,15 @@ class HerkulexSocket:
         30, 256-46, 46,
     ]
 
-    def __init__(self, ip="10.42.0.1", port=2000):
+    def __init__(self, max_velocity, max_torque, ip="10.42.0.1", port=2000):
         """Initialize Herkulex class
 
         Args:
             ip (str): Control socket IP.
             port (int): Control socket port.
         """
+        self.max_velocity = max_velocity
+        self.max_torque = max_torque
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.socket.connect((ip, port))
 
@@ -97,25 +100,20 @@ class HerkulexSocket:
         Returns:
             array: Observations.
         """
-        # TODO: read from 58 to 65 in one shot
-        # pos_calibrated, pos_raw, speed, torque
+        self.servo_obs = np.zeros(3*18, dtype="float32")
 
-        # Get positions from RAM
-        positions = [0] * 18
-        pos_ram_addr = 60 if raw else 58
         for i in range(18):
-            ret = self.send(0x04, [pos_ram_addr, 0x02], i, len_ack=13)
-            raw_pos = ret[9] + ((ret[10] & 0x3) << 8)
-            positions[i] = raw_pos * 18.621  # to radian
+            # Read 8 bytes from 58 to 65 in RAM, then normalize
+            ret = self.send(0x04, [58, 8], i, len_ack=19)
+            if raw:
+                pos = (ret[11] + ((ret[12] & 0x3) << 8)) * 0.0036224 - 2
+            else:
+                pos = (ret[9] + ((ret[10] & 0x3) << 8)) * 0.0036224 - 2
+            velocity = (ret[13] + ((ret[14] & 0x3) << 8)) * 0.5077 / self.max_velocity
+            torque = (ret[15] + ((ret[16] & 0x3) << 8))  / self.max_torque
+            self.servo_obs[i*3:i*3+3] = [pos, velocity, torque]
 
-        # Get speeds from RAM
-        speeds = [0] * 18
-        for i in range(18):
-            ret = self.send(0x04, [62, 0x02], i, len_ack=13)
-            raw_speed = ret[9] + ((ret[10] & 0x3) << 8)
-            speeds[i] = raw_speed * 1.9696  # to rad/s
-
-        return positions, speeds
+        return self.servo_obs
 
     def set_eeprom(self):
         """Initial configuration
