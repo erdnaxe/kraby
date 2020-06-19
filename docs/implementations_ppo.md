@@ -26,19 +26,8 @@ you may use Docker to isolate the requirements.
 More detailed instructions are available at
 [Tensorflow documentation](https://www.tensorflow.org/install/docker).
 Install `docker` and `nvidia-container-toolkit`,
-restart `docker` daemon then run:
-
-```bash
-docker pull stablebaselines/stable-baselines
-git clone https://github.com/hill-a/stable-baselines -b v2.10.0
-cd stable-baselines
-docker run -it --gpus all --rm -v $(pwd):/root/code/stable-baselines \
-    stablebaselines/stable-baselines:v2.10.0 \
-    bash -c "cd /root/code/stable-baselines/ && pytest tests/"  # test
-```
-
-Then you may start a Jupyter Notebook environment
-as your user and with GPU support with:
+restart `docker` daemon then start a Jupyter Notebook environment
+as your user and with GPU support by running in repository folder:
 
 ```bash
 docker build -f Dockerfile.stablebaselines -t kraby-stablebaselines .

@@ -108,3 +108,11 @@ You may also use
 to plot the average episode reward by the step (with standard deviation of this average).
 
 ![Training results](img/training_one_leg_pytorch-a2c-ppo-acktr-gail.png)
+
+## With StableBaselines
+
+Start StableBaselines Docker as explained in [previous page](implementations_ppo.md).
+Then in Jupyter web interface go to `kraby/notebooks/stablebaselines/`.
+
+-   `check_env.ipynb` will check that OpenAI Gym environments are working as expected,
+-   `one_leg_training.ipynb` is an example of PPO training on one leg.
