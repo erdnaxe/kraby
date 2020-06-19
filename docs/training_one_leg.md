@@ -59,8 +59,8 @@ tmuxp load run_all.yaml
 
 ### Enjoying results
 
-Because Kraby environments use PyBullet rendering, you need to edit `enjoy.py`
-and `a2c_ppo_acktr/envs.py`:
+Because Kraby environments use PyBullet rendering,
+you need to edit `a2c_ppo_acktr/envs.py`:
 
 ```diff
 diff --git a/a2c_ppo_acktr/envs.py b/a2c_ppo_acktr/envs.py
@@ -76,25 +76,6 @@ index 2514630..62b5abf 100755
  
          is_atari = hasattr(gym.envs, 'atari') and isinstance(
              env.unwrapped, gym.envs.atari.atari_env.AtariEnv)
-diff --git a/enjoy.py b/enjoy.py
-index f67f055..da50bde 100644
---- a/enjoy.py
-+++ b/enjoy.py
-@@ -64,7 +64,7 @@ masks = torch.zeros(1, 1)
- obs = env.reset()
- 
- if render_func is not None:
--    render_func('human')
-+    pass #render_func('human')
- 
- if args.env_name.find('Bullet') > -1:
-     import pybullet as p
-@@ -92,4 +92,4 @@ while True:
-             p.resetDebugVisualizerCamera(distance, yaw, -20, humanPos)
- 
-     if render_func is not None:
--        render_func('human')
-+        pass #render_func('human')
 ```
 
 Then launch a demo with:
