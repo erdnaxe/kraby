@@ -69,9 +69,12 @@ velocities and speeds from all servomotors.
 The biggest bottleneck in this implementation is the data collecting.
 All servomotors need to be manually pulled one at a time to get all positions,
 velocities and torques.
-This takes approximatively between 100 and 140 ms at 115 200 bauds/s.
+This takes approximatively between 100 and 140 ms at 115 200 bauds/s
+with a TCP connection over WiFi.
 
 For the command it is much faster as it can be done using only one
-`S_JOG` packet.
+`S_JOG` packet[^herkulex_manual].
 
 [^nanopi_wiki]: "[NanoPi NEO4.](http://wiki.friendlyarm.com/wiki/index.php/NanoPi_NEO4)" FriendlyARM Wiki. October 2019.
+
+[^herkulex_manual]: "[Herkulex DRS-0101/DRS-0201 User Manual.](https://www.robotshop.com/media/files/PDF/manual-drs-0101.pdf)" Version 1.00, March 2011.
