@@ -13,15 +13,18 @@ except ImportError:
 
 class OneLegBulletEnv(gym.Env):
     """One leg Hexapod environnement using PyBullet"""
-    metadata = {'render.modes': ['human']}
+    metadata = {
+        "render.modes": ["human", "rgb_array"],
+        "video.frames_per_second": 100,
+    }
 
     def __init__(self, time_step=0.01, render=False, max_step=200):
         """Init environment"""
         super().__init__()
 
         # Init PyBullet in GUI or DIRECT mode
-        self.render = render
-        if self.render:
+        self._render = render
+        if self._render:
             # Try to connect to PyBullet render server
             cid = p.connect(p.SHARED_MEMORY)
             if (cid < 0):
@@ -76,8 +79,8 @@ class OneLegBulletEnv(gym.Env):
 
         # Load robot
         flags = p.URDF_USE_SELF_COLLISION | p.URDF_USE_INERTIA_FROM_FILE
-        #flags |= p.URDF_MERGE_FIXED_LINKS  # pybullet>2.89
-        #flags |= p.URDF_IGNORE_VISUAL_SHAPES  # pybullet>2.89, see collisions
+        # flags |= p.URDF_MERGE_FIXED_LINKS  # pybullet>2.89
+        # flags |= p.URDF_IGNORE_VISUAL_SHAPES  # pybullet>2.89, see collisions
         with pkg_resources.path("gym_kraby", "data") as path:
             self.robot_id = p.loadURDF(str(path / 'one_leg.urdf'), flags=flags,
                                        useFixedBase=True)
@@ -89,14 +92,16 @@ class OneLegBulletEnv(gym.Env):
         # Reset all joint using normal distribution
         m = np.pi/4
         for j in self.joint_list:
-            p.resetJointState(self.robot_id, j, np.random.uniform(low=-m, high=m))
+            p.resetJointState(self.robot_id, j,
+                              np.random.uniform(low=-m, high=m))
 
         # Show goal as a crosshair
-        if self.render:
-            p.addUserDebugLine(self.goal_position - [0, 0, 0.01],
-                            self.goal_position + [0, 0, 0.01], [0, 0, 0], 2)
-            p.addUserDebugLine(self.goal_position - [0, 0.01, 0],
-                            self.goal_position + [0, 0.01, 0], [0, 0, 0], 2)
+        p.addUserDebugLine(self.goal_position - [0, 0, 0.01],
+                           self.goal_position + [0, 0, 0.01],
+                           [0, 0, 0], 2)
+        p.addUserDebugLine(self.goal_position - [0, 0.01, 0],
+                           self.goal_position + [0, 0.01, 0],
+                           [0, 0, 0], 2)
 
         # Return observation
         self._update_observation()
@@ -115,7 +120,7 @@ class OneLegBulletEnv(gym.Env):
         # Step simulation
         self.counting_step += 1
         p.stepSimulation()  # step self.dt
-        if self.render:
+        if self._render:
             sleep(self.dt)  # realtime
 
         # Return observation, reward and done
@@ -123,12 +128,46 @@ class OneLegBulletEnv(gym.Env):
         reward, done = self._get_reward()
         return self.observation, reward, done, {}
 
-    def render(self, mode='human', close=False):
+    def render(self, mode='human'):
+        """Render environment
+
+        PyBullet GUI can be disabled in favour of manual RGB rendering
+
+        Args:
+            mode (str, optional): Render mode. Defaults to 'human'.
+
+        Returns:
+            np.ndarray: data array
         """
-        Render environment
-        Do nothing as PyBullet automatically renders
-        """
-        pass
+
+        # If not asking for a RGB array, return nothing
+        if mode != "rgb_array":
+            return np.array([])
+
+        view_matrix = p.computeViewMatrixFromYawPitchRoll(
+            cameraTargetPosition=[0, 0, 0.05],
+            distance=0.6,
+            yaw=30,
+            pitch=-30,
+            roll=0,
+            upAxisIndex=2,
+        )
+        proj_matrix = p.computeProjectionMatrixFOV(
+            fov=60,
+            aspect=960./720,
+            nearVal=0.1,
+            farVal=100.0,
+        )
+        (_, _, px, _, _) = p.getCameraImage(
+            width=960,
+            height=720,
+            viewMatrix=view_matrix,
+            projectionMatrix=proj_matrix,
+            renderer=p.ER_BULLET_HARDWARE_OPENGL,
+        )
+        rgb_array = np.array(px)
+        rgb_array = rgb_array[:, :, :3]
+        return rgb_array
 
     def close(self):
         """
@@ -148,7 +187,8 @@ class OneLegBulletEnv(gym.Env):
         Compute reward function
         """
         # Distance progress toward goal
-        goal_distance = np.linalg.norm(self.observation[-6:-3] - self.goal_position)**2
+        position = self.observation[-6:-3]
+        goal_distance = np.linalg.norm(position - self.goal_position)**2
 
         # Comsuption is speed * torque
         speeds = self.observation[1:-6:3]
