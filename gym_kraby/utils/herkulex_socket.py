@@ -13,12 +13,14 @@ class HerkulexSocket:
         30, 256-46, 46,
     ]
 
-    def __init__(self, max_velocity, max_torque, ip="10.42.0.1", port=2000):
+    def __init__(self, max_velocity=6.308, max_torque=1.57, ip="10.42.0.1", port=2000):
         """Initialize Herkulex class
 
         Args:
-            ip (str): Control socket IP.
-            port (int): Control socket port.
+            max_velocity (float, optional): Maximum servomotor velocity. Defaults to 6.308 rad/s.
+            max_torque ([type], optional): Maximum servomotor torque. Defaults to 1.57 N.m.
+            ip (str, optional): Control socket IP. Defaults to "10.42.0.1".
+            port (int, optional): Control socket port. Defaults to 2000.
         """
         self.max_velocity = max_velocity
         self.max_torque = max_torque
@@ -88,7 +90,6 @@ class HerkulexSocket:
             # TODO when in velocity control, no blocking
             #command += [velocities[i] & 0xFF, velocities[i] >> 8, 0b1010, i]
             command += [velocities[i] & 0xFF, velocities[i] >> 8, 0b1000, i]
-        print(command)
         self.send(0x06, command)
 
     def get_observations(self, raw=False):
@@ -106,12 +107,16 @@ class HerkulexSocket:
             # Read 8 bytes from 58 to 65 in RAM, then normalize
             ret = self.send(0x04, [58, 8], i, len_ack=19)
             if raw:
-                pos = (ret[11] + ((ret[12] & 0x3) << 8)) * 0.0036224 - 2
+                pos = ret[11] + ((ret[12] & 0x3) << 8)
             else:
-                pos = (ret[9] + ((ret[10] & 0x3) << 8)) * 0.0036224 - 2
-            velocity = (ret[13] + ((ret[14] & 0x3) << 8)) * 0.5077 / self.max_velocity
-            torque = (ret[15] + ((ret[16] & 0x3) << 8))  / self.max_torque
-            self.servo_obs[i*3:i*3+3] = [pos, velocity, torque]
+                pos = ret[9] + ((ret[10] & 0x3) << 8)
+            velocity = ret[13] + ((ret[14] & 0x3) << 8)
+            torque = ret[15] + ((ret[16] & 0x3) << 8)
+            self.servo_obs[i*3:i*3+3] = [
+                pos * 0.0036224 - 2,
+                velocity * 0.5077 / self.max_velocity,
+                torque / self.max_torque
+            ]
 
         return self.servo_obs
 
@@ -119,8 +124,11 @@ class HerkulexSocket:
         """Initial configuration
 
         You should set servomotors id from 0 to 17 before
-        and baudrate to 115 200 bauds/s.
+        and baudrate to 500,000 bauds/s.
 
         See page 22 of doc.
         """
+        # Set baudrate to 500,000 bauds/s
+        #for i in range(18):
+        #    self.send(0x01, [4, 0x01, 0x03], i)
         pass
