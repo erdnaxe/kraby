@@ -1,6 +1,33 @@
-# Using different implementations of PPO
+# PPO (Proximal Policy Optimization)
 
-## Using pytorch-a2c-ppo-acktr-gail PPO (PyTorch)
+## What is PPO?
+
+Proximal Policy Optimization is a policy gradient method for reinforcement
+learning developed by OpenAI[^PPO_OpenAI].
+The following video explains clearly how Proximal Policy Optimization works.
+
+<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/5P7I-xPq8u8" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+Original paper : <https://arxiv.org/abs/1707.06347>.
+
+## Using different implementations of PPO
+
+The following implementations were tested:
+
+-   [pytorch-a2c-ppo-acktr-gail](https://github.com/ikostrikov/pytorch-a2c-ppo-acktr-gail) (PyTorch),
+-   [StableBaselines](https://github.com/hill-a/stable-baselines) (Tensorflow 1),
+-   [StableBaselines3](https://github.com/DLR-RM/stable-baselines3) (PyTorch),
+-   [OpenAI SpinningUp](https://github.com/openai/spinningup) (PyTorch and Tensorflow 1).
+
+OpenAI developed internally a new training system called OpenAI Rapid
+implementing PPO at large scale. It is able to train a policy on large cloud
+platform (such as Kubernetes) using CPU workers for rollout and eval and GPU
+workers for optimization[^OpenAI_Rapid].
+Other companies are developping alternatives such as
+[Facebook ReAgent](https://github.com/facebookresearch/ReAgent)
+or [Intel Coach](https://github.com/NervanaSystems/coach).
+
+### Using pytorch-a2c-ppo-acktr-gail PPO (PyTorch)
 
 This section details how to use
 [pytorch-a2c-ppo-acktr-gail](https://github.com/ikostrikov/pytorch-a2c-ppo-acktr-gail)
@@ -19,7 +46,7 @@ git clone https://github.com/ikostrikov/pytorch-a2c-ppo-acktr-gail
 
 Then follow instructions of the README.
 
-## Using StableBaselines PPO (Tensorflow 1)
+### Using StableBaselines PPO (Tensorflow 1)
 
 As StableBaselines current stable version supports only Tensorflow 1,
 you may use Docker to isolate the requirements.
@@ -37,7 +64,7 @@ docker run -it -u $(id -u):$(id -g) --gpus all --rm \
 
 Some notebooks are available in `kraby/notebooks/stablebaselines/`.
 
-## Using OpenAI Spinning Up PPO (PyTorch)
+### Using OpenAI Spinning Up PPO (PyTorch)
 
 For an easier setup you may use Docker to isolate the requirements.
 Install `docker` and `nvidia-container-toolkit`,
@@ -52,3 +79,7 @@ docker run -it -u $(id -u):$(id -g) --gpus all --ipc=host --rm \
 ```
 
 Some notebooks are available in `kraby/notebooks/spinningup/`.
+
+[^PPO_OpenAI]: "Proximal Policy Optimization." OpenAI Blog. <https://openai.com/blog/openai-baselines-ppo/>.
+
+[^OpenAI_Rapid]: "Rapid, OpenAI Five." OpenAI Blog. <https://openai.com/blog/openai-five/#rapid>
