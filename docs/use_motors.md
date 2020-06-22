@@ -26,7 +26,7 @@ to transfer a simulated control agent to the real robot.
 **Notice**: The Herkulex DRS-0101 are able to communicate in series as fast as 0.667 Mbauds/s.
 Nevertheless **RK3399 boards are unable to communicate at that baud-rate
 as their base baud-rate is 1.5 Mbaud/s[^rk3399dtsi]**.
-So 0.5 Mbaud/s is a good compromise (divided by 3).
+So 0.5 Mbaud/s is a good compromise (divided by 3 rather than 2.25).
 
 ## Server-side
 
