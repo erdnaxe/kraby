@@ -1,4 +1,4 @@
-# Send and receive data from motors
+# Send and receive data from servomotors
 
 The NanoPi NEO4 has five 3.3V UART that can go up to 1.5 Mbauds/s.
 Two of these UART are used by the gigabit Ethernet controler
@@ -74,6 +74,7 @@ This takes approximatively:
 
 -   between 100 and 140 ms at 115 200 bauds/s with a TCP connection over WiFi
 -   between 60 and 100 ms at 500 000 bauds/s with a TCP connection over WiFi
+-   between 35 and 50 ms at 500 000 bauds/s locally
 
 For the command it is much faster as it can be done using only one
 `S_JOG` packet[^herkulex_manual].
