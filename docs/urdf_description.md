@@ -18,9 +18,6 @@ You may edit files under
 then execute
 [gym_kraby/data/generate_urdf.py](https://github.com/erdnaxe/kraby/tree/master/gym_kraby/data).
 
-[^xacro]&#x3A; [Xacro](http://wiki.ros.org/xacro) could also be an option, but it
-requires to install the ROS toolchain.
-
 * * *
 
 ## Computing 3d-printed part inertia
@@ -63,3 +60,5 @@ Inertia Tensor is :
 
 For more information, see
 <http://gazebosim.org/tutorials?tut=inertia&cat=build_robot>.
+
+[^xacro]: [Xacro](http://wiki.ros.org/xacro) could also be an option, but it requires to install the ROS toolchain.

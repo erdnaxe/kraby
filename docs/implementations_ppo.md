@@ -20,10 +20,10 @@ The following implementations were tested:
 -   [OpenAI SpinningUp](https://github.com/openai/spinningup) (PyTorch and Tensorflow 1).
 
 OpenAI developed internally a new training system called OpenAI Rapid
-implementing PPO at large scale. It is able to train a policy on large cloud
+implementing PPO at large scale. It can train a policy on large cloud
 platform (such as Kubernetes) using CPU workers for rollout and eval and GPU
 workers for optimization[^OpenAI_Rapid].
-Other companies are developping alternatives such as
+Other companies are developing alternatives such as
 [Facebook ReAgent](https://github.com/facebookresearch/ReAgent)
 or [Intel Coach](https://github.com/NervanaSystems/coach).
 
