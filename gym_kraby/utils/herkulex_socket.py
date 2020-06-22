@@ -1,6 +1,6 @@
 import socket
 import numpy as np
-from time import sleep
+from time import sleep, time
 
 
 class HerkulexSocket:
@@ -25,6 +25,9 @@ class HerkulexSocket:
         self.max_velocity = max_velocity
         self.max_torque = max_torque
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+        # Disable TCP Naggle algorithm
+        self.socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
         self.socket.connect((ip, port))
 
     def send(self, cmd: int, data: [int], pid=0xFE, len_ack=0):
@@ -55,7 +58,13 @@ class HerkulexSocket:
                             checksum1, checksum2] + data)
         self.socket.send(packet)
 
-        return self.socket.recv(len_ack) if len_ack else None
+        # Receive
+        ack = bytearray()
+        timeout = time() + 0.1  # timeout in 100 ms
+        while len(ack) < len_ack and time() < timeout:
+            ack += self.socket.recv(len_ack - len(ack))
+
+        return ack
 
     def reset(self):
         """Perform reset of all Herkulex servomotors
