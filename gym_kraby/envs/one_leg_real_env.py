@@ -1,5 +1,4 @@
 import numpy as np
-import pybullet as p
 from ..utils.herkulex_socket import HerkulexSocket
 from .one_leg_bullet_env import OneLegBulletEnv
 
@@ -37,9 +36,3 @@ class OneLegRealEnv(OneLegBulletEnv):
 
         # Sometimes 1.0 is greater than 1
         self.observation = np.clip(self.observation, -1., 1.)
-
-        # Endcap position and orientation
-        endcap_id = 5
-        pos, ori, _, _, _, _ = p.getLinkState(self.robot_id, endcap_id)  # TODO
-        self.observation[-6:] = list(pos) + list(p.getEulerFromQuaternion(ori))
-        self.observation[-3:] /= np.pi  # normalization

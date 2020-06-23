@@ -39,8 +39,8 @@ class OneLegBulletEnv(gym.Env):
                                        shape=(self.n_actions,),
                                        dtype="float32")
 
-        # 3*(position,speed,torque) + robot positions observations
-        self.n_observation = 3*3+6
+        # 3*(position,speed,torque) + robot goal position observations
+        self.n_observation = 3*3+3
         self.observation_space = spaces.Box(low=-1, high=1,
                                             shape=(self.n_observation,),
                                             dtype="float32")
@@ -60,9 +60,6 @@ class OneLegBulletEnv(gym.Env):
         # Some constants for normalization
         self.servo_max_speed = 6.308  # rad/s
         self.servo_max_torque = 1.57  # N.m
-
-        # Goal
-        self.goal_position = np.array([0.264, 0.016, 0.285])
 
         # Seed random number generator
         self.seed()
@@ -94,6 +91,14 @@ class OneLegBulletEnv(gym.Env):
         for j in self.joint_list:
             p.resetJointState(self.robot_id, j,
                               np.random.uniform(low=-m, high=m))
+
+        # Set random goal and put it in observations
+        self.goal_position = np.array([
+            np.random.uniform(low=0.018, high=0.289),
+            np.random.uniform(low=-0.133, high=0.175),
+            np.random.uniform(low=0.056, high=0.347),
+        ])
+        self.observation[-3:] = self.goal_position
 
         # Show goal as a crosshair
         p.addUserDebugLine(self.goal_position - [0, 0, 0.01],
@@ -187,7 +192,8 @@ class OneLegBulletEnv(gym.Env):
         Compute reward function
         """
         # Distance progress toward goal
-        position = self.observation[-6:-3]
+        endcap_id = 5
+        position, _, _, _, _, _ = p.getLinkState(self.robot_id, endcap_id)
         goal_distance = np.linalg.norm(position - self.goal_position)**2
 
         # Comsuption is speed * torque
@@ -216,9 +222,3 @@ class OneLegBulletEnv(gym.Env):
 
         # Sometimes 1.0 is greater than 1
         self.observation = np.clip(self.observation, -1., 1.)
-
-        # Endcap position and orientation
-        endcap_id = 5
-        pos, ori, _, _, _, _ = p.getLinkState(self.robot_id, endcap_id)
-        self.observation[-6:] = list(pos) + list(p.getEulerFromQuaternion(ori))
-        self.observation[-3:] /= np.pi  # normalization
