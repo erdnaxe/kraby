@@ -64,15 +64,10 @@ class OneLegBulletEnv(gym.Env):
         # Seed random number generator
         self.seed()
 
-    def reset(self):
+        # Init world
         p.resetSimulation()
-        self.counting_step = 0
-
-        # Newton's apple
-        p.setGravity(0, 0, -9.81)
-
-        # Load a ground
-        p.loadURDF("plane.urdf")
+        p.setGravity(0, 0, -9.81)  # Newton's apple
+        p.loadURDF("plane.urdf")  # Load a ground
 
         # Load robot
         flags = p.URDF_USE_SELF_COLLISION | p.URDF_USE_INERTIA_FROM_FILE
@@ -81,6 +76,9 @@ class OneLegBulletEnv(gym.Env):
         with pkg_resources.path("gym_kraby", "data") as path:
             self.robot_id = p.loadURDF(str(path / 'one_leg.urdf'), flags=flags,
                                        useFixedBase=True)
+
+    def reset(self):
+        self.counting_step = 0
 
         # Get all motorized joints id and name (which are revolute joints)
         self.joint_list = [j for j in range(p.getNumJoints(self.robot_id))
@@ -101,6 +99,7 @@ class OneLegBulletEnv(gym.Env):
         self.observation[-3:] = self.goal_position
 
         # Show goal as a crosshair
+        p.removeAllUserDebugItems()
         p.addUserDebugLine(self.goal_position - [0, 0, 0.01],
                            self.goal_position + [0, 0, 0.01],
                            [0, 0, 0], 2)
