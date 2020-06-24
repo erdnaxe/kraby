@@ -77,18 +77,17 @@ class OneLegBulletEnv(gym.Env):
             self.robot_id = p.loadURDF(str(path / 'one_leg.urdf'), flags=flags,
                                        useFixedBase=True)
 
-    def reset(self):
-        self.counting_step = 0
-
         # Get all motorized joints id and name (which are revolute joints)
         self.joint_list = [j for j in range(p.getNumJoints(self.robot_id))
                            if p.getJointInfo(self.robot_id, j)[2] == p.JOINT_REVOLUTE]
 
+    def reset(self):
+        self.counting_step = 0
+
         # Reset all joint using normal distribution
-        m = np.pi/4
         for j in self.joint_list:
             p.resetJointState(self.robot_id, j,
-                              np.random.uniform(low=-m, high=m))
+                              np.random.uniform(low=-np.pi/4, high=np.pi/4))
 
         # Set random goal and put it in observations
         self.goal_position = np.array([
