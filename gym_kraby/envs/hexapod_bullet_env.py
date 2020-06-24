@@ -190,7 +190,7 @@ class HexapodBulletEnv(gym.Env):
 
         # Distance progress toward goal
         position = self.observation[-6:-3]
-        goal_distance = np.linalg.norm(position - self.goal_position)**2
+        goal_distance = np.square(position - self.goal_position).sum()
 
         # Comsuption is speed * torque
         speeds = self.observation[1:-6:3]

@@ -193,7 +193,7 @@ class OneLegBulletEnv(gym.Env):
         # Distance progress toward goal
         endcap_id = 5
         position, _, _, _, _, _ = p.getLinkState(self.robot_id, endcap_id)
-        goal_distance = np.linalg.norm(position - self.goal_position)**2
+        goal_distance = np.square(position - self.goal_position).sum()
 
         # Comsuption is speed * torque
         speeds = self.observation[1:-6:3]
