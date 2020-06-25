@@ -1,11 +1,12 @@
 import gym
 import numpy as np
 import argparse
+from gym.wrappers import TimeLimit
 
 
-def play(env_name: str, manual_control: bool):
+def play(env_name: str, manual_control: bool, max_steps: int):
     # Make environment
-    env = gym.make(env_name, render=True)
+    env = TimeLimit(gym.make(env_name, render=True), max_steps)
     observation = env.reset()
 
     if manual_control:
@@ -66,4 +67,4 @@ if __name__ == "__main__":
     env_name = 'gym_kraby:' + model + variant + 'Env-v0'
 
     # Play environment
-    play(env_name, not args.random)
+    play(env_name, not args.random, 1000)

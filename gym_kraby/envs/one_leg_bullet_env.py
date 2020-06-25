@@ -18,7 +18,7 @@ class OneLegBulletEnv(gym.Env):
         "video.frames_per_second": 100,
     }
 
-    def __init__(self, time_step=0.01, render=False, max_step=200):
+    def __init__(self, time_step=0.01, render=False):
         """Init environment"""
         super().__init__()
 
@@ -54,8 +54,6 @@ class OneLegBulletEnv(gym.Env):
         # Simulation timestep and max step
         self.dt = time_step
         p.setTimeStep(time_step)
-        self.counting_step = 0
-        self.max_step = max_step
 
         # Some constants for normalization
         self.servo_max_speed = 6.308  # rad/s
@@ -82,8 +80,6 @@ class OneLegBulletEnv(gym.Env):
                            if p.getJointInfo(self.robot_id, j)[2] == p.JOINT_REVOLUTE]
 
     def reset(self):
-        self.counting_step = 0
-
         # Reset all joint using normal distribution
         for j in self.joint_list:
             p.resetJointState(self.robot_id, j,
@@ -121,14 +117,14 @@ class OneLegBulletEnv(gym.Env):
                                     forces=max_torques)
 
         # Step simulation
-        self.counting_step += 1
         p.stepSimulation()  # step self.dt
         if self._render:
             sleep(self.dt)  # realtime
 
         # Return observation, reward and done
         self._update_observation()
-        reward, done = self._get_reward()
+        reward = self._get_reward()
+        done = False
         return self.observation, reward, done, {}
 
     def render(self, mode='human'):
@@ -202,8 +198,7 @@ class OneLegBulletEnv(gym.Env):
 
         # Compute reward
         reward = -goal_distance - w * comsuption
-        done = self.counting_step > self.max_step
-        return reward, done
+        return reward
 
     def _update_observation(self):
         """

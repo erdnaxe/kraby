@@ -18,7 +18,7 @@ class HexapodBulletEnv(gym.Env):
         "video.frames_per_second": 100,
     }
 
-    def __init__(self, time_step=0.01, render=False, max_step=1000):
+    def __init__(self, time_step=0.01, render=False):
         """Init environment"""
         super().__init__()
 
@@ -54,8 +54,6 @@ class HexapodBulletEnv(gym.Env):
         # Simulation timestep and max step
         self.dt = time_step
         p.setTimeStep(time_step)
-        self.counting_step = 0
-        self.max_step = max_step
 
         # Some constants for normalization
         self.servo_max_speed = 6.308  # rad/s
@@ -84,7 +82,7 @@ class HexapodBulletEnv(gym.Env):
                            if p.getJointInfo(self.robot_id, j)[2] == p.JOINT_REVOLUTE]
 
     def reset(self):
-        self.counting_step = 0
+        # TODO Reset body position/orientation
 
         # Reset all joint using normal distribution
         for j in self.joint_list:
@@ -115,14 +113,14 @@ class HexapodBulletEnv(gym.Env):
                                     forces=max_torques)
 
         # Step simulation
-        self.counting_step += 1
         p.stepSimulation()  # step self.dt
         if self._render:
             sleep(self.dt)  # realtime
 
         # Return observation, reward and done
         self._update_observation()
-        reward, done = self._get_reward()
+        reward = self._get_reward()
+        done = self.observation[-4] < 0.08  # Has fallen?
         return self.observation, reward, done, {}
 
     def render(self, mode='human'):
@@ -184,9 +182,6 @@ class HexapodBulletEnv(gym.Env):
         Compute reward function
         TODO: take into account the inclinaison of base
         """
-        # Has fallen?
-        fallen = self.observation[-4] < 0.08
-
         # Distance progress toward goal
         position = self.observation[-6:-3]
         goal_distance = np.square(position - self.goal_position).sum()
@@ -202,8 +197,7 @@ class HexapodBulletEnv(gym.Env):
         # else the agent will learn how to end the episode quickly
         # 200 > max_comsuption + max_distance
         reward = 200 - goal_distance - w * comsuption
-        done = fallen or self.counting_step > self.max_step
-        return reward, done
+        return reward
 
     def _update_observation(self):
         """
