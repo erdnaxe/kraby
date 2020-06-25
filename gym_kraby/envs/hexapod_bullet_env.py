@@ -44,12 +44,7 @@ class HexapodBulletEnv(gym.Env):
         self.observation_space = spaces.Box(low=-1, high=1,
                                             shape=(self.n_observation,),
                                             dtype="float32")
-
-        # Init observation space
         self.observation = np.zeros(self.n_observation, dtype="float32")
-
-        # Add pybullet_data as search path
-        p.setAdditionalSearchPath(getDataPath())
 
         # Simulation timestep and max step
         self.dt = time_step
@@ -68,6 +63,7 @@ class HexapodBulletEnv(gym.Env):
         # Init world
         p.resetSimulation()
         p.setGravity(0, 0, -9.81)  # Newton's apple
+        p.setAdditionalSearchPath(getDataPath())  # Add pybullet_data
         p.loadURDF("plane.urdf")  # Load a ground
 
         # Load robot
