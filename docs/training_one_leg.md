@@ -1,96 +1,26 @@
 # Training one hexapod leg
 
-## With pytorch-a2c-ppo-acktr-gail
+This section gives some example of training and draws some conclusions about
+the training of a single robot leg.
 
-This section details how to use
-[pytorch-a2c-ppo-acktr-gail](https://github.com/ikostrikov/pytorch-a2c-ppo-acktr-gail)
-PPO implementation with PyTorch.
+**Note**: Some early tests were done on StableBaselines3
+but as the library is currently being developed,
+the training was failing and the average episode reward was constant.
+
+## First tests with pytorch-a2c-ppo-acktr-gail
 
 The defaults hyperparameters given in the
 [README](https://github.com/ikostrikov/pytorch-a2c-ppo-acktr-gail/blob/master/README.md)
-will work even if they may not be optimized to the environment and your computer. 
+are recommanded and are able to give good results for a first training.
 
-### Running one training
-
-As the README recommands, train using the following command,
-
-```bash
-python main.py --env-name gym_kraby:OneLegBulletEnv-v0 --algo ppo --use-gae \
-               --log-interval 1 --num-steps 2048 --num-processes 1 --lr 3e-4 \
-               --entropy-coef 0 --value-loss-coef 0.5 --ppo-epoch 10 \
-               --num-mini-batch 32 --gamma 0.99 --gae-lambda 0.95 \
-               --num-env-steps 1000000 --use-linear-lr-decay --no-cuda \
-               --seed 0 --use-proper-time-limits
-```
-
-### Running simultaneous training
-
-[generate_tmux_yaml.py](https://github.com/ikostrikov/pytorch-a2c-ppo-acktr-gail/blob/master/generate_tmux_yaml.py)
-generates a tmuxp Yaml configuration file to launch simultaneous experiments.
-This is a modified version for `gym_kraby:OneLegBulletEnv-v0`:
-
-```Python
-import yaml
-
-ppo_mujoco_template = "python main.py --env-name {0} --algo ppo --use-gae --log-interval 1 --num-steps 2048 --num-processes 1 --lr 3e-4 --entropy-coef 0 --value-loss-coef 0.5 --ppo-epoch 10 --num-mini-batch 32 --gamma 0.99 --gae-lambda 0.95 --num-env-steps 1000000 --use-linear-lr-decay --no-cuda --log-dir /tmp/gym/{1}/{1}-{2} --seed {2} --use-proper-time-limits"
-template = ppo_mujoco_template
-env_name = "gym_kraby:OneLegBulletEnv-v0"
-config = {"session_name": "run-all", "windows": []}
-
-for i in range(16):
-    panes_list = []
-    panes_list.append(
-        template.format(env_name,
-                        env_name.split('-')[0].lower(), i))
-
-    config["windows"].append({
-        "window_name": "seed-{}".format(i),
-        "panes": panes_list
-    })
-
-yaml.dump(config, open("run_all.yaml", "w"), default_flow_style=False)
-```
-
-After launching this script you can run the experiments,
-
-```bash
-tmuxp load run_all.yaml
-```
-
-### Enjoying results
-
-Because Kraby environments use PyBullet rendering,
-you need to edit `a2c_ppo_acktr/envs.py`:
-
-```diff
-diff --git a/a2c_ppo_acktr/envs.py b/a2c_ppo_acktr/envs.py
-index 2514630..62b5abf 100755
---- a/a2c_ppo_acktr/envs.py
-+++ b/a2c_ppo_acktr/envs.py
-@@ -35,7 +35,8 @@ def make_env(env_id, seed, rank, log_dir, allow_early_resets):
-             _, domain, task = env_id.split('.')
-             env = dm_control2gym.make(domain_name=domain, task_name=task)
-         else:
--            env = gym.make(env_id)
-+            env = gym.make(env_id, render=True)
- 
-         is_atari = hasattr(gym.envs, 'atari') and isinstance(
-             env.unwrapped, gym.envs.atari.atari_env.AtariEnv)
-```
-
-Then launch a demo with:
-
-```bash
-python enjoy.py --load-dir trained_models/ppo --env-name "gym_kraby:OneLegBulletEnv-v0"
-```
-
-You may also use
-[visualize.ipynb](https://github.com/ikostrikov/pytorch-a2c-ppo-acktr-gail/blob/master/visualize.ipynb)
-to plot the average episode reward by the step (with standard deviation of this average).
+**Important**: The reward function is only using the distance to a **fixed** objective,
+and the observation contains the position, velocity and torque of each servomotors
+and also **the absolute position of the endcap** of the leg.
+*This agent is trained on an unrealistic environment.*
 
 ![Training results](img/training_one_leg_pytorch-a2c-ppo-acktr-gail.png)
 
-## With StableBaselines
+## Testing StableBaselines
 
 Start StableBaselines Docker as explained in [previous page](implementations_ppo.md).
 Then in Jupyter web interface,
@@ -98,3 +28,11 @@ Then in Jupyter web interface,
 -   `check_env.ipynb` will check that OpenAI Gym environments are working as expected,
 -   `one_leg_training.ipynb` is an example of PPO training on one leg,
 -   `render.ipynb` will render the agent to a MP4 video or a GIF.
+
+As planned, it works as well as `pytorch-a2c-ppo-acktr-gail` on PyTorch,
+but this time we get much more tools such as
+[TensorBoard](https://www.tensorflow.org/tensorboard) data and graph.
+
+As StableBaselines stands out as being an easy PPO implementation
+with a clear documentation and hyperparameters,
+all the following training were done with it.

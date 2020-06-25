@@ -38,13 +38,54 @@ On ArchLinux you may just need to install `python-pytorch-opt-cuda`
 witch is a compiled version of PyTorch
 for post Hashell Intel CPU and NVIDIA Cuda.
 
-Then clone the source code,
+Then clone the source code and start training,
 
 ```bash
 git clone https://github.com/ikostrikov/pytorch-a2c-ppo-acktr-gail
+cd pytorch-a2c-ppo-acktr-gail
+python main.py --env-name gym_kraby:OneLegBulletEnv-v0 --algo ppo --use-gae \
+               --log-interval 1 --num-steps 2048 --num-processes 1 --lr 3e-4 \
+               --entropy-coef 0 --value-loss-coef 0.5 --ppo-epoch 10 \
+               --num-mini-batch 32 --gamma 0.99 --gae-lambda 0.95 \
+               --num-env-steps 1000000 --use-linear-lr-decay --no-cuda \
+               --seed 0 --use-proper-time-limits
 ```
 
 Then follow instructions of the README.
+
+#### Running simultaneous training
+
+[generate_tmux_yaml.py](https://github.com/ikostrikov/pytorch-a2c-ppo-acktr-gail/blob/master/generate_tmux_yaml.py)
+generates a tmuxp Yaml configuration file to launch simultaneous experiments.
+This is a modified version for `gym_kraby:OneLegBulletEnv-v0`:
+
+```Python
+import yaml
+
+ppo_mujoco_template = "python main.py --env-name {0} --algo ppo --use-gae --log-interval 1 --num-steps 2048 --num-processes 1 --lr 3e-4 --entropy-coef 0 --value-loss-coef 0.5 --ppo-epoch 10 --num-mini-batch 32 --gamma 0.99 --gae-lambda 0.95 --num-env-steps 1000000 --use-linear-lr-decay --no-cuda --log-dir /tmp/gym/{1}/{1}-{2} --seed {2} --use-proper-time-limits"
+template = ppo_mujoco_template
+env_name = "gym_kraby:OneLegBulletEnv-v0"
+config = {"session_name": "run-all", "windows": []}
+
+for i in range(16):
+    panes_list = []
+    panes_list.append(
+        template.format(env_name,
+                        env_name.split('-')[0].lower(), i))
+
+    config["windows"].append({
+        "window_name": "seed-{}".format(i),
+        "panes": panes_list
+    })
+
+yaml.dump(config, open("run_all.yaml", "w"), default_flow_style=False)
+```
+
+After launching this script you can run the experiments,
+
+```bash
+tmuxp load run_all.yaml
+```
 
 ### Using StableBaselines PPO (Tensorflow 1)
 
