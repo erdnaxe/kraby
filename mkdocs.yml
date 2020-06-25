@@ -16,7 +16,7 @@ nav:
       - URDF description: urdf_description.md
       - OpenAI Gym environments: gym_environments.md
       - Proximal Policy Optimization: implementations_ppo.md
-      - Traning one leg: training_one_leg.md
+      - Training one leg: training_one_leg.md
   - About:
       - Contributing: contributing.md
       - License: license.md
