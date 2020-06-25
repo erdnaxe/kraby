@@ -60,3 +60,18 @@ There are two problems with the previous trainings:
 1.  The reward function is the opposite of the distance to a fixed objective.
     Or we want the leg to be able to move to any objective that the user inputs.
 
+2.  The observation contains the absolute position of the endcap.
+
+The second point could be fixed by computing
+it through a mecanical computing using servomotors positions.
+But before doing it, it is also interesting to study the learning when
+the absolute position is remplaced by:
+
+-   the objective position (constant during one episode),
+-   the objective position vector substracted by the current position.
+
+The second idea comes from
+[OpenAI Gym Reacher-v2 environment](https://github.com/openai/gym/wiki/Reacher-v2).
+This environment also input cosinus and sinus
+of the joint position in the observation,
+rather than directly the angle.
