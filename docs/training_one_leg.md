@@ -6,6 +6,7 @@ the training of a single robot leg.
 The environment resets the leg to a random position.
 The agent has to command each servomotors
 to move the endcap to the objective (visualized by the cross).
+
 ```Python
 # Reset all joint using normal distribution
 for j in self.joint_list:
@@ -14,6 +15,23 @@ for j in self.joint_list:
 ```
 
 ![One leg environment](img/one_leg_env.png)
+
+The initial observation vector used is:
+
+| Num | Observation                                 |
+| --- | ------------------------------------------- |
+| 0   | position (first joint)                      |
+| 1   | velocity (first joint)                      |
+| 2   | torque (first joint)                        |
+| 3   | position (first joint)                      |
+| 4   | velocity (first joint)                      |
+| 5   | torque (first joint)                        |
+| 6   | position (first joint)                      |
+| 7   | velocity (first joint)                      |
+| 8   | torque (first joint)                        |
+| 9   | the x-axis component of the endcap position |
+| 10  | the y-axis component of the endcap position |
+| 11  | the z-axis component of the endcap position |
 
 **Note**: Some early tests were done on StableBaselines3
 but as the library is currently being developed,
@@ -28,7 +46,6 @@ are recommanded and are able to give good results for a first training.
 **Important**: The reward function is only using the distance to a **fixed** objective,
 and the observation contains the position, velocity and torque of each servomotors
 and also **the absolute position of the endcap** of the leg.
-_This agent is trained on an unrealistic environment._
 
 ![Training results](img/training_one_leg_pytorch-a2c-ppo-acktr-gail.png)
 
@@ -53,25 +70,39 @@ As StableBaselines stands out as being an easy PPO implementation
 with a clear documentation and hyperparameters,
 all the following training were done with it.
 
-## Fixing the unrealistic observation and reward
+## Tweaking the observation and reward
 
 There are two problems with the previous trainings:
 
-1.  The reward function is the opposite of the distance to a fixed objective.
-    Or we want the leg to be able to move to any objective that the user inputs.
+1.  The observation contains the absolute position of the endcap.
 
-2.  The observation contains the absolute position of the endcap.
+2.  The reward function is the opposite of the distance to a fixed objective,
+    or we want the leg to be able to move to any objective that the user inputs.
 
-The second point could be fixed by computing
-it through a mecanical computing using servomotors positions.
+### Indicating the target position in observations
+
+The absolute position of the endcap could be computed through a mecanical equation using servomotors positions.
 But before doing it, it is also interesting to study the learning when
 the absolute position is remplaced by:
 
 -   the objective position (constant during one episode),
 -   the objective position vector substracted by the current position.
+-   the objective position vector substracted by the current position and the objective position.
 
-The second idea comes from
+The third idea comes from
 [OpenAI Gym Reacher-v2 environment](https://github.com/openai/gym/wiki/Reacher-v2).
-This environment also input cosinus and sinus
-of the joint position in the observation,
-rather than directly the angle.
+which observation vector is:
+
+| Num | Observation                                                         |
+| --- | ------------------------------------------------------------------- |
+| 0   | cos(theta) (first joint)                                            |
+| 1   | cos(theta) (second joint)                                           |
+| 2   | sin(theta) (first joint)                                            |
+| 3   | sin(theta) (second joint)                                           |
+| 4   | qpos (the x coordinate of the target)                               |
+| 5   | qpos (the y coordinate of the target)                               |
+| 6   | qvel (the velocity of the fingertip in the x direction)             |
+| 7   | qvel (the velocity of the fingertip in the y direction)             |
+| 8   | the x-axis component of the vector from the target to the fingertip |
+| 9   | the y-axis component of the vector from the target to the fingertip |
+| 10  | the z-axis component of the vector from the target to the fingertip |
