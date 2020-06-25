@@ -3,6 +3,18 @@
 This section gives some example of training and draws some conclusions about
 the training of a single robot leg.
 
+The environment resets the leg to a random position.
+The agent has to command each servomotors
+to move the endcap to the objective (visualized by the cross).
+```Python
+# Reset all joint using normal distribution
+for j in self.joint_list:
+    p.resetJointState(self.robot_id, j,
+                      np.random.uniform(low=-np.pi/4, high=np.pi/4))
+```
+
+![One leg environment](img/one_leg_env.png)
+
 **Note**: Some early tests were done on StableBaselines3
 but as the library is currently being developed,
 the training was failing and the average episode reward was constant.
@@ -16,9 +28,13 @@ are recommanded and are able to give good results for a first training.
 **Important**: The reward function is only using the distance to a **fixed** objective,
 and the observation contains the position, velocity and torque of each servomotors
 and also **the absolute position of the endcap** of the leg.
-*This agent is trained on an unrealistic environment.*
+_This agent is trained on an unrealistic environment._
 
 ![Training results](img/training_one_leg_pytorch-a2c-ppo-acktr-gail.png)
+
+**The training is successful and converges after 300k steps.**
+The `enjoy.py` script shows the leg moving to the fixed target,
+but it vibrates after reaching the objective.
 
 ## Testing StableBaselines
 
@@ -36,3 +52,11 @@ but this time we get much more tools such as
 As StableBaselines stands out as being an easy PPO implementation
 with a clear documentation and hyperparameters,
 all the following training were done with it.
+
+## Fixing the unrealistic observation and reward
+
+There are two problems with the previous trainings:
+
+1.  The reward function is the opposite of the distance to a fixed objective.
+    Or we want the leg to be able to move to any objective that the user inputs.
+
