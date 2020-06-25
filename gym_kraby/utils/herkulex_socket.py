@@ -137,7 +137,9 @@ class HerkulexSocket:
 
         See page 22 of doc.
         """
-        # Set baudrate to 500,000 bauds/s
-        #for i in range(18):
-        #    self.send(0x01, [4, 0x01, 0x03], i)
-        pass
+        for i in range(18):
+            # Rollback everything except id and baudrate
+            self.send(0x08, [0x01, 0x01], i)
+
+            # Disable acceleration time
+            self.send(0x01, [15, 0x01, 0], i)
