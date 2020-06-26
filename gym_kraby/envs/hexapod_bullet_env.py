@@ -140,8 +140,9 @@ class HexapodBulletEnv(gym.Env):
         if mode != "rgb_array":
             return np.array([])
 
+        position = p.getBasePositionAndOrientation(self.robot_id)[0]
         view_matrix = p.computeViewMatrixFromYawPitchRoll(
-            cameraTargetPosition=[0, 0, 0.05],  # TODO put robot position
+            cameraTargetPosition=position,
             distance=0.6,
             yaw=30,
             pitch=-30,
