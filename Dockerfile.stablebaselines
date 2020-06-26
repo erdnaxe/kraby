@@ -11,6 +11,11 @@ WORKDIR /tf/kraby
 COPY . /tf/kraby
 RUN pip install -e .
 
+# Add OpenCL support
+# from https://github.com/pkienzle/opencl_docker
+RUN mkdir -p /etc/OpenCL/vendors && \
+    echo "libnvidia-opencl.so.1" > /etc/OpenCL/vendors/nvidia.icd
+
 # Launch Jupyter Notebook by default on :8888
 EXPOSE 8888
 CMD jupyter notebook --ip 0.0.0.0 --no-browser --notebook-dir=/tf/kraby/notebooks/stablebaselines
