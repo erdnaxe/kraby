@@ -78,7 +78,12 @@ class HexapodBulletEnv(gym.Env):
                            if p.getJointInfo(self.robot_id, j)[2] == p.JOINT_REVOLUTE]
 
     def reset(self):
-        # TODO Reset body position/orientation
+        # Reset body position/orientation
+        p.resetBasePositionAndOrientation(
+            self.robot_id,
+            [0, 0, 0.2],
+            [0, 0, 0, 1],
+        )
 
         # Reset all joint using normal distribution
         for j in self.joint_list:
