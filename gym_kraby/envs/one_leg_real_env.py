@@ -7,10 +7,10 @@ class OneLegRealEnv(OneLegBulletEnv):
     """One leg Hexapod environnement for transfer to real robot
     """
 
-    def __init__(self, time_step=0.01, max_step=200, render=False):
+    def __init__(self, time_step=0.01):
         """Init environment
         """
-        super().__init__(time_step, max_step, render)
+        super().__init__(time_step, render=True)
         self.servomotors = HerkulexSocket(
             max_velocity=6.308,  # rad/s
             max_torque=1.57,  # N.m
@@ -31,8 +31,8 @@ class OneLegRealEnv(OneLegBulletEnv):
     def _update_observation(self):
         """Override to get observation from real sensors
         """
-        # Each servomotor position, speed and torque
-        self.observation[0:3*3] = self.servomotors.get_observations()
+        # Each servomotor position and speed
+        self.observation[0:2*3], _ = self.servomotors.get_observations()
 
         # Sometimes 1.0 is greater than 1
         self.observation = np.clip(self.observation, -1., 1.)

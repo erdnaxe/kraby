@@ -110,8 +110,9 @@ class HerkulexSocket:
         Returns:
             array: Observations.
         """
-        self.servo_obs = np.zeros(3*18, dtype="float32")
+        servo_obs = np.zeros(2*18, dtype="float32")
 
+        energy = 0
         for i in range(18):
             # Read 8 bytes from 58 to 65 in RAM, then normalize
             ret = self.send(0x04, [58, 8], i, len_ack=19)
@@ -121,13 +122,13 @@ class HerkulexSocket:
                 pos = ret[9] + ((ret[10] & 0x3) << 8)
             velocity = ret[13] + ((ret[14] & 0x3) << 8)
             torque = ret[15] + ((ret[16] & 0x3) << 8)
-            self.servo_obs[i*3:i*3+3] = [
+            servo_obs[i*2:i*2+2] = [
                 pos * 0.0036224 - 2,
-                velocity * 0.5077 / self.max_velocity,
-                torque / self.max_torque
+                velocity * 0.5077 / self.max_velocity,  # FIXME not signed
             ]
+            energy += (velocity * 0.5077) * torque / 1024 * self.max_torque
 
-        return self.servo_obs
+        return servo_obs, energy
 
     def set_eeprom(self):
         """Initial configuration
