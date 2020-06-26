@@ -27,11 +27,21 @@ Other companies are developing alternatives such as
 [Facebook ReAgent](https://github.com/facebookresearch/ReAgent)
 or [Intel Coach](https://github.com/NervanaSystems/coach).
 
+[Garage](https://github.com/rlworkgroup/garage) also implements PPO for
+Tensorflow and PyTorch
+but Garage documentation does not introduce as many concepts as StableBaselines
+and is more intended for experimented users. 
+
+[TensorForce](https://github.com/tensorforce/tensorforce) implements PPO
+for Tensorflow 2 which gives access to the new profiler and tools compared to the other toolkits.
+It also provides a hyperparameter tuner. Like Garage, it is also geared towards
+more experimented users.
+
 ### Using pytorch-a2c-ppo-acktr-gail PPO (PyTorch)
 
-This section details how to use
 [pytorch-a2c-ppo-acktr-gail](https://github.com/ikostrikov/pytorch-a2c-ppo-acktr-gail)
-PPO implementation with PyTorch.
+is a PPO implementation with PyTorch.
+It is simple to use but lacks many features compared to other toolkits.
 
 You need to install PyTorch and NVIDIA Cuda for GPU acceleration.
 On ArchLinux you may just need to install `python-pytorch-opt-cuda`
@@ -89,6 +99,12 @@ tmuxp load run_all.yaml
 
 ### Using StableBaselines PPO (Tensorflow 1)
 
+[StableBaselines](https://github.com/hill-a/stable-baselines) is a fork
+of OpenAI Baselines that make it more easier to use for beginners
+and cleans up the code base.
+[StableBaselines documentation](https://stable-baselines.readthedocs.io/en/master/)
+introduces many key concepts and is quite clear about PPO parameters.
+
 As StableBaselines current stable version supports only Tensorflow 1,
 you may use Docker to isolate the requirements.
 More detailed instructions are available at
@@ -106,6 +122,11 @@ docker run -it -u $(id -u):$(id -g) --gpus all --rm \
 Some notebooks are available in `kraby/notebooks/stablebaselines/`.
 
 ### Using OpenAI Spinning Up PPO (PyTorch)
+
+[OpenAI Spinning Up](https://spinningup.openai.com/en/latest/) is a more recent
+implementation than OpenAI Baselines.
+It is geared toward giving a well-documented code repository of short
+implementations of key algorithms.
 
 For an easier setup you may use Docker to isolate the requirements.
 Install `docker` and `nvidia-container-toolkit`,
