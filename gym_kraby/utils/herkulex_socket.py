@@ -78,7 +78,8 @@ class HerkulexSocket:
             self.send(0x03, [47, 0x01, v], i)
 
         # For each servo, set blue LED and Turn/Velocity control mode
-        self.move([0] * 18)
+        # We set 512 as initial position as 0 is outside range
+        self.move([512] * 18)
 
         # Prompt user if it's ready
         input("Press enter to set torque on...")
