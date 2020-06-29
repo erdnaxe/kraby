@@ -39,12 +39,13 @@ class OneLegBulletEnv(gym.Env):
                                        shape=(self.n_actions,),
                                        dtype="float32")
 
-        # 3*(position,speed,torque) + robot goal position observations
-        self.n_observation = 3*3+3
+        # 3*(position,speed,torque) + positions observations
+        self.n_observation = 3*3+3+3
         self.observation_space = spaces.Box(low=-1, high=1,
                                             shape=(self.n_observation,),
                                             dtype="float32")
         self.observation = np.zeros(self.n_observation, dtype="float32")
+        self.torques = np.zeros(self.n_actions)
 
         # Simulation timestep and max step
         self.dt = time_step
@@ -82,10 +83,11 @@ class OneLegBulletEnv(gym.Env):
                               np.random.uniform(low=-np.pi/4, high=np.pi/4))
 
         # Set random goal and put it in observations
+        d = 0.1
         self.goal_position = np.array([
-            np.random.uniform(low=0.018, high=0.289),
-            np.random.uniform(low=-0.133, high=0.175),
-            np.random.uniform(low=0.056, high=0.347),
+            np.random.uniform(0.219 - 0.069*d, 0.219 + 0.069*d),
+            np.random.uniform(0.020 - 0.153*d, 0.020 + 0.153*d),
+            np.random.uniform(0.128 - 0.072*d, 0.128 + 0.072*d),
         ])
         self.observation[-3:] = self.goal_position
 
@@ -158,7 +160,7 @@ class OneLegBulletEnv(gym.Env):
             height=720,
             viewMatrix=view_matrix,
             projectionMatrix=proj_matrix,
-            renderer=p.ER_BULLET_HARDWARE_OPENGL,
+            renderer=p.ER_TINY_RENDERER,
         )
         rgb_array = np.array(px)
         rgb_array = rgb_array[:, :, :3]
@@ -187,10 +189,10 @@ class OneLegBulletEnv(gym.Env):
         goal_distance = np.square(position - self.goal_position).sum()
 
         # Comsuption is speed * torque
-        speeds = self.observation[1:-6:3]
-        torques = self.observation[2:-6:3]
+        speeds = self.observation[2:-6:3]
+        torques = self.torques
         comsuption = self.dt * abs(sum(speeds * torques))
-        w = 0.008  # comsuption weight
+        w = 0  # comsuption weight, FIXME: disabled
 
         # Compute reward
         reward = -goal_distance - w * comsuption
@@ -199,15 +201,23 @@ class OneLegBulletEnv(gym.Env):
     def _update_observation(self):
         """
         Update the observation from BulletPhysics
+
+        Observation contains:
+        * 3x servomotor {position, speed}
+        * position - goal (x, y, z)
+        * goal (x, y, z)
         """
         # Each servomotor position, speed and torque
         all_states = p.getJointStates(self.robot_id, self.joint_list)
         for i, (pos, vel, _, tor) in enumerate(all_states):
+            self.torques[i] = tor / self.servo_max_torque
             self.observation[3*i:3*i+3] = [
-                2 * pos / np.pi,
-                vel / self.servo_max_speed,
-                tor / self.servo_max_torque
+                np.cos(pos),
+                np.sin(pos),
+                np.clip(vel / self.servo_max_speed, -1., 1.),
             ]
 
-        # Sometimes 1.0 is greater than 1
-        self.observation = np.clip(self.observation, -1., 1.)
+        # Endcap position and orientation
+        endcap_id = 5
+        position, _, _, _, _, _ = p.getLinkState(self.robot_id, endcap_id)
+        self.observation[-6:-3] = position - self.goal_position
