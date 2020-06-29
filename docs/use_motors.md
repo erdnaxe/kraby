@@ -71,6 +71,13 @@ You can send a demo choreography to `10.42.0.1:2000` with:
 python -m gym_kraby.utils.herkulex_socket
 ```
 
+The robot will reset to its neutral position, then will receive two velocity commands.
+In a perfect world without gravity, the robot should go back to its initial state.
+
+<video style="max-width:100%;height:auto" preload="metadata" controls="">
+<source src="https://perso.crans.org/erdnaxe/videos/projet_hexapod/demo_motors.mp4" type="video/mp4">
+</video><br/>
+
 ### How slow is it?
 
 The biggest bottleneck in this implementation is the data collecting.
