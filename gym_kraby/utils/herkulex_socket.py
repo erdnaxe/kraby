@@ -77,29 +77,50 @@ class HerkulexSocket:
         for i, v in enumerate(self.calibration_values):
             self.send(0x03, [47, 0x01, v], i)
 
-        # For each servo, set blue LED and Turn/Velocity control mode
-        # We set 512 as initial position as 0 is outside range
-        self.move([512] * 18)
-
         # Prompt user if it's ready
         input("Press enter to set torque on...")
+
+        # Go home
+        self.reset_position()
+
+        # For each servo, set blue LED and Turn/Velocity control mode
+        # We set 512 as initial as 0 is outside range
+        self.move([512] * 18)
 
         # Set torque on (in RAM)
         self.send(0x03, [52, 0x01, 0x60])
 
-    def move(self, velocities: [int]):
+    def reset_position(self):
+        """Make all motor go home
+        """
+        # Torque on
+        self.send(0x03, [52, 0x01, 0x60])
+
+        # Move to home
+        command = [60]  # 672 ms playtime
+        for i in range(18):
+            # 0b00000100 = position mode and green LED
+            command += [0, 0x2, 0b00000100, i]
+        self.send(0x06, command)
+
+        # Torque off
+        sleep(2)
+        self.send(0x03, [52, 0x01, 0x00])
+
+    def move(self, velocities: np.ndarray):
         """Send a S_JOG velocity control to all servo
 
         With S_JOG all servo operates simultaneously.
 
         Args:
-            velocities ([int]): Target velocities
+            velocities (np.ndarray): Target velocities (signed int 10 bits)
         """
         command = [60]  # 672 ms playtime
+        sig = (np.sign(velocities) < 0) * 0x40
+        vel = np.abs(velocities)
         for i in range(18):
-            # TODO when in velocity control, no blocking
-            #command += [velocities[i] & 0xFF, velocities[i] >> 8, 0b1010, i]
-            command += [velocities[i] & 0xFF, velocities[i] >> 8, 0b1000, i]
+            # 0b00001010 = velocity mode and blue LED
+            command += [vel[i] & 0xFF, (vel[i] >> 8) + sig[i], 0b00001010, i]
         self.send(0x06, command)
 
     def get_observations(self, raw=False):
@@ -145,3 +166,16 @@ class HerkulexSocket:
 
             # Disable acceleration time
             self.send(0x01, [15, 0x01, 0], i)
+
+
+if __name__ == "__main__":
+    # If directly executed, then play a demo
+    h = HerkulexSocket()
+    h.reset()
+    h.move([1023]*18)
+    sleep(0.3)
+    h.move([1]*18)
+    sleep(1)
+    h.move([-1023]*18)
+    sleep(0.3)
+    h.move([1]*18)

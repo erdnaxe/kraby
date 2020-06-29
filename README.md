@@ -26,6 +26,8 @@ pip install gym_kraby --user
 python -m gym_kraby.demo
 ```
 
+To test servomotors communication with the robot, you may execute `python -m gym_kraby.utils.herkulex_socket`.
+
 ## License
 
 This project is under GNU General Public License v3.0 because we believe in

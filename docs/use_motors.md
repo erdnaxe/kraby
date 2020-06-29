@@ -65,6 +65,12 @@ A client implementation is available at
 This client is able to control the robot and get positions,
 velocities and speeds from all servomotors.
 
+You can send a demo choreography to `10.42.0.1:2000` with:
+
+```bash
+python -m gym_kraby.utils.herkulex_socket
+```
+
 ### How slow is it?
 
 The biggest bottleneck in this implementation is the data collecting.
