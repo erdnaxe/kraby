@@ -111,11 +111,16 @@ class HerkulexSocket:
         """Send a S_JOG velocity control to all servo
 
         With S_JOG all servo operates simultaneously.
+        Velocities go from -1023 to 1023.
 
         Args:
             velocities (np.ndarray): Target velocities (signed int 10 bits)
         """
-        command = [60]  # 672 ms playtime
+        # Make sure input is in range
+        velocities = np.clip(velocities, -1023, 1023)
+
+        # Build and send velocity command
+        command = [60]  # 672 ms playtime, unmeaningful for velocity control
         sig = (np.sign(velocities) < 0) * 0x40
         vel = np.abs(velocities)
         for i in range(18):
