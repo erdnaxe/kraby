@@ -33,9 +33,11 @@ The initial observation vector used is:
 | 10  | the y-axis component of the endcap position |
 | 11  | the z-axis component of the endcap position |
 
-**Note**: Some early tests were done on StableBaselines3
-but as the library is currently being developed,
-the training was failing and the average episode reward was constant.
+!!! Note
+
+    Some early tests were done on StableBaselines3
+    but as the library is currently being developed,
+    the training was failing and the average episode reward was constant.
 
 ## First tests with pytorch-a2c-ppo-acktr-gail
 
@@ -43,9 +45,11 @@ The defaults hyperparameters given in the
 [README](https://github.com/ikostrikov/pytorch-a2c-ppo-acktr-gail/blob/master/README.md)
 are recommanded and are able to give good results for a first training.
 
-**Important**: The reward function is only using the distance to a **fixed** objective,
-and the observation contains the position, velocity and torque of each servomotors
-and also **the absolute position of the endcap** of the leg.
+!!! Warning
+
+    The reward function is only using the distance to a **fixed** objective,
+    and the observation contains the position, velocity and torque of each servomotors
+    and also **the absolute position of the endcap** of the leg.
 
 ![Training results](img/training_one_leg_pytorch-a2c-ppo-acktr-gail.png)
 

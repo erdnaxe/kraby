@@ -50,12 +50,16 @@ and change:
 Compile with `make ARCH=arm64 nanopi4-images`.
 This will generate `kernel.img` and `resource.img` files.
 
-_Note:_ you may need to change `CONFIG_CROSS_COMPILE="aarch64-linux-gnu-"` in `.config`
-to point to the correct cross-compilation toolchain.
+!!! Note
 
-_Note:_ you can directly update the running kernel without reflashing rootfs with
-`sudo dd if=kernel.img of=/dev/mmcblk1p5` and `sudo dd if=resource.img of=/dev/mmcblk1p4`.
-Please use with caution, you may brick your device!
+    You may need to change `CONFIG_CROSS_COMPILE="aarch64-linux-gnu-"` in `.config`
+    to point to the correct cross-compilation toolchain.
+
+!!! Note
+
+    You can directly update the running kernel without reflashing rootfs with
+    `sudo dd if=kernel.img of=/dev/mmcblk1p5` and `sudo dd if=resource.img of=/dev/mmcblk1p4`.
+    **Please use with caution, you may brick your device!**
 
 ## Install modified FriendlyCore
 
@@ -96,8 +100,10 @@ sudo nmcli connection up Hotspot
 Reboot and connect to WiFi "Hexapod" with password "tfpopcorns",
 then `ssh pi@10.42.0.1`.
 
-_Note:_ you can plug wired Internet access
-and NetworkManager will automatically use and share this connection.
+!!! Note
+
+    You can plug wired Internet access
+	and NetworkManager will automatically use and share this connection.
 
 ## Test the MPU9250
 

@@ -23,10 +23,12 @@ to transfer a simulated control agent to the real robot.
 
 ![servomotors id](img/servomotors_id.jpg)
 
-**Notice**: The Herkulex DRS-0101 are able to communicate in series as fast as 0.667 Mbauds/s.
-Nevertheless **RK3399 boards are unable to communicate at that baud-rate
-as their base baud-rate is 1.5 Mbaud/s[^rk3399dtsi]**.
-So 0.5 Mbaud/s is a good compromise (divided by 3 rather than 2.25).
+!!! warning "Max baud-rate"
+
+    Herkulex DRS-0101 are able to communicate in series as fast as 0.667 Mbauds/s.
+    Nevertheless **RK3399 boards are unable to communicate at that baud-rate
+    as their base baud-rate is 1.5 Mbaud/s[^rk3399dtsi]**.
+    So 0.5 Mbaud/s is a good compromise (divided by 3 rather than 2.25).
 
 ## Server-side
 
@@ -50,8 +52,10 @@ and some common serial configuration to `0.0.0.0:2000`.
 
 Now, you may restart the service with `sudo systemctl restart ser2net`.
 
-**Notice**: if you improperly disconnect the socket too many times,
-then you may need to restart `ser2net` service to clean up dead sockets.
+!!! note
+
+    If you improperly disconnect the socket too many times,
+    then you may need to restart `ser2net` service to clean up dead sockets.
 
 It is also possible to use `socat` or `netcat` to achieve the same result,
 but you may have to write a Systemd service unit and make sure that the

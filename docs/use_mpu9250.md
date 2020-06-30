@@ -60,5 +60,7 @@ with IMUConnection("10.42.0.1", "mpu6050") as imu:
 
 ![IIO access in Python](img/iio_python.png)
 
-_Note:_ You may install the documentation with the `libiio0-doc` package
-and explore it by opening `/usr/share/doc/libiio0-doc/html` in a web browser.
+!!! Note
+
+    You may install the documentation with the `libiio0-doc` package
+    and explore it by opening `/usr/share/doc/libiio0-doc/html` in a web browser.

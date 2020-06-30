@@ -63,39 +63,12 @@ python main.py --env-name gym_kraby:OneLegBulletEnv-v0 --algo ppo --use-gae \
 
 Then follow instructions of the README.
 
-#### Running simultaneous training
+!!! Note "Running simultaneous training"
 
-[generate_tmux_yaml.py](https://github.com/ikostrikov/pytorch-a2c-ppo-acktr-gail/blob/master/generate_tmux_yaml.py)
-generates a tmuxp Yaml configuration file to launch simultaneous experiments.
-This is a modified version for `gym_kraby:OneLegBulletEnv-v0`:
-
-```Python
-import yaml
-
-ppo_mujoco_template = "python main.py --env-name {0} --algo ppo --use-gae --log-interval 1 --num-steps 2048 --num-processes 1 --lr 3e-4 --entropy-coef 0 --value-loss-coef 0.5 --ppo-epoch 10 --num-mini-batch 32 --gamma 0.99 --gae-lambda 0.95 --num-env-steps 1000000 --use-linear-lr-decay --no-cuda --log-dir /tmp/gym/{1}/{1}-{2} --seed {2} --use-proper-time-limits"
-template = ppo_mujoco_template
-env_name = "gym_kraby:OneLegBulletEnv-v0"
-config = {"session_name": "run-all", "windows": []}
-
-for i in range(16):
-    panes_list = []
-    panes_list.append(
-        template.format(env_name,
-                        env_name.split('-')[0].lower(), i))
-
-    config["windows"].append({
-        "window_name": "seed-{}".format(i),
-        "panes": panes_list
-    })
-
-yaml.dump(config, open("run_all.yaml", "w"), default_flow_style=False)
-```
-
-After launching this script you can run the experiments,
-
-```bash
-tmuxp load run_all.yaml
-```
+    [generate_tmux_yaml.py](https://github.com/ikostrikov/pytorch-a2c-ppo-acktr-gail/blob/master/generate_tmux_yaml.py)
+    generates a tmuxp Yaml configuration file to launch simultaneous experiments.
+    You can run the experiments with
+    `tmuxp load run_all.yaml`.
 
 ### Using StableBaselines PPO (Tensorflow 1)
 
@@ -121,6 +94,10 @@ docker run -it -u $(id -u):$(id -g) --gpus all --rm \
 ```
 
 Some notebooks are available in `kraby/notebooks/stablebaselines/`.
+
+!!! Note
+
+    `-u $(id -u):$(id -g) --env="DISPLAY"  --volume="/tmp/.X11-unix:/tmp/.X11-unix:rw"` is required to use X11 windows in Docker container and launch PyBullet debugging GUI. It forwards the host X11 server.
 
 ### Using OpenAI Spinning Up PPO (PyTorch)
 
