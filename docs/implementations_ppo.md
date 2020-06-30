@@ -116,6 +116,7 @@ as your user and with GPU support by running in repository folder:
 ```bash
 docker build -f Dockerfile.stablebaselines -t kraby-stablebaselines .
 docker run -it -u $(id -u):$(id -g) --gpus all --rm \
+    --env="DISPLAY"  --volume="/tmp/.X11-unix:/tmp/.X11-unix:rw" \
     -v $(pwd):/tf/kraby -p 8888:8888 kraby-stablebaselines
 ```
 

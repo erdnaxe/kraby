@@ -4,7 +4,7 @@
 
 FROM tensorflow/tensorflow:1.15.2-gpu-py3-jupyter
 RUN apt-get update && \
-    apt-get install -y libsm6 libxext6 libxrender-dev cmake zlib1g-dev ffmpeg && \
+    apt-get install -y libsm6 libxext6 libxrender-dev cmake zlib1g-dev ffmpeg libglvnd0 libgl1 libglx0 libegl1 mesa-utils && \
     rm -rf /var/lib/apt/lists/*
 RUN pip install gym stable-baselines imageio
 WORKDIR /tf/kraby
@@ -15,6 +15,9 @@ RUN pip install -e .
 # from https://github.com/pkienzle/opencl_docker
 RUN mkdir -p /etc/OpenCL/vendors && \
     echo "libnvidia-opencl.so.1" > /etc/OpenCL/vendors/nvidia.icd
+
+# Add OpenGL support
+ENV NVIDIA_DRIVER_CAPABILITIES ${NVIDIA_DRIVER_CAPABILITIES},display
 
 # Launch Jupyter Notebook by default on :8888
 EXPOSE 8888
