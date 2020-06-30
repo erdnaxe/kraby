@@ -31,3 +31,4 @@ markdown_extensions:
   - attr_list
   - smarty
   - footnotes
+  - admonition
