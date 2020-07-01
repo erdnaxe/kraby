@@ -32,6 +32,8 @@ to transfer a simulated control agent to the real robot.
 
 ## Server-side
 
+### With ser2net
+
 To ease development, `ser2net` can be used to publish
 this serial port to a TCP socket.
 Then, this TCP socket can be used one the same network, on a computer connected to the robot or locally.
@@ -57,8 +59,27 @@ Now, you may restart the service with `sudo systemctl restart ser2net`.
     If you improperly disconnect the socket too many times,
     then you may need to restart `ser2net` service to clean up dead sockets.
 
-It is also possible to use `socat` or `netcat` to achieve the same result,
-but you may have to write a Systemd service unit and make sure that the
+### With socat
+
+It is possible to achieve the same result with a `socat` relay.
+
+```bash
+socat tcp-listen:2000,reuseaddr,fork file:/dev/ttyS4,raw,nonblock,waitlock=/tmp/s0.lock,echo=0,b500000
+```
+
+`tcp-listen:2000` makes socat listen on TCP 2000.
+The serial TTY is open as `raw` to pass input and output unprocessed,
+`nonblock` to open in nonblocking mode,
+`echo=0` to disable local echo,
+`b500000` to set the baud-rate.
+
+You may also consider using UDP to achieve faster communications,
+
+```bash
+socat udp-listen:2000,reuseaddr,fork file:/dev/ttyS4,raw,nonblock,waitlock=/tmp/s0.lock,echo=0,b500000
+```
+
+You may have to write a Systemd service unit and make sure that the
 connection persist after ending an instance.
 
 ## Client-side

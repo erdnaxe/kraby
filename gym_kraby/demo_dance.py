@@ -21,6 +21,7 @@ def main(args):
     low_bin = math.floor(low / delta_f)
 
     # Connect and init motors
+    print("Connecting...")
     h = HerkulexSocket()
     h.reset()
 
@@ -42,6 +43,7 @@ def main(args):
         blocksize=int(samplerate * args.block_duration / 1000),
         samplerate=samplerate,
     ):
+        print("Press enter to quit...")
         while True:
             if input() in ('', 'q', 'Q'):
                 h.disableTorque()
