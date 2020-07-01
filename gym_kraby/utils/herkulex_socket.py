@@ -89,7 +89,7 @@ class HerkulexSocket:
         # Go home and blue led
         self.move([0] * 18)
 
-    def move(self, dp: np.ndarray):
+    def move(self, dp: np.ndarray, reset_neutral=False):
         """Send a S_JOG position control to all servo
 
         With S_JOG all servo operates simultaneously.
@@ -98,6 +98,9 @@ class HerkulexSocket:
         Args:
             dp (np.ndarray): Difference of position (signed int 10 bits)
         """
+        if reset_neutral:
+            self.positions = np.array([512] * 18)
+
         self.positions += np.array(dp).astype(int)
 
         # Make sure input is in range
