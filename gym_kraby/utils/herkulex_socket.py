@@ -30,6 +30,9 @@ class HerkulexSocket:
         self.socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
         self.socket.connect((ip, port))
 
+        # Init all servomotors to neutral position
+        self.positions = np.array([512] * 18)
+
     def send(self, cmd: int, data: [int], pid=0xFE, len_ack=0):
         """Format and send a command to one or all Herkulex servomotors
 
@@ -80,52 +83,40 @@ class HerkulexSocket:
         # Prompt user if it's ready
         input("Press enter to set torque on...")
 
-        # Go home
-        self.reset_position()
-
-        # For each servo, set blue LED and Turn/Velocity control mode
-        # We set 512 as initial as 0 is outside range
-        self.move([512] * 18)
-
         # Set torque on (in RAM)
         self.send(0x03, [52, 0x01, 0x60])
 
-    def reset_position(self):
-        """Make all motor go home
-        """
-        # Torque on
-        self.send(0x03, [52, 0x01, 0x60])
+        # Go home and blue led
+        self.move([0] * 18)
 
-        # Move to home
-        command = [60]  # 672 ms playtime
-        for i in range(18):
-            # 0b00000100 = position mode and green LED
-            command += [0, 0x2, 0b00000100, i]
-        self.send(0x06, command)
-
-        # Torque off
-        sleep(2)
-        self.send(0x03, [52, 0x01, 0x00])
-
-    def move(self, velocities: np.ndarray):
-        """Send a S_JOG velocity control to all servo
+    def move(self, dp: np.ndarray):
+        """Send a S_JOG position control to all servo
 
         With S_JOG all servo operates simultaneously.
-        Velocities go from -1023 to 1023.
+        Difference of position go from -1023 to 1023.
 
         Args:
-            velocities (np.ndarray): Target velocities (signed int 10 bits)
+            dp (np.ndarray): Difference of position (signed int 10 bits)
         """
-        # Make sure input is in range
-        velocities = np.clip(velocities, -1023, 1023)
+        self.positions += np.array(dp).astype(int)
 
-        # Build and send velocity command
-        command = [60]  # 672 ms playtime, unmeaningful for velocity control
-        sig = (np.sign(velocities) < 0) * 0x40
-        vel = np.abs(velocities)
+        # Make sure input is in range
+        self.positions = np.clip(
+            self.positions,
+            [435, 415, 419] * 6,
+            [590, 609, 605] * 6,
+            dtype=int,
+        )
+
+        # Build and send position command
+        command = [5]  # 56 ms playtime
         for i in range(18):
-            # 0b00001010 = velocity mode and blue LED
-            command += [vel[i] & 0xFF, (vel[i] >> 8) + sig[i], 0b00001010, i]
+            command += [
+                self.positions[i] & 0xFF,
+                (self.positions[i] >> 8),
+                0b00001000,  # position mode and blue LED
+                i  # servo id
+            ]
         self.send(0x06, command)
 
     def get_observations(self, raw=False):
@@ -172,15 +163,23 @@ class HerkulexSocket:
             # Disable acceleration time
             self.send(0x01, [15, 0x01, 0], i)
 
+    def disableTorque(self):
+        """Disable torque on all servomotors
+        """
+        # Set torque off (in RAM)
+        self.send(0x03, [52, 0x01, 0x00])
+
 
 if __name__ == "__main__":
     # If directly executed, then play a demo
     h = HerkulexSocket()
     h.reset()
-    h.move([1023]*18)
-    sleep(0.3)
-    h.move([1]*18)
-    sleep(1)
-    h.move([-1023]*18)
-    sleep(0.3)
-    h.move([1]*18)
+
+    for i in range(1000):
+        sleep(0.05)
+        m1 = np.sin(i*0.1/2)*5
+        m2 = np.sin(i*0.1)*10
+        m3 = np.sin(i*0.1)*10
+        h.move([m1, m2, m3]*6)
+
+    h.disableTorque()
