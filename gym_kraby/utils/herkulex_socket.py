@@ -62,7 +62,7 @@ class HerkulexSocket:
         # Build and send packet
         packet = bytearray([0xFF, 0xFF, size, pid, cmd,
                             checksum1, checksum2] + data)
-        self.socket.send(packet)
+        self.socket.sendall(packet)
 
         # Receive
         ack = bytearray()
