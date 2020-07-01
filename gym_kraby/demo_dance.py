@@ -22,7 +22,7 @@ def main(args):
 
     # Connect and init motors
     print("Connecting...")
-    h = HerkulexSocket()
+    h = HerkulexSocket(use_udp=True)
     h.reset()
 
     def callback(indata, frames, time, _):

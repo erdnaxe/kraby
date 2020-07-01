@@ -13,7 +13,7 @@ class HerkulexSocket:
         30, 256-46, 46,
     ]
 
-    def __init__(self, max_velocity=6.308, max_torque=1.57, ip="10.42.0.1", port=2000):
+    def __init__(self, max_velocity=6.308, max_torque=1.57, ip="10.42.0.1", port=2000, use_udp=False):
         """Initialize Herkulex class
 
         Args:
@@ -24,10 +24,13 @@ class HerkulexSocket:
         """
         self.max_velocity = max_velocity
         self.max_torque = max_torque
-        self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        if use_udp:
+            self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        else:
+            self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            # Disable TCP Naggle algorithm
+            self.socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
 
-        # Disable TCP Naggle algorithm
-        self.socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
         self.socket.connect((ip, port))
 
         # Init all servomotors to neutral position
