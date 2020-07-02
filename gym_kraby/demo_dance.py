@@ -34,7 +34,7 @@ def main(args):
             # Control servomotors
             a = magnitude[low_bin:low_bin + columns] * 20 - 10
             m2, m3 = a[1:3]
-            h.move([m3/10, m2, m2]*6, reset_neutral=True)
+            h.move([m3/10, m2, m2*2]*6, reset_neutral=True)
 
     with sd.InputStream(
         device=args.device,
@@ -68,12 +68,12 @@ if __name__ == "__main__":
     parser.add_argument(
         '-d', '--device',
         type=int,
-        help='input device (numeric ID or substring)',
+        help='input device (numeric ID)',
     )
     parser.add_argument(
         '-g', '--gain',
         type=float,
-        default=10,
+        default=100,
         help='initial gain factor (default %(default)s)',
     )
     args = parser.parse_args()
