@@ -73,14 +73,28 @@ The serial TTY is open as `raw` to pass input and output unprocessed,
 `echo=0` to disable local echo,
 `b500000` to set the baud-rate.
 
-You may also consider using UDP to achieve faster communications,
+You may also consider using UDP to achieve faster commands,
 
 ```bash
-socat udp-listen:2000,reuseaddr,fork file:/dev/ttyS4,raw,nonblock,waitlock=/tmp/s0.lock,echo=0,b500000
+socat udp-recvfrom:2000,fork file:/dev/ttyS4,raw,nonblock,echo=0,b500000
 ```
 
-You may have to write a Systemd service unit and make sure that the
-connection persist after ending an instance.
+You may have to write a Systemd service unit to establish these relays at boot,
+edit `/etc/systemd/system/socat-tcp.service`:
+
+```ini
+[Unit]
+Description=Socat TCP to ttyS4 relay
+After=network-online.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/socat tcp-listen:2000,reuseaddr,fork file:/dev/ttyS4,raw,nonblock,waitlock=/tmp/s0.lock,echo=0,b500000
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+```
 
 ## Client-side
 
