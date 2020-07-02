@@ -18,7 +18,7 @@ class OneLegBulletEnv(gym.Env):
         "video.frames_per_second": 100,
     }
 
-    def __init__(self, time_step=0.01, render=False):
+    def __init__(self, time_step=0.01, delta=0.5, render=False):
         """Init environment"""
         super().__init__()
 
@@ -55,6 +55,9 @@ class OneLegBulletEnv(gym.Env):
         self.servo_max_speed = 6.308  # rad/s
         self.servo_max_torque = 1.57  # N.m
 
+        # Size of the box in which we pick the target
+        self.delta = delta  # from 0 to 1
+
         # Seed random number generator
         self.seed()
 
@@ -82,22 +85,24 @@ class OneLegBulletEnv(gym.Env):
             p.resetJointState(self.robot_id, j,
                               np.random.uniform(low=-np.pi/4, high=np.pi/4))
 
-        # Set random goal and put it in observations
-        d = 0.1
-        self.goal_position = np.array([
-            np.random.uniform(0.219 - 0.069*d, 0.219 + 0.069*d),
-            np.random.uniform(0.020 - 0.153*d, 0.020 + 0.153*d),
-            np.random.uniform(0.128 - 0.072*d, 0.128 + 0.072*d),
+        # Set random target and put it in observations
+        self.target_position = np.array([
+            np.random.uniform(0.219 - 0.069*self.delta,
+                              0.219 + 0.069*self.delta),
+            np.random.uniform(0.020 - 0.153*self.delta,
+                              0.020 + 0.153*self.delta),
+            np.random.uniform(0.128 - 0.072*self.delta,
+                              0.128 + 0.072*self.delta),
         ])
-        self.observation[-3:] = self.goal_position
+        self.observation[-3:] = self.target_position
 
-        # Show goal as a crosshair
+        # Show target as a crosshair
         p.removeAllUserDebugItems()
-        p.addUserDebugLine(self.goal_position - [0, 0, 0.01],
-                           self.goal_position + [0, 0, 0.01],
+        p.addUserDebugLine(self.target_position - [0, 0, 0.01],
+                           self.target_position + [0, 0, 0.01],
                            [0, 0, 0], 2)
-        p.addUserDebugLine(self.goal_position - [0, 0.01, 0],
-                           self.goal_position + [0, 0.01, 0],
+        p.addUserDebugLine(self.target_position - [0, 0.01, 0],
+                           self.target_position + [0, 0.01, 0],
                            [0, 0, 0], 2)
 
         # Return observation
@@ -183,10 +188,10 @@ class OneLegBulletEnv(gym.Env):
         """
         Compute reward function
         """
-        # Distance progress toward goal
+        # Distance progress toward target
         endcap_id = 5
         position, _, _, _, _, _ = p.getLinkState(self.robot_id, endcap_id)
-        goal_distance = np.square(position - self.goal_position).sum()
+        target_distance = np.square(position - self.target_position).sum()
 
         # Comsuption is speed * torque
         speeds = self.observation[2:-6:3]
@@ -195,7 +200,7 @@ class OneLegBulletEnv(gym.Env):
         w = 0  # comsuption weight, FIXME: disabled
 
         # Compute reward
-        reward = -goal_distance - w * comsuption
+        reward = -target_distance - w * comsuption
         return reward
 
     def _update_observation(self):
@@ -203,9 +208,9 @@ class OneLegBulletEnv(gym.Env):
         Update the observation from BulletPhysics
 
         Observation contains:
-        * 3x servomotor {position, speed}
-        * position - goal (x, y, z)
-        * goal (x, y, z)
+        * 3x servomotor {cos(position), sin(position), speed}
+        * position - target (x, y, z)
+        * target (x, y, z)
         """
         # Each servomotor position, speed and torque
         all_states = p.getJointStates(self.robot_id, self.joint_list)
@@ -220,4 +225,4 @@ class OneLegBulletEnv(gym.Env):
         # Endcap position and orientation
         endcap_id = 5
         position, _, _, _, _, _ = p.getLinkState(self.robot_id, endcap_id)
-        self.observation[-6:-3] = position - self.goal_position
+        self.observation[-6:-3] = position - self.target_position
