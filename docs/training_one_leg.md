@@ -1,37 +1,33 @@
-# Training one hexapod leg
+# Training one robot leg
 
-This section gives some example of training and draws some conclusions about
+This section gives some example and draws some conclusions about
 the training of a single robot leg.
 
 The environment resets the leg to a random position.
 The agent has to command each servomotors
-to move the endcap to the objective (visualized by the cross).
+to move the endcap to a random objective (visualized by the cross).
 
 ```Python
 # Reset all joint using normal distribution
 for j in self.joint_list:
     p.resetJointState(self.robot_id, j,
                       np.random.uniform(low=-np.pi/4, high=np.pi/4))
+
+# Set random target in a 3D box
+self.target_position = np.array([
+    np.random.uniform(0.219 - 0.069*self.delta, 0.219 + 0.069*self.delta),
+    np.random.uniform(0.020 - 0.153*self.delta, 0.020 + 0.153*self.delta),
+    np.random.uniform(0.128 - 0.072*self.delta, 0.128 + 0.072*self.delta),
+])
 ```
 
+!!! Warning "Batch size"
+
+    As the target changes at each episode start,
+    the batch size need to be large enough
+    to make sure it contains some variance.
+
 ![One leg environment](img/one_leg_env.png)
-
-The initial observation vector used is:
-
-| Num | Observation                                 |
-| --- | ------------------------------------------- |
-| 0   | position (first joint)                      |
-| 1   | velocity (first joint)                      |
-| 2   | torque (first joint)                        |
-| 3   | position (first joint)                      |
-| 4   | velocity (first joint)                      |
-| 5   | torque (first joint)                        |
-| 6   | position (first joint)                      |
-| 7   | velocity (first joint)                      |
-| 8   | torque (first joint)                        |
-| 9   | the x-axis component of the endcap position |
-| 10  | the y-axis component of the endcap position |
-| 11  | the z-axis component of the endcap position |
 
 !!! Note
 
@@ -39,17 +35,35 @@ The initial observation vector used is:
     but as the library is currently being developed,
     the training was failing and the average episode reward was constant.
 
-## First tests with pytorch-a2c-ppo-acktr-gail
+## First tests with a fixed objective
+
+### With pytorch-a2c-ppo-acktr-gail
 
 The defaults hyperparameters given in the
-[README](https://github.com/ikostrikov/pytorch-a2c-ppo-acktr-gail/blob/master/README.md)
+[pytorch-a2c-ppo-acktr-gail README](https://github.com/ikostrikov/pytorch-a2c-ppo-acktr-gail/blob/master/README.md)
 are recommanded and are able to give good results for a first training.
 
 !!! Warning
 
-    The reward function is only using the distance to a **fixed** objective,
-    and the observation contains the position, velocity and torque of each servomotors
-    and also **the absolute position of the endcap** of the leg.
+    The reward function is only using the distance to a **fixed** objective.
+    This agent learned only to go to a fixed target.
+
+The observation vector used here is:
+
+| Num | Observation                                 |
+| --- | ------------------------------------------- |
+| 0   | position (first joint)                      |
+| 1   | velocity (first joint)                      |
+| 2   | torque (first joint)                        |
+| 3   | position (second joint)                     |
+| 4   | velocity (second joint)                     |
+| 5   | torque (second joint)                       |
+| 6   | position (third joint)                      |
+| 7   | velocity (third joint)                      |
+| 8   | torque (third joint)                        |
+| 9   | the x-axis component of the endcap position |
+| 10  | the y-axis component of the endcap position |
+| 11  | the z-axis component of the endcap position |
 
 ![Training results](img/training_one_leg_pytorch-a2c-ppo-acktr-gail.png)
 
@@ -57,7 +71,7 @@ are recommanded and are able to give good results for a first training.
 The `enjoy.py` script shows the leg moving to the fixed target,
 but it vibrates after reaching the objective.
 
-## Testing StableBaselines
+### With StableBaselines
 
 Start StableBaselines Docker as explained in [previous page](implementations_ppo.md).
 Then in Jupyter web interface,
@@ -74,39 +88,47 @@ As StableBaselines stands out as being an easy PPO implementation
 with a clear documentation and hyperparameters,
 all the following training were done with it.
 
-## Tweaking the observation and reward
+### Removing motors torque from observations
 
-There are two problems with the previous trainings:
+The observation vector used here is:
 
-1.  The observation contains the absolute position of the endcap.
+| Num | Observation                                 |
+| --- | ------------------------------------------- |
+| 0   | position (first joint)                      |
+| 1   | velocity (first joint)                      |
+| 2   | position (second joint)                     |
+| 3   | velocity (second joint)                     |
+| 4   | position (third joint)                      |
+| 5   | velocity (third joint)                      |
+| 6   | the x-axis component of the endcap position |
+| 7   | the y-axis component of the endcap position |
+| 8   | the z-axis component of the endcap position |
 
-2.  The reward function is the opposite of the distance to a fixed objective,
-    or we want the leg to be able to move to any objective that the user inputs.
+**WIP**
 
-### Indicating the target position in observations
+### Using cosinus and sinus of motor positions
 
-The absolute position of the endcap could be computed through a mecanical equation using servomotors positions.
-But before doing it, it is also interesting to study the learning when
-the absolute position is remplaced by:
+This idea comes from [OpenAI Gym Reacher-v2 environment](https://github.com/openai/gym/wiki/Reacher-v2).
 
--   the objective position (constant during one episode),
--   the objective position vector substracted by the current position.
--   the objective position vector substracted by the current position and the objective position.
+The observation vector used here is:
 
-The third idea comes from
-[OpenAI Gym Reacher-v2 environment](https://github.com/openai/gym/wiki/Reacher-v2).
-which observation vector is:
+| Num | Observation                                 |
+| --- | ------------------------------------------- |
+| 0   | cos(position) (first joint)                 |
+| 1   | sin(position) (first joint)                 |
+| 2   | velocity (first joint)                      |
+| 3   | cos(position) (second joint)                |
+| 4   | sin(position) (second joint)                |
+| 5   | velocity (second joint)                     |
+| 6   | cos(position) (third joint)                 |
+| 7   | sin(position) (third joint)                 |
+| 8   | velocity (third joint)                      |
+| 9   | the x-axis component of the endcap position |
+| 10  | the y-axis component of the endcap position |
+| 11  | the z-axis component of the endcap position |
 
-| Num | Observation                                                         |
-| --- | ------------------------------------------------------------------- |
-| 0   | cos(theta) (first joint)                                            |
-| 1   | cos(theta) (second joint)                                           |
-| 2   | sin(theta) (first joint)                                            |
-| 3   | sin(theta) (second joint)                                           |
-| 4   | qpos (the x coordinate of the target)                               |
-| 5   | qpos (the y coordinate of the target)                               |
-| 6   | qvel (the velocity of the fingertip in the x direction)             |
-| 7   | qvel (the velocity of the fingertip in the y direction)             |
-| 8   | the x-axis component of the vector from the target to the fingertip |
-| 9   | the y-axis component of the vector from the target to the fingertip |
-| 10  | the z-axis component of the vector from the target to the fingertip |
+**WIP**
+
+## Learning to go to a random target
+
+**WIP**
