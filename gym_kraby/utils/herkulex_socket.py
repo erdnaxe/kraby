@@ -21,6 +21,7 @@ class HerkulexSocket:
             max_torque ([type], optional): Maximum servomotor torque. Defaults to 1.57 N.m.
             ip (str, optional): Control socket IP. Defaults to "10.42.0.1".
             port (int, optional): Control socket port. Defaults to 2000.
+            use_udp (bool, optional): Use UDP connection rather than TCP.
         """
         self.max_velocity = max_velocity
         self.max_torque = max_torque
@@ -180,12 +181,16 @@ if __name__ == "__main__":
     # If directly executed, then play a demo
     h = HerkulexSocket()
     h.reset()
+    sleep(10)
 
-    for i in range(1000):
+    for i in range(200):
         sleep(0.05)
         m1 = np.sin(i*0.1/2)*5
         m2 = np.sin(i*0.1)*10
         m3 = np.sin(i*0.1)*10
         h.move([m1, m2, m3]*6)
 
+    # Return to home and disable torque
+    h.move([0]*18, reset_neutral=True)
+    sleep(0.5)
     h.disableTorque()

@@ -110,11 +110,12 @@ You can send a demo choreography to `10.42.0.1:2000` with:
 python -m gym_kraby.utils.herkulex_socket
 ```
 
-The robot will reset to its neutral position, then will receive two velocity commands.
-In a perfect world without gravity, the robot should go back to its initial state.
+The robot will reset to its neutral position,
+then will receive position commands each 50 ms
+and will finally reset to its neutral position.
 
 <video style="max-width:100%;height:auto" preload="metadata" controls="">
-<source src="https://perso.crans.org/erdnaxe/videos/projet_hexapod/demo_motors.mp4" type="video/mp4">
+<source src="https://perso.crans.org/erdnaxe/videos/projet_hexapod/herkulex_demo.mp4" type="video/mp4">
 </video><br/>
 
 ### How slow is it?
@@ -126,7 +127,7 @@ This takes approximatively:
 
 -   between 100 and 140 ms at 115 200 bauds/s with a TCP connection over WiFi
 -   between 60 and 100 ms at 500 000 bauds/s with a TCP connection over WiFi
--   between 35 and 50 ms at 500 000 bauds/s locally
+-   between 35 and 50 ms at 500 000 bauds/s with a local TCP connection
 
 For the command it is much faster as it can be done using only one
 `S_JOG` packet[^herkulex_manual].
