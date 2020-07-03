@@ -21,12 +21,6 @@ self.target_position = np.array([
 ])
 ```
 
-!!! Warning "Batch size"
-
-    As the target changes at each episode start,
-    the batch size need to be large enough
-    to make sure it contains some variance.
-
 ![One leg environment](img/one_leg_env.png)
 
 !!! Note
@@ -65,6 +59,9 @@ The observation vector used here is:
 | 10  | the y-axis component of the endcap position |
 | 11  | the z-axis component of the endcap position |
 
+The reward is `-target_distance`,
+`target_distance` being the distance between the endcap and the target.
+
 ![Training results](img/training_one_leg_pytorch-a2c-ppo-acktr-gail.png)
 
 **The training is successful and converges after 300k steps.**
@@ -88,6 +85,48 @@ As StableBaselines stands out as being an easy PPO implementation
 with a clear documentation and hyperparameters,
 all the following training were done with it.
 
+## Learning to go to a random target
+
+Now we fix `delta = 0.5` to pick the target (x, y, z) such as,
+0.1845 ≤ x ≤ 0.2535,
+-0.0565 ≤ y ≤ 0.0965,
+0.0920 ≤ z ≤ 0.164.
+
+![Visualization](img/onde_leg_env_delta05.png)
+
+!!! Warning "Batch size"
+
+    As the target changes at each episode start,
+    the batch size need to be large enough
+    to make sure it contains some variance.
+
+### First tests
+
+The observation vector used here is:
+
+| Num | Observation                                 |
+| --- | ------------------------------------------- |
+| 0   | position (first joint)                      |
+| 1   | velocity (first joint)                      |
+| 2   | torque (first joint)                        |
+| 3   | position (second joint)                     |
+| 4   | velocity (second joint)                     |
+| 5   | torque (second joint)                       |
+| 6   | position (third joint)                      |
+| 7   | velocity (third joint)                      |
+| 8   | torque (third joint)                        |
+| 9   | the x-axis component of the endcap position |
+| 10  | the y-axis component of the endcap position |
+| 11  | the z-axis component of the endcap position |
+| 12  | the x-axis component of the target          |
+| 13  | the y-axis component of the target          |
+| 14  | the z-axis component of the target          |
+
+The reward is `-target_distance`,
+`target_distance` being the distance between the endcap and the target.
+
+**WIP**
+
 ### Removing motors torque from observations
 
 The observation vector used here is:
@@ -103,6 +142,9 @@ The observation vector used here is:
 | 6   | the x-axis component of the endcap position |
 | 7   | the y-axis component of the endcap position |
 | 8   | the z-axis component of the endcap position |
+
+The reward is `-target_distance`,
+`target_distance` being the distance between the endcap and the target.
 
 **WIP**
 
@@ -126,9 +168,5 @@ The observation vector used here is:
 | 9   | the x-axis component of the endcap position |
 | 10  | the y-axis component of the endcap position |
 | 11  | the z-axis component of the endcap position |
-
-**WIP**
-
-## Learning to go to a random target
 
 **WIP**
