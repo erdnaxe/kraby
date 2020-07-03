@@ -64,6 +64,11 @@ The reward is `-target_distance`,
 
 ![Training results](img/training_one_leg_pytorch-a2c-ppo-acktr-gail.png)
 
+!!! note
+
+    16 trainings with different seeds were averaged to plot the previous figure.
+    The light blue zone corresponds to the standard error.
+
 **The training is successful and converges after 300k steps.**
 The `enjoy.py` script shows the leg moving to the fixed target,
 but it vibrates after reaching the objective.
@@ -102,6 +107,60 @@ Now we fix `delta = 0.5` to pick the target (x, y, z) such as,
 
 ### First tests
 
+We used the following code and hyperparameters to train using StableBaselines:
+
+```Python
+from stable_baselines.common.policies import MlpPolicy
+from stable_baselines.common import set_global_seeds
+from stable_baselines import PPO2
+from stable_baselines.common.vec_env import SubprocVecEnv
+import gym
+from gym.wrappers import TimeLimit
+
+
+def make_env(rank, seed=0):
+    """
+    Init an environment
+
+    :param rank: (int) index of the subprocess
+    :param seed: (int) the inital seed for RNG
+    """
+    timestep_limit = 128
+
+    def _init():
+        env = gym.make("gym_kraby:OneLegBulletEnv-v0")
+        env = TimeLimit(env, timestep_limit)
+        env.seed(seed + rank)
+        return env
+    set_global_seeds(seed)
+    return _init
+
+seed = 1
+num_cpu = 16
+env = SubprocVecEnv([make_env(i, seed) for i in range(num_cpu)])
+
+# Use `tensorboard --logdir notebooks/stablebaselines/tensorboard_log/doc1` to inspect learning
+model = PPO2(
+    policy=MlpPolicy,
+    env=env,
+    gamma=0.99,  # Discount factor
+    n_steps=512,  # batchsize = n_steps * n_envs
+    ent_coef=0.0,  # Entropy coefficient for the loss calculation
+    learning_rate=2.5e-4,
+    lam=0.95,  # Factor for trade-off of bias vs variance for Generalized Advantage Estimator
+    nminibatches=32,  # Number of training minibatches per update.
+                      # For recurrent policies, the nb of env run in parallel should be a multiple of it.
+    noptepochs=4,  # Number of epoch when optimizing the surrogate
+    cliprange=0.2,  # Clipping parameter, this clipping depends on the reward scaling
+    verbose=False,
+    tensorboard_log="./tensorboard_log/doc1/",
+
+    seed=seed,  # Fixed seed
+    n_cpu_tf_sess=1,  # force deterministic results
+)
+model.learn(total_timesteps=int(2e6))
+```
+
 The observation vector used here is:
 
 | Num | Observation                                 |
@@ -125,7 +184,9 @@ The observation vector used here is:
 The reward is `-target_distance`,
 `target_distance` being the distance between the endcap and the target.
 
-**WIP**
+![Training results](img/training_one_leg_random_target.png)
+
+<!-- TODO video -->
 
 ### Removing motors torque from observations
 
@@ -146,7 +207,10 @@ The observation vector used here is:
 The reward is `-target_distance`,
 `target_distance` being the distance between the endcap and the target.
 
-**WIP**
+![Training results](img/training_one_leg_without_torque.png)
+
+It seems that the training is a bit faster
+without motors torques as the observation vector is smaller.
 
 ### Using cosinus and sinus of motor positions
 
@@ -169,4 +233,5 @@ The observation vector used here is:
 | 10  | the y-axis component of the endcap position |
 | 11  | the z-axis component of the endcap position |
 
-**WIP**
+![Training results](img/training_one_leg_sin_cos.png)
+
