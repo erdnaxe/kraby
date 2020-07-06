@@ -215,6 +215,12 @@ The reward is `-target_distance`,
 It seems that the training is a bit faster
 without motors torques as the observation vector is smaller.
 
+<video style="max-width:100%;height:auto" preload="metadata" controls="">
+<source src="https://perso.crans.org/erdnaxe/videos/projet_hexapod/training_one_leg_without_torque.mp4" type="video/mp4">
+</video><br/>
+
+The leg does not always reach the target and vibrates.
+
 ### Using cosinus and sinus of motor positions
 
 This idea comes from [OpenAI Gym Reacher-v2 environment](https://github.com/openai/gym/wiki/Reacher-v2).
@@ -240,3 +246,5 @@ The observation vector used here is:
 | 14  | the z-axis component of the target          |
 
 ![Training results](img/training_one_leg_sin_cos.png)
+
+The training using cosinus and sinus is slower.
