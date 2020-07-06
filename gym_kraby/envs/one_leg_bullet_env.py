@@ -39,8 +39,8 @@ class OneLegBulletEnv(gym.Env):
                                        shape=(self.n_actions,),
                                        dtype="float32")
 
-        # 3*(position,speed,torque) + positions observations
-        self.n_observation = 3*3+3+3
+        # 3*(position,speed) + positions observations
+        self.n_observation = 3*2+3+3
         self.observation_space = spaces.Box(low=-1, high=1,
                                             shape=(self.n_observation,),
                                             dtype="float32")
@@ -194,7 +194,7 @@ class OneLegBulletEnv(gym.Env):
         target_distance = np.square(position - self.target_position).sum()
 
         # Comsuption is speed * torque
-        speeds = self.observation[2:-6:3]
+        speeds = self.observation[1:-6:2]
         torques = self.torques
         comsuption = self.dt * abs(sum(speeds * torques))
         w = 0  # comsuption weight, FIXME: disabled
@@ -216,13 +216,12 @@ class OneLegBulletEnv(gym.Env):
         all_states = p.getJointStates(self.robot_id, self.joint_list)
         for i, (pos, vel, _, tor) in enumerate(all_states):
             self.torques[i] = tor / self.servo_max_torque
-            self.observation[3*i:3*i+3] = [
-                np.cos(pos),
-                np.sin(pos),
+            self.observation[2*i:2*i+2] = [
+                pos * 2 / np.pi,
                 np.clip(vel / self.servo_max_speed, -1., 1.),
             ]
 
         # Endcap position and orientation
         endcap_id = 5
         position, _, _, _, _, _ = p.getLinkState(self.robot_id, endcap_id)
-        self.observation[-6:-3] = position - self.target_position
+        self.observation[-6:-3] = position

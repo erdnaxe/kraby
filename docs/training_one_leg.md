@@ -94,7 +94,7 @@ all the following training were done with it.
 
 Now we fix `delta = 0.5` to pick the target (x, y, z) such as,
 0.1845 ≤ x ≤ 0.2535,
--0.0565 ≤ y ≤ 0.0965,
+\-0.0565 ≤ y ≤ 0.0965,
 0.0920 ≤ z ≤ 0.164.
 
 ![Visualization](img/onde_leg_env_delta05.png)
@@ -203,6 +203,9 @@ The observation vector used here is:
 | 6   | the x-axis component of the endcap position |
 | 7   | the y-axis component of the endcap position |
 | 8   | the z-axis component of the endcap position |
+| 9   | the x-axis component of the target          |
+| 10  | the y-axis component of the target          |
+| 11  | the z-axis component of the target          |
 
 The reward is `-target_distance`,
 `target_distance` being the distance between the endcap and the target.
@@ -232,6 +235,8 @@ The observation vector used here is:
 | 9   | the x-axis component of the endcap position |
 | 10  | the y-axis component of the endcap position |
 | 11  | the z-axis component of the endcap position |
+| 12  | the x-axis component of the target          |
+| 13  | the y-axis component of the target          |
+| 14  | the z-axis component of the target          |
 
 ![Training results](img/training_one_leg_sin_cos.png)
-
