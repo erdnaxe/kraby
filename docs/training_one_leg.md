@@ -5,7 +5,7 @@ the training of a single robot leg.
 
 The environment resets the leg to a random position.
 The agent has to command each servomotors
-to move the endcap to a random objective (visualized by the cross).
+to move the fingertip to a random objective (visualized by the cross).
 
 ```Python
 # Reset all joint using normal distribution
@@ -44,23 +44,23 @@ are recommanded and are able to give good results for a first training.
 
 The observation vector used here is:
 
-| Num | Observation                                 |
-| --- | ------------------------------------------- |
-| 0   | position (first joint)                      |
-| 1   | velocity (first joint)                      |
-| 2   | torque (first joint)                        |
-| 3   | position (second joint)                     |
-| 4   | velocity (second joint)                     |
-| 5   | torque (second joint)                       |
-| 6   | position (third joint)                      |
-| 7   | velocity (third joint)                      |
-| 8   | torque (third joint)                        |
-| 9   | the x-axis component of the endcap position |
-| 10  | the y-axis component of the endcap position |
-| 11  | the z-axis component of the endcap position |
+| Num | Observation                                    |
+| --- | ---------------------------------------------- |
+| 0   | position (first joint)                         |
+| 1   | velocity (first joint)                         |
+| 2   | torque (first joint)                           |
+| 3   | position (second joint)                        |
+| 4   | velocity (second joint)                        |
+| 5   | torque (second joint)                          |
+| 6   | position (third joint)                         |
+| 7   | velocity (third joint)                         |
+| 8   | torque (third joint)                           |
+| 9   | the x-axis component of the fingertip position |
+| 10  | the y-axis component of the fingertip position |
+| 11  | the z-axis component of the fingertip position |
 
 The reward is `-target_distance`,
-`target_distance` being the distance between the endcap and the target.
+`target_distance` being the distance between the fingertip and the target.
 
 ![Training results](img/training_one_leg_pytorch-a2c-ppo-acktr-gail.png)
 
@@ -163,26 +163,26 @@ model.learn(total_timesteps=int(2e6))
 
 The observation vector used here is:
 
-| Num | Observation                                 |
-| --- | ------------------------------------------- |
-| 0   | position (first joint)                      |
-| 1   | velocity (first joint)                      |
-| 2   | torque (first joint)                        |
-| 3   | position (second joint)                     |
-| 4   | velocity (second joint)                     |
-| 5   | torque (second joint)                       |
-| 6   | position (third joint)                      |
-| 7   | velocity (third joint)                      |
-| 8   | torque (third joint)                        |
-| 9   | the x-axis component of the endcap position |
-| 10  | the y-axis component of the endcap position |
-| 11  | the z-axis component of the endcap position |
-| 12  | the x-axis component of the target          |
-| 13  | the y-axis component of the target          |
-| 14  | the z-axis component of the target          |
+| Num | Observation                                    |
+| --- | ---------------------------------------------- |
+| 0   | position (first joint)                         |
+| 1   | velocity (first joint)                         |
+| 2   | torque (first joint)                           |
+| 3   | position (second joint)                        |
+| 4   | velocity (second joint)                        |
+| 5   | torque (second joint)                          |
+| 6   | position (third joint)                         |
+| 7   | velocity (third joint)                         |
+| 8   | torque (third joint)                           |
+| 9   | the x-axis component of the fingertip position |
+| 10  | the y-axis component of the fingertip position |
+| 11  | the z-axis component of the fingertip position |
+| 12  | the x-axis component of the target             |
+| 13  | the y-axis component of the target             |
+| 14  | the z-axis component of the target             |
 
 The reward is `-target_distance`,
-`target_distance` being the distance between the endcap and the target.
+`target_distance` being the distance between the fingertip and the target.
 
 ![Training results](img/training_one_leg_random_target.png)
 
@@ -192,23 +192,23 @@ The reward is `-target_distance`,
 
 The observation vector used here is:
 
-| Num | Observation                                 |
-| --- | ------------------------------------------- |
-| 0   | position (first joint)                      |
-| 1   | velocity (first joint)                      |
-| 2   | position (second joint)                     |
-| 3   | velocity (second joint)                     |
-| 4   | position (third joint)                      |
-| 5   | velocity (third joint)                      |
-| 6   | the x-axis component of the endcap position |
-| 7   | the y-axis component of the endcap position |
-| 8   | the z-axis component of the endcap position |
-| 9   | the x-axis component of the target          |
-| 10  | the y-axis component of the target          |
-| 11  | the z-axis component of the target          |
+| Num | Observation                                    |
+| --- | ---------------------------------------------- |
+| 0   | position (first joint)                         |
+| 1   | velocity (first joint)                         |
+| 2   | position (second joint)                        |
+| 3   | velocity (second joint)                        |
+| 4   | position (third joint)                         |
+| 5   | velocity (third joint)                         |
+| 6   | the x-axis component of the fingertip position |
+| 7   | the y-axis component of the fingertip position |
+| 8   | the z-axis component of the fingertip position |
+| 9   | the x-axis component of the target             |
+| 10  | the y-axis component of the target             |
+| 11  | the z-axis component of the target             |
 
 The reward is `-target_distance`,
-`target_distance` being the distance between the endcap and the target.
+`target_distance` being the distance between the fingertip and the target.
 
 ![Training results](img/training_one_leg_without_torque.png)
 
@@ -227,24 +227,57 @@ This idea comes from [OpenAI Gym Reacher-v2 environment](https://github.com/open
 
 The observation vector used here is:
 
-| Num | Observation                                 |
-| --- | ------------------------------------------- |
-| 0   | cos(position) (first joint)                 |
-| 1   | sin(position) (first joint)                 |
-| 2   | velocity (first joint)                      |
-| 3   | cos(position) (second joint)                |
-| 4   | sin(position) (second joint)                |
-| 5   | velocity (second joint)                     |
-| 6   | cos(position) (third joint)                 |
-| 7   | sin(position) (third joint)                 |
-| 8   | velocity (third joint)                      |
-| 9   | the x-axis component of the endcap position |
-| 10  | the y-axis component of the endcap position |
-| 11  | the z-axis component of the endcap position |
-| 12  | the x-axis component of the target          |
-| 13  | the y-axis component of the target          |
-| 14  | the z-axis component of the target          |
+| Num | Observation                                    |
+| --- | ---------------------------------------------- |
+| 0   | cos(position) (first joint)                    |
+| 1   | sin(position) (first joint)                    |
+| 2   | velocity (first joint)                         |
+| 3   | cos(position) (second joint)                   |
+| 4   | sin(position) (second joint)                   |
+| 5   | velocity (second joint)                        |
+| 6   | cos(position) (third joint)                    |
+| 7   | sin(position) (third joint)                    |
+| 8   | velocity (third joint)                         |
+| 9   | the x-axis component of the fingertip position |
+| 10  | the y-axis component of the fingertip position |
+| 11  | the z-axis component of the fingertip position |
+| 12  | the x-axis component of the target             |
+| 13  | the y-axis component of the target             |
+| 14  | the z-axis component of the target             |
 
 ![Training results](img/training_one_leg_sin_cos.png)
 
 The training using cosinus and sinus is slower.
+
+### Using the vector from the target to the fingertip
+
+This idea also comes from [OpenAI Gym Reacher-v2 environment](https://github.com/openai/gym/wiki/Reacher-v2).
+
+The observation vector used here is:
+
+| Num | Observation                                                         |
+| --- | ------------------------------------------------------------------- |
+| 0   | cos(position) (first joint)                                         |
+| 1   | sin(position) (first joint)                                         |
+| 2   | velocity (first joint)                                              |
+| 3   | cos(position) (second joint)                                        |
+| 4   | sin(position) (second joint)                                        |
+| 5   | velocity (second joint)                                             |
+| 6   | cos(position) (third joint)                                         |
+| 7   | sin(position) (third joint)                                         |
+| 8   | velocity (third joint)                                              |
+| 9   | the x-axis component of the vector from the target to the fingertip |
+| 10  | the y-axis component of the vector from the target to the fingertip |
+| 11  | the z-axis component of the vector from the target to the fingertip |
+| 12  | the x-axis component of the target                                  |
+| 13  | the y-axis component of the target                                  |
+| 14  | the z-axis component of the target                                  |
+
+![Training results](img/training_one_leg_with_diff_target.png)
+
+Putting the vector from the target to the fingertip
+rather than the fingertip position results in better learning performances.
+
+<video style="max-width:100%;height:auto" preload="metadata" controls="">
+<source src="https://perso.crans.org/erdnaxe/videos/projet_hexapod/training_one_leg_with_diff_target.mp4" type="video/mp4">
+</video><br/>

@@ -208,7 +208,7 @@ class OneLegBulletEnv(gym.Env):
         Update the observation from BulletPhysics
 
         Observation contains:
-        * 3x servomotor {cos(position), sin(position), speed}
+        * 3x servomotor {position, speed}
         * position - target (x, y, z)
         * target (x, y, z)
         """
@@ -224,4 +224,4 @@ class OneLegBulletEnv(gym.Env):
         # Endcap position and orientation
         endcap_id = 5
         position, _, _, _, _, _ = p.getLinkState(self.robot_id, endcap_id)
-        self.observation[-6:-3] = position
+        self.observation[-6:-3] = position - self.target_position
