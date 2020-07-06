@@ -257,21 +257,18 @@ The observation vector used here is:
 
 | Num | Observation                                                         |
 | --- | ------------------------------------------------------------------- |
-| 0   | cos(position) (first joint)                                         |
-| 1   | sin(position) (first joint)                                         |
-| 2   | velocity (first joint)                                              |
-| 3   | cos(position) (second joint)                                        |
-| 4   | sin(position) (second joint)                                        |
-| 5   | velocity (second joint)                                             |
-| 6   | cos(position) (third joint)                                         |
-| 7   | sin(position) (third joint)                                         |
-| 8   | velocity (third joint)                                              |
-| 9   | the x-axis component of the vector from the target to the fingertip |
-| 10  | the y-axis component of the vector from the target to the fingertip |
-| 11  | the z-axis component of the vector from the target to the fingertip |
-| 12  | the x-axis component of the target                                  |
-| 13  | the y-axis component of the target                                  |
-| 14  | the z-axis component of the target                                  |
+| 0   | position (first joint)                                              |
+| 1   | velocity (first joint)                                              |
+| 2   | position (second joint)                                             |
+| 3   | velocity (second joint)                                             |
+| 4   | position (third joint)                                              |
+| 5   | velocity (third joint)                                              |
+| 6   | the x-axis component of the vector from the target to the fingertip |
+| 7   | the y-axis component of the vector from the target to the fingertip |
+| 8   | the z-axis component of the vector from the target to the fingertip |
+| 9   | the x-axis component of the target                                  |
+| 10  | the y-axis component of the target                                  |
+| 11  | the z-axis component of the target                                  |
 
 ![Training results](img/training_one_leg_with_diff_target.png)
 
