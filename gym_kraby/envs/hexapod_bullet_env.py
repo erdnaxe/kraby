@@ -121,7 +121,7 @@ class HexapodBulletEnv(gym.Env):
         # Return observation, reward and done
         self._update_observation()
         reward = self._get_reward()
-        done = self.observation[-4] < 0.08  # Has fallen?
+        done = bool(self.observation[-4] < 0.08)  # Has fallen?
         return self.observation, reward, done, {}
 
     def render(self, mode='human'):
