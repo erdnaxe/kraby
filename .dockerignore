@@ -1,0 +1,19 @@
+# Useless Eagle files
+*.b#*
+*.s#*
+*.epf
+
+# Useless Python files
+*.egg-info
+*.pyc
+.eggs
+.idea
+build
+dist
+*~
+.ipynb_checkpoints
+
+# Training logs
+notebooks/*/tensorboard_log
+notebooks/*/trained_models
+notebooks/*/video
