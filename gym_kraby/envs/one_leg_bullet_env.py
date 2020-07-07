@@ -39,8 +39,8 @@ class OneLegBulletEnv(gym.Env):
                                        shape=(self.n_actions,),
                                        dtype="float32")
 
-        # 3*(position,speed) + positions observations
-        self.n_observation = 3*2+3+3
+        # 3*(position,speed) + position target
+        self.n_observation = 3*2+3
         self.observation_space = spaces.Box(low=-1, high=1,
                                             shape=(self.n_observation,),
                                             dtype="float32")
@@ -209,7 +209,6 @@ class OneLegBulletEnv(gym.Env):
 
         Observation contains:
         * 3x servomotor {position, speed}
-        * position - target (x, y, z)
         * target (x, y, z)
         """
         # Each servomotor position, speed and torque
@@ -220,8 +219,3 @@ class OneLegBulletEnv(gym.Env):
                 pos * 2 / np.pi,
                 np.clip(vel / self.servo_max_speed, -1., 1.),
             ]
-
-        # Endcap position and orientation
-        endcap_id = 5
-        position, _, _, _, _, _ = p.getLinkState(self.robot_id, endcap_id)
-        self.observation[-6:-3] = position - self.target_position

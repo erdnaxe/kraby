@@ -278,3 +278,46 @@ rather than the fingertip position results in better learning performances.
 <video style="max-width:100%;height:auto" preload="metadata" controls="">
 <source src="https://perso.crans.org/erdnaxe/videos/projet_hexapod/training_one_leg_with_diff_target.mp4" type="video/mp4">
 </video><br/>
+
+### Optimizing hyperparameters
+
+The observation used here is the same as the previous section but the hyperparameters are now:
+
+```Python
+num_cpu = 32
+ent_coef=0.01
+nminibatches=64
+noptepochs=30
+total_timesteps=1e6
+```
+
+![Training results](img/training_one_leg_new_hyperparams.png)
+
+Increasing `noptepochs` increases GPU usage and make the learning converge much faster.
+A learning of 1 million steps is done under 8 minutes on a Nvidia GTX1060 and an Intel i7-8750H. 
+
+### Training without fingertip position
+
+All previous learning put the fingertip position in the observation vector.
+This is problematic to transfer from simulation to reality as this vector cannot be measured on the real system.
+It may be found by solving the dynamic of the robot leg.
+Another approach is to remove this data from the observation and see how much the learning performance fall.
+
+The observation vector used here is:
+
+| Num | Observation                        |
+| --- | ---------------------------------- |
+| 0   | position (first joint)             |
+| 1   | velocity (first joint)             |
+| 2   | position (second joint)            |
+| 3   | velocity (second joint)            |
+| 4   | position (third joint)             |
+| 5   | velocity (third joint)             |
+| 6   | the x-axis component of the target |
+| 7   | the y-axis component of the target |
+| 8   | the z-axis component of the target |
+
+![Training results](img/training_one_leg_without_fingertip_position.png)
+
+Not only the policy learned to reach the target
+but it did it with less variance between learning runs.
