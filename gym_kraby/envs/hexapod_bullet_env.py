@@ -19,7 +19,8 @@ class HexapodBulletEnv(gym.Env):
     }
 
     def __init__(self, time_step=0.01, render=False):
-        """Init environment"""
+        """Init environment
+        """
         super().__init__()
 
         # Init PyBullet in GUI or DIRECT mode
@@ -46,21 +47,16 @@ class HexapodBulletEnv(gym.Env):
                                             dtype="float32")
         self.observation = np.zeros(self.n_observation, dtype="float32")
 
-        # Simulation timestep and max step
+        # Environment timestep and constants
         self.dt = time_step
-        p.setTimeStep(time_step)
-
-        # Some constants for normalization
         self.servo_max_speed = 6.308  # rad/s
         self.servo_max_torque = 1.57  # N.m
-
-        # Goal
-        self.goal_position = np.array([1., 0., 0.1])
 
         # Seed random number generator
         self.seed()
 
         # Init world
+        p.setTimeStep(time_step)
         p.resetSimulation()
         p.setGravity(0, 0, -9.81)  # Newton's apple
         p.setAdditionalSearchPath(getDataPath())  # Add pybullet_data
@@ -90,13 +86,17 @@ class HexapodBulletEnv(gym.Env):
             p.resetJointState(self.robot_id, j,
                               np.random.uniform(low=-np.pi/4, high=np.pi/4))
 
-        # Show goal as a crosshair
+        # Set random target and put it in observations
+        self.target_position = np.array([1., 0., 0.1])  # FIXME: make it random
+        self.observation[-3:] = self.target_position
+
+        # Show target as a crosshair
         p.removeAllUserDebugItems()
-        p.addUserDebugLine(self.goal_position - [0, 0, 0.01],
-                           self.goal_position + [0, 0, 0.01],
+        p.addUserDebugLine(self.target_position - [0, 0, 0.01],
+                           self.target_position + [0, 0, 0.01],
                            [0, 0, 0], 2)
-        p.addUserDebugLine(self.goal_position - [0, 0.01, 0],
-                           self.goal_position + [0, 0.01, 0],
+        p.addUserDebugLine(self.target_position - [0, 0.01, 0],
+                           self.target_position + [0, 0.01, 0],
                            [0, 0, 0], 2)
 
         # Return observation
@@ -113,7 +113,7 @@ class HexapodBulletEnv(gym.Env):
                                     targetVelocities=transformed_action,
                                     forces=max_torques)
 
-        # Step simulation
+        # Wait for environment step
         p.stepSimulation()  # step self.dt
         if self._render:
             sleep(self.dt)  # realtime
@@ -169,6 +169,7 @@ class HexapodBulletEnv(gym.Env):
     def close(self):
         """
         Close environment
+
         Do nothing as PyBullet automatically closes
         """
         pass
@@ -186,7 +187,7 @@ class HexapodBulletEnv(gym.Env):
         """
         # Distance progress toward goal
         position = self.observation[-6:-3]
-        goal_distance = np.square(position - self.goal_position).sum()
+        target_distance = np.square(position - self.target_position).sum()
 
         # Comsuption is speed * torque
         speeds = self.observation[1:-6:3]
@@ -198,7 +199,7 @@ class HexapodBulletEnv(gym.Env):
         # +200 to keep it positiv,
         # else the agent will learn how to end the episode quickly
         # 200 > max_comsuption + max_distance
-        reward = 200 - goal_distance - w * comsuption
+        reward = 200 - target_distance - w * comsuption
         return reward
 
     def _update_observation(self):

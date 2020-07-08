@@ -19,7 +19,8 @@ class OneLegBulletEnv(gym.Env):
     }
 
     def __init__(self, time_step=0.01, delta=0.5, render=False):
-        """Init environment"""
+        """Init environment
+        """
         super().__init__()
 
         # Init PyBullet in GUI or DIRECT mode
@@ -47,11 +48,8 @@ class OneLegBulletEnv(gym.Env):
         self.observation = np.zeros(self.n_observation, dtype="float32")
         self.torques = np.zeros(self.n_actions)
 
-        # Simulation timestep and max step
+        # Environment timestep and constants
         self.dt = time_step
-        p.setTimeStep(time_step)
-
-        # Some constants for normalization
         self.servo_max_speed = 6.308  # rad/s
         self.servo_max_torque = 1.57  # N.m
 
@@ -62,6 +60,7 @@ class OneLegBulletEnv(gym.Env):
         self.seed()
 
         # Init world
+        p.setTimeStep(time_step)
         p.resetSimulation()
         p.setGravity(0, 0, -9.81)  # Newton's apple
         p.setAdditionalSearchPath(getDataPath())  # Add pybullet_data
@@ -119,7 +118,7 @@ class OneLegBulletEnv(gym.Env):
                                     targetVelocities=transformed_action,
                                     forces=max_torques)
 
-        # Step simulation
+        # Wait for environment step
         p.stepSimulation()  # step self.dt
         if self._render:
             sleep(self.dt)  # realtime
@@ -174,6 +173,7 @@ class OneLegBulletEnv(gym.Env):
     def close(self):
         """
         Close environment
+
         Do nothing as PyBullet automatically closes
         """
         pass

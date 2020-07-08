@@ -1,44 +1,92 @@
 import numpy as np
-import pybullet as p
+import gym
+from gym import spaces
+from time import sleep
 from ..utils.herkulex_socket import HerkulexSocket
-from .hexapod_bullet_env import HexapodBulletEnv
 
 
-class HexapodRealEnv(HexapodBulletEnv):
+class HexapodRealEnv(gym.Env):
     """Hexapod environnement for transfer to real robot
     """
 
-    def __init__(self, time_step=0.01, max_step=1000, render=False):
+    def __init__(self, time_step=0.01):
         """Init environment
         """
-        super().__init__(time_step, max_step, render)
+        super().__init__()
+
+        # 18 actions (servomotors)
+        self.n_actions = 18
+        self.action_space = spaces.Box(low=-1, high=1,
+                                       shape=(self.n_actions,),
+                                       dtype="float32")
+
+        # 18*(position,speed) + imu + position target
+        self.n_observation = 18*2+6+3
+        self.observation_space = spaces.Box(low=-1, high=1,
+                                            shape=(self.n_observation,),
+                                            dtype="float32")
+        self.observation = np.zeros(self.n_observation, dtype="float32")
+
+        # Environment timestep and constants
+        self.dt = time_step
+        self.servo_max_speed = 6.308  # rad/s
+        self.servo_max_torque = 1.57  # N.m
+
+        # Seed random number generator
+        self.seed()
+
+        # Servomotors socket
         self.servomotors = HerkulexSocket(
-            max_velocity=6.308,  # rad/s
-            max_torque=1.57,  # N.m
+            max_velocity=self.servo_max_speed,
+            max_torque=self.servo_max_torque,
         )
 
     def reset(self):
-        """Override reset to reset servomotors
-        """
+        # Reset servomotors
         self.servomotors.reset()
-        return super().reset()
+        sleep(1)
+
+        # Set random target and put it in observations
+        self.target_position = np.array([1., 0., 0.1])  # FIXME: make it random
+        self.observation[-3:] = self.target_position
+
+        # Return observation
+        self._update_observation()
+        return self.observation
 
     def step(self, action):
-        """Override step to move servomotors
+        # Update servomotors
+        transformed_action = np.array(action) * self.servo_max_speed
+        transformed_action *= 0.01  # Training timestep
+        self.servomotors.move(transformed_action)
+
+        # Wait for environment step
+        sleep(self.dt)
+
+        # Return observation, reward and done
+        self._update_observation()
+        reward = 0  # No reward in real mode
+        done = False
+        return self.observation, reward, done, {}
+
+    def close(self):
         """
-        # TODO send transformed_action velocities and set max_torques
-        return super().step(action)
+        Close environment
+
+        Stop servomotors torque
+        """
+        self.servomotors.disableTorque()
+
+    def seed(self, seed=None):
+        """
+        Sets the seed for this env's random number generator
+        """
+        np.random.seed(seed)
 
     def _update_observation(self):
-        """Override to get observation from real sensors
         """
-        # Each servomotor position, speed and torque
-        self.observation[0:3*18] = self.servomotors.get_observations()
-
-        # Sometimes 1.0 is greater than 1
-        self.observation = np.clip(self.observation, -1., 1.)
-
-        # Robot position and orientation
-        pos, ori = p.getBasePositionAndOrientation(self.robot_id)  # TODO Use IMU
-        self.observation[-6:] = list(pos) + list(p.getEulerFromQuaternion(ori))
-        self.observation[-3:] /= np.pi  # normalization
+        Update the observation from servomotors sensors and IMU
+        """
+        # Each servomotor position and velocity
+        obs, _ = self.servomotors.get_observations()
+        self.observation[:2*18] = obs[:2*18]

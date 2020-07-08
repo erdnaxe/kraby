@@ -284,7 +284,7 @@ rather than the fingertip position results in better learning performances.
 The observation used here is the same as the previous section but the hyperparameters are now:
 
 ```Python
-num_cpu = 32
+num_cpu=32
 ent_coef=0.01
 nminibatches=64
 noptepochs=30
