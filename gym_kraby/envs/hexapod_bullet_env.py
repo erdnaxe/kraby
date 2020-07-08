@@ -18,8 +18,14 @@ class HexapodBulletEnv(gym.Env):
         "video.frames_per_second": 100,
     }
 
-    def __init__(self, time_step=0.01, render=False):
-        """Init environment
+    def __init__(self, time_step=0.1, frameskip=25, render=False):
+        """
+        Init environment
+
+        Args:
+            time_step (float, optional): Environment time step in seconds. Defaults to 0.1.
+            frameskip (int, optional): Sub steps for physic simulation. Defaults to 25.
+            render (bool, optional): Open PyBullet GUI. Defaults to False.
         """
         super().__init__()
 
@@ -49,6 +55,7 @@ class HexapodBulletEnv(gym.Env):
 
         # Environment timestep and constants
         self.dt = time_step
+        self.frameskip = frameskip
         self.servo_max_speed = 6.308  # rad/s
         self.servo_max_torque = 1.57  # N.m
 
@@ -56,7 +63,7 @@ class HexapodBulletEnv(gym.Env):
         self.seed()
 
         # Init world
-        p.setTimeStep(time_step)
+        p.setTimeStep(self.dt / self.frameskip)  # between 0.001 and 0.01 s
         p.resetSimulation()
         p.setGravity(0, 0, -9.81)  # Newton's apple
         p.setAdditionalSearchPath(getDataPath())  # Add pybullet_data
@@ -114,9 +121,10 @@ class HexapodBulletEnv(gym.Env):
                                     forces=max_torques)
 
         # Wait for environment step
-        p.stepSimulation()  # step self.dt
-        if self._render:
-            sleep(self.dt)  # realtime
+        for _ in range(self.frameskip):  # step self.dt
+            p.stepSimulation()
+            if self._render:
+                sleep(self.dt / self.frameskip)  # realtime
 
         # Return observation, reward and done
         self._update_observation()
@@ -125,7 +133,8 @@ class HexapodBulletEnv(gym.Env):
         return self.observation, reward, done, {}
 
     def render(self, mode='human'):
-        """Render environment
+        """
+        Render environment
 
         PyBullet GUI can be disabled in favour of manual RGB rendering
 
@@ -155,7 +164,7 @@ class HexapodBulletEnv(gym.Env):
             nearVal=0.1,
             farVal=100.0,
         )
-        (_, _, px, _, _) = p.getCameraImage(
+        _, _, px, _, _ = p.getCameraImage(
             width=960,
             height=720,
             viewMatrix=view_matrix,
@@ -167,24 +176,17 @@ class HexapodBulletEnv(gym.Env):
         return rgb_array
 
     def close(self):
-        """
-        Close environment
-
-        Do nothing as PyBullet automatically closes
-        """
+        """Do nothing as PyBullet automatically closes"""
         pass
 
-    def seed(self, seed=None):
-        """
-        Sets the seed for this env's random number generator
-        """
+    @staticmethod
+    def seed(seed=None):
+        """Sets the seed for this env's random number generator"""
         np.random.seed(seed)
 
     def _get_reward(self):
-        """
-        Compute reward function
-        TODO: take into account the inclinaison of base
-        """
+        """Compute reward function"""
+        # TODO: take into account the inclinaison of base
         # Distance progress toward goal
         position = self.observation[-6:-3]
         target_distance = np.square(position - self.target_position).sum()
@@ -203,9 +205,7 @@ class HexapodBulletEnv(gym.Env):
         return reward
 
     def _update_observation(self):
-        """
-        Update the observation from BulletPhysics
-        """
+        """Update the observation from BulletPhysics"""
         # Each servomotor position, speed and torque
         all_states = p.getJointStates(self.robot_id, self.joint_list)
         for i, (pos, vel, _, tor) in enumerate(all_states):

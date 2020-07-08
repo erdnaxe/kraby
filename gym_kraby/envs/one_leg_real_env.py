@@ -10,8 +10,7 @@ class OneLegRealEnv(gym.Env):
     """
 
     def __init__(self, time_step=0.01, delta=0.5):
-        """Init environment
-        """
+        """Init environment"""
         super().__init__()
 
         # 3 actions (servomotors)
@@ -80,17 +79,12 @@ class OneLegRealEnv(gym.Env):
         return self.observation, reward, done, {}
 
     def close(self):
-        """
-        Close environment
-
-        Stop servomotors torque
-        """
+        """Stop servomotors torque"""
         self.servomotors.disableTorque()
 
-    def seed(self, seed=None):
-        """
-        Sets the seed for this env's random number generator
-        """
+    @staticmethod
+    def seed(seed=None):
+        """Sets the seed for this env's random number generator"""
         np.random.seed(seed)
 
     def _update_observation(self):
