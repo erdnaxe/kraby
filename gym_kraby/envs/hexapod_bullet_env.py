@@ -12,7 +12,7 @@ except ImportError:
 
 
 class HexapodBulletEnv(gym.Env):
-    """Hexapod environnement using PyBullet"""
+    """Hexapod environnement using PyBullet."""
     metadata = {
         "render.modes": ["human", "rgb_array"],
         "video.frames_per_second": 100,
@@ -20,7 +20,7 @@ class HexapodBulletEnv(gym.Env):
 
     def __init__(self, time_step=0.1, frameskip=25, render=False):
         """
-        Init environment
+        Init environment.
 
         Args:
             time_step (float, optional): Environment time step in seconds. Defaults to 0.1.
@@ -134,9 +134,9 @@ class HexapodBulletEnv(gym.Env):
 
     def render(self, mode='human'):
         """
-        Render environment
+        Render environment.
 
-        PyBullet GUI can be disabled in favour of manual RGB rendering
+        PyBullet GUI can be disabled in favour of manual RGB rendering.
 
         Args:
             mode (str, optional): Render mode. Defaults to 'human'.
@@ -176,16 +176,16 @@ class HexapodBulletEnv(gym.Env):
         return rgb_array
 
     def close(self):
-        """Do nothing as PyBullet automatically closes"""
+        """Do nothing as PyBullet automatically closes."""
         pass
 
     @staticmethod
     def seed(seed=None):
-        """Sets the seed for this env's random number generator"""
+        """Sets the seed for this env's random number generator."""
         np.random.seed(seed)
 
     def _get_reward(self):
-        """Compute reward function"""
+        """Compute reward function."""
         # TODO: take into account the inclinaison of base
         # Distance progress toward goal
         position = self.observation[-6:-3]
@@ -205,7 +205,7 @@ class HexapodBulletEnv(gym.Env):
         return reward
 
     def _update_observation(self):
-        """Update the observation from BulletPhysics"""
+        """Update the observation from BulletPhysics."""
         # Each servomotor position, speed and torque
         all_states = p.getJointStates(self.robot_id, self.joint_list)
         for i, (pos, vel, _, tor) in enumerate(all_states):

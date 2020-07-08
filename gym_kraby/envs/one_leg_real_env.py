@@ -6,11 +6,11 @@ from ..utils.herkulex_socket import HerkulexSocket
 
 
 class OneLegRealEnv(gym.Env):
-    """One leg Hexapod environnement for transfer to real robot
+    """One leg Hexapod environnement for transfer to real robot.
     """
 
     def __init__(self, time_step=0.01, delta=0.5):
-        """Init environment"""
+        """Init environment."""
         super().__init__()
 
         # 3 actions (servomotors)
@@ -84,12 +84,12 @@ class OneLegRealEnv(gym.Env):
 
     @staticmethod
     def seed(seed=None):
-        """Sets the seed for this env's random number generator"""
+        """Sets the seed for this env's random number generator."""
         np.random.seed(seed)
 
     def _update_observation(self):
         """
-        Update the observation from servomotors sensors
+        Update the observation from servomotors sensors.
 
         Observation contains:
         * 3x servomotor {position, speed}

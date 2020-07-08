@@ -12,7 +12,7 @@ except ImportError:
 
 
 class OneLegBulletEnv(gym.Env):
-    """One leg Hexapod environnement using PyBullet"""
+    """One leg Hexapod environnement using PyBullet."""
     metadata = {
         "render.modes": ["human", "rgb_array"],
         "video.frames_per_second": 100,
@@ -20,7 +20,7 @@ class OneLegBulletEnv(gym.Env):
 
     def __init__(self, time_step=0.1, frameskip=25, delta=0.5, render=False):
         """
-        Init environment
+        Init environment.
 
         Args:
             time_step (float, optional): Environment time step in seconds. Defaults to 0.1.
@@ -140,9 +140,9 @@ class OneLegBulletEnv(gym.Env):
 
     def render(self, mode='human'):
         """
-        Render environment
+        Render environment.
 
-        PyBullet GUI can be disabled in favour of manual RGB rendering
+        PyBullet GUI can be disabled in favour of manual RGB rendering.
 
         Args:
             mode (str, optional): Render mode. Defaults to 'human'.
@@ -181,16 +181,16 @@ class OneLegBulletEnv(gym.Env):
         return rgb_array
 
     def close(self):
-        """Do nothing as PyBullet automatically closes"""
+        """Do nothing as PyBullet automatically closes."""
         pass
 
     @staticmethod
     def seed(seed=None):
-        """Sets the seed for this env's random number generator"""
+        """Sets the seed for this env's random number generator."""
         np.random.seed(seed)
 
     def _get_reward(self):
-        """Compute reward function"""
+        """Compute reward function."""
         # Distance progress toward target
         endcap_id = 5
         position, _, _, _, _, _ = p.getLinkState(self.robot_id, endcap_id)
@@ -208,7 +208,7 @@ class OneLegBulletEnv(gym.Env):
 
     def _update_observation(self):
         """
-        Update the observation from BulletPhysics
+        Update the observation from BulletPhysics.
 
         Observation contains:
         * 3x servomotor {position, speed}
