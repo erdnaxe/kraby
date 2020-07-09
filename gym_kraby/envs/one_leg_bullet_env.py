@@ -18,13 +18,13 @@ class OneLegBulletEnv(gym.Env):
         "video.frames_per_second": 100,
     }
 
-    def __init__(self, time_step=0.1, frameskip=25, delta=0.5, render=False):
+    def __init__(self, time_step=0.05, frameskip=12, delta=0.5, render=False):
         """
         Init environment.
 
         Args:
-            time_step (float, optional): Environment time step in seconds. Defaults to 0.1.
-            frameskip (int, optional): Sub steps for physic simulation. Defaults to 25.
+            time_step (float, optional): Environment time step in seconds. Defaults to 0.05.
+            frameskip (int, optional): Sub steps for physic simulation. Defaults to 12.
             delta (float, optional): Size of the random in which the target will be randomly fixed. Defaults to 0.5.
             render (bool, optional): Open PyBullet GUI. Defaults to False.
         """
