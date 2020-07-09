@@ -6,7 +6,7 @@ FROM tensorflow/tensorflow:1.15.2-gpu-py3
 RUN apt-get update && \
     apt-get install -y libsm6 libxext6 libxrender-dev cmake zlib1g-dev ffmpeg libglvnd0 libgl1 libglx0 libegl1 mesa-utils && \
     rm -rf /var/lib/apt/lists/*
-RUN pip install --no-cache-dir gym stable-baselines imageio jupyter jupyterlab matplotlib
+RUN pip install --no-cache-dir gym stable-baselines imageio jupyter jupyterlab matplotlib optuna
 WORKDIR /tf/kraby
 COPY . /tf/kraby
 RUN pip install --no-cache-dir -e .
@@ -23,4 +23,4 @@ ENV NVIDIA_DRIVER_CAPABILITIES ${NVIDIA_DRIVER_CAPABILITIES},display
 RUN mkdir /.local /.jupyter && \
     chmod a+rwx /.local /.jupyter
 EXPOSE 8888
-CMD jupyter notebook --ip 0.0.0.0 --no-browser --notebook-dir=/tf/kraby/notebooks/stablebaselines
+CMD jupyter lab --ip 0.0.0.0 --no-browser --notebook-dir=/tf/kraby/notebooks/stablebaselines
