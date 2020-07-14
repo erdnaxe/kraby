@@ -1,7 +1,7 @@
 import numpy as np
 import gym
 from gym import spaces
-from time import time
+from time import sleep, time
 from ..utils.herkulex_socket import HerkulexSocket
 
 
