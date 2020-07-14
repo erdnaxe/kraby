@@ -1,16 +1,22 @@
 import numpy as np
 import gym
 from gym import spaces
-from time import sleep
+from time import time
 from ..utils.herkulex_socket import HerkulexSocket
 
 
 class OneLegRealEnv(gym.Env):
-    """One leg Hexapod environnement for transfer to real robot.
-    """
+    """One leg Hexapod environnement for transfer to real robot."""
 
-    def __init__(self, time_step=0.01, delta=0.5):
-        """Init environment."""
+    def __init__(self, time_step=0.05, delta=0.5, render=False):
+        """
+        Init environment.
+
+        Args:
+            time_step (float, optional): Environment time step in seconds. Defaults to 0.05.
+            delta (float, optional): Size of the random in which the target will be randomly fixed. Defaults to 0.5.
+            render (bool, optional): Unused, kept for compatibility.
+        """
         super().__init__()
 
         # 3 actions (servomotors)
@@ -64,22 +70,25 @@ class OneLegRealEnv(gym.Env):
         return self.observation
 
     def step(self, action):
+        initial_time = time()
+
         # Update servomotors
         transformed_action = np.array(action) * self.servo_max_speed
-        transformed_action *= 0.01  # Training timestep
+        transformed_action *= self.dt  # Training timestep
         self.servomotors.move(list(transformed_action) + [0] * 12)
 
-        # Wait for environment step
-        sleep(self.dt)
+        # Get observation (slow!)
+        self._update_observation()
+        while time() - initial_time < self.dt:
+            pass # Wait for environment step
 
         # Return observation, reward and done
-        self._update_observation()
         reward = 0  # No reward in real mode
         done = False
         return self.observation, reward, done, {}
 
     def close(self):
-        """Stop servomotors torque"""
+        """Stop servomotors torque."""
         self.servomotors.disableTorque()
 
     @staticmethod
