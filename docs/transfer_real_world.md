@@ -22,4 +22,8 @@ learning_rate=10e-4  # better performance
 
 ![Training results](img/transfer_real_world_new_timestep.png)
 
+<video style="max-width:100%;height:auto" preload="metadata" controls="">
+<source src="https://perso.crans.org/erdnaxe/videos/projet_hexapod/transfer_real_world_simulation.mp4" type="video/mp4">
+</video><br/>
+
 **To reduce vibrations, the discount factor was reduced to 0.95.**
