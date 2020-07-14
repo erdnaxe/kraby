@@ -18,13 +18,13 @@ class HexapodBulletEnv(gym.Env):
         "video.frames_per_second": 100,
     }
 
-    def __init__(self, time_step=0.1, frameskip=25, render=False):
+    def __init__(self, time_step=0.05, frameskip=12, render=False):
         """
         Init environment.
 
         Args:
-            time_step (float, optional): Environment time step in seconds. Defaults to 0.1.
-            frameskip (int, optional): Sub steps for physic simulation. Defaults to 25.
+            time_step (float, optional): Environment time step in seconds. Defaults to 0.05.
+            frameskip (int, optional): Sub steps for physic simulation. Defaults to 12.
             render (bool, optional): Open PyBullet GUI. Defaults to False.
         """
         super().__init__()

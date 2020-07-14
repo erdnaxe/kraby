@@ -1,16 +1,21 @@
 import numpy as np
 import gym
 from gym import spaces
-from time import sleep
+from time import sleep, time
 from ..utils.herkulex_socket import HerkulexSocket
 
 
 class HexapodRealEnv(gym.Env):
-    """Hexapod environnement for transfer to real robot.
-    """
+    """Hexapod environnement for transfer to real robot."""
 
-    def __init__(self, time_step=0.01):
-        """Init environment."""
+    def __init__(self, time_step=0.05, render=False):
+        """
+        Init environment.
+
+        Args:
+            time_step (float, optional): Environment time step in seconds. Defaults to 0.05.
+            render (bool, optional): Unused, kept for compatibility.
+        """
         super().__init__()
 
         # 18 actions (servomotors)
@@ -54,16 +59,19 @@ class HexapodRealEnv(gym.Env):
         return self.observation
 
     def step(self, action):
+        initial_time = time()
+
         # Update servomotors
         transformed_action = np.array(action) * self.servo_max_speed
-        transformed_action *= 0.01  # Training timestep
+        transformed_action *= self.dt  # Training timestep
         self.servomotors.move(transformed_action)
 
-        # Wait for environment step
-        sleep(self.dt)
+        # Get observation (slow!)
+        self._update_observation()
+        while time() - initial_time < self.dt:
+            pass # Wait for environment step
 
         # Return observation, reward and done
-        self._update_observation()
         reward = 0  # No reward in real mode
         done = False
         return self.observation, reward, done, {}
@@ -78,7 +86,13 @@ class HexapodRealEnv(gym.Env):
         np.random.seed(seed)
 
     def _update_observation(self):
-        """Update the observation from servomotors sensors and IMU."""
+        """
+        Update the observation from servomotors sensors.
+
+        Observation contains:
+        * 3x servomotor {position, speed}
+        * target (x, y, z)
+        """
         # Each servomotor position and velocity
         obs, _ = self.servomotors.get_observations()
         self.observation[:2*18] = obs[:2*18]
