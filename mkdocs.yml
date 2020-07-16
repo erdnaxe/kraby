@@ -19,6 +19,7 @@ nav:
       - Training one leg: training_one_leg.md
       - Transfer to the real world: transfer_real_world.md
   - About:
+      - References: references.md
       - Contributing: contributing.md
       - License: license.md
 
