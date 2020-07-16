@@ -14,7 +14,7 @@ nav:
       - Use the servomotors: use_motors.md
   - Simulation:
       - URDF description: urdf_description.md
-      - OpenAI Gym environments: gym_environments.md
+      - Learning environments: gym_environments.md
       - Proximal Policy Optimization: implementations_ppo.md
       - Training one leg: training_one_leg.md
       - Transfer to the real world: transfer_real_world.md

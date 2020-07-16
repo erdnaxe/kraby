@@ -1,8 +1,16 @@
-# OpenAI Gym environments
+# Introduction to reinforcement learning
 
 **Reinforcement learning** (RL) consists in using machine learning techniques to
 make decisions and control robots.
-The domain studies how an agent can learn how to achieve goals in an environment.
+The domain studies how **an agent** can learn how to achieve goals in **an environment**.
+
+At every step of the environment (each 50ms for our robot),
+the agent sees **an observation** of this environment and send **an action** to take depending on **his policy**.
+
+When learning, the environment also returns **a reward** at every step to indicate how bad the agent did act.
+The sum of all these rewards when the episode ends is **the return** of this episode.
+
+# OpenAI Gym environments
 
 The **OpenAI Gym** library defines an interface to reinforcement learning
 environments, making them easier to share and use.
@@ -35,6 +43,15 @@ class ExampleEnv(gym.Env):
     def seed(self, seed=None):
         # Change the random number generator seed
 ```
+
+## OpenAI Gym Reacher-v2
+
+OpenAI Gym includes [an environment](https://github.com/openai/gym/blob/master/gym/envs/mujoco/reacher.py) of an robot arm in a 2D space which goal is to reach a target.
+It uses [MuJoCo](http://www.mujoco.org/) which is a proprietary equivalent of BulletPhysics.
+
+<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/OtJ_6Nu8Ic0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+It is a great base to start with as one of our goals is to make one robot leg reach a target.
 
 ## Reinforcement learning tasks associated with kraby
 
@@ -74,10 +91,12 @@ import gym
 
 env = gym.make('gym_kraby:HexapodBulletEnv-v0', render=True)
 observation = env.reset()
+score_return = 0
 
 for _ in range(10000):
-    a = env.action_space.sample()
-    observation, reward, done, _ = env.step(a)
+    a = env.action_space.sample()  # take a random action
+    observation, reward, done, _ = env.step(a)  # step
+    score_return += reward
 
 env.close()
 ```

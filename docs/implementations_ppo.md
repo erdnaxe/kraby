@@ -1,6 +1,22 @@
-# PPO (Proximal Policy Optimization)
+# Learning algorithm
 
-## What is PPO?
+## Choosing a learning algorithm
+
+This project choose to use **Proximal Policy Optimization** which is an **on-policy** algorithm.
+
+### On-policy vs Off-policy
+
+An **on-policy** algorithm does not use old data.
+In our case it means that one batch of simulation episodes will one be used to train the next policy,
+and sample won't be stored in memory to be reused later.
+
+This implies that on-policy algorithms are less sample efficient compared to off-policy.
+Nonetheless it increases learning stability.
+
+> These algorithms directly optimize [...] policy performance and it works out mathematically that you need on-policy data to calculate the updates. So, this family of algorithms trades off sample efficiency in favor of stability—but you can see the progression of techniques (from VPG to TRPO to PPO) working to make up the deficit on sample efficiency. <br/>
+> -- [Algorithms, OpenAI SpinningUp](https://spinningup.openai.com/en/latest/user/algorithms.html#the-on-policy-algorithms)
+
+## Proximal Policy Optimization
 
 Proximal Policy Optimization is a policy gradient method for reinforcement
 learning developed by OpenAI[^PPO_OpenAI].
