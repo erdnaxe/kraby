@@ -1,6 +1,6 @@
 site_name: Kraby
 site_description: Open source hexapod robot for deep learning research.
-copyright: "This project is under GNU General Public License v3.0."
+copyright: "This project is under MIT License."
 repo_url: https://github.com/erdnaxe/kraby
 
 nav:

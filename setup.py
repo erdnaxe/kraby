@@ -10,7 +10,7 @@ setup(
     name='gym_kraby',
     author='Alexandre Iooss',
     author_email='erdnaxe@crans.org',
-    license='GPLv3',
+    license='MIT',
     url='https://kraby.readthedocs.io/',
     description="OpenAI Gym environment for Kraby, an open-source hexapod "
                 "robot",
