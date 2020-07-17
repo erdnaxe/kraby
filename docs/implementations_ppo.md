@@ -45,7 +45,7 @@ and optimization (GPU).
 ## Proximal Policy Optimization
 
 Proximal Policy Optimization is a policy gradient method for reinforcement
-learning developed by OpenAI[^PPO_OpenAI].
+learning developed by OpenAI [[Schulman et al., 2017](references.md#schulman2017ppo)].
 The following video explains clearly how Proximal Policy Optimization works.
 
 <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/5P7I-xPq8u8" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
@@ -61,7 +61,7 @@ The following implementations were tested:
 -   [StableBaselines3](https://github.com/DLR-RM/stable-baselines3) (PyTorch),
 -   [OpenAI SpinningUp](https://github.com/openai/spinningup) (PyTorch and Tensorflow 1).
 
-OpenAI developed internally a new training system called OpenAI Rapid
+OpenAI developed internally a new training system called [OpenAI Rapid](https://openai.com/blog/openai-five/#rapid)
 implementing PPO at large scale. It can train a policy on large cloud
 platform (such as Kubernetes) using CPU workers for rollout and eval and GPU
 workers for optimization[^OpenAI_Rapid].
@@ -164,7 +164,3 @@ docker run -it -u $(id -u):$(id -g) --gpus all --ipc=host --rm \
 ```
 
 Some notebooks are available in `kraby/notebooks/spinningup/`.
-
-[^PPO_OpenAI]: "Proximal Policy Optimization." OpenAI Blog. <https://openai.com/blog/openai-baselines-ppo/>.
-
-[^OpenAI_Rapid]: "Rapid, OpenAI Five." OpenAI Blog. <https://openai.com/blog/openai-five/#rapid>

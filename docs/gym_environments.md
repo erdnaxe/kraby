@@ -14,7 +14,7 @@ The sum of all these rewards when the episode ends is **the return** of this epi
 
 The **OpenAI Gym** library defines an interface to reinforcement learning
 environments, making them easier to share and use.
-Gym also provides a large collection of environments to benchmark different learning algorithms[^OpenAIGym].
+Gym also provides a large collection of environments to benchmark different learning algorithms \[[Brockman et al., 2016](references.md#brockman2016openai)].
 
 A Gym environment is a Python class implementing a set of methods:
 
@@ -80,6 +80,10 @@ to test each environment.
 
 ![Demo script in action](img/env_demo.jpg)
 
+!!! Warning "Not tested"
+
+    `gym_kraby:HexapodBulletEnv-v0` and `gym_kraby:HexapodRealEnv-v0` are quite similar to the "OneLeg" variant but they were not tested in learning.
+
 ## Using Kraby Gym environments
 
 You may use these environments as any other OpenAI Gym environment.
@@ -92,13 +96,23 @@ import gym
 env = gym.make('gym_kraby:HexapodBulletEnv-v0', render=True)
 observation = env.reset()
 score_return = 0
+done = False
 
-for _ in range(10000):
+while not done:
     a = env.action_space.sample()  # take a random action
     observation, reward, done, _ = env.step(a)  # step
     score_return += reward
 
+print("Environment episode is done, your total return was", score_return)
 env.close()
 ```
 
-[^OpenAIGym]: "[Gym](http://gym.openai.com/docs/)." OpenAI documentation.
+As environments with only one leg cannot end prematuraly (and `done` will always returned true),
+you may use a time limit wrapper:
+
+```python
+from gym.wrappers import TimeLimit
+
+env_no_time_limit = gym.make('gym_kraby:HexapodBulletEnv-v0', render=True)
+env = TimeLimit(env_no_time_limit, max_steps)
+```

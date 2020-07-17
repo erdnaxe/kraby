@@ -27,13 +27,15 @@ theme:
   name: readthedocs
 
 extra_css:
+  - https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css
   - css/extra.css
 
 extra_javascript:
-  - https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML
+  - https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js
+  - https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js
+  - js/extra.js
 
 markdown_extensions:
-  - pymdownx.arithmatex
   - attr_list
   - smarty
   - footnotes
