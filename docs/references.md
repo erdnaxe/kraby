@@ -1,60 +1,88 @@
 # References
 
 <!-- Generate with
-bibtex2html -dl -nobibsource -noheader -nofooter -noabstract -nokeywords -d -nodoc -s ieeetr hexapod.bib
+bibtex2html -dl -nobibsource -noheader -nofooter -noabstract -nokeywords -d -nodoc -s apalike hexapod.bib
 -->
 
 <dl>
 
 <dt>
-[<a name="coumans2020">1</a>]
+[<a name="kingma2014method">Kingma and Ba, 2014</a>]
 </dt>
 <dd>
-E.&nbsp;Coumans and Y.&nbsp;Bai, &ldquo;Pybullet, a python module for physics simulation for
-  games, robotics and machine learning,&rdquo; 2016-2020.
+Kingma, D.&nbsp;P. and Ba, J. (2014).
+ Adam: A method for stochastic optimization.
+[&nbsp;<a href="http://arxiv.org/abs/1412.6980">http</a>&nbsp;]
+
+</dd>
+
+
+<dt>
+[<a name="coumans2020">Coumans and Bai, 2016</a>]
+</dt>
+<dd>
+Coumans, E. and Bai, Y. (2016).
+ Pybullet, a python module for physics simulation for games, robotics
+  and machine learning.
 [&nbsp;<a href="http://pybullet.org">http</a>&nbsp;]
 
 </dd>
 
 
 <dt>
-[<a name="brockman2016openai">2</a>]
+[<a name="brockman2016openai">Brockman et&nbsp;al., 2016</a>]
 </dt>
 <dd>
-G.&nbsp;Brockman, V.&nbsp;Cheung, L.&nbsp;Pettersson, J.&nbsp;Schneider, J.&nbsp;Schulman, J.&nbsp;Tang, and
-  W.&nbsp;Zaremba, &ldquo;Openai gym,&rdquo; 2016.
+Brockman, G., Cheung, V., Pettersson, L., Schneider, J., Schulman, J., Tang,
+  J., and Zaremba, W. (2016).
+ Openai gym.
 [&nbsp;<a href="http://arxiv.org/abs/1606.01540">http</a>&nbsp;]
 
 </dd>
 
 
 <dt>
-[<a name="henderson2017reinforcement">3</a>]
+[<a name="DuanCHSA16">Duan et&nbsp;al., 2016</a>]
 </dt>
 <dd>
-P.&nbsp;Henderson, R.&nbsp;Islam, P.&nbsp;Bachman, J.&nbsp;Pineau, D.&nbsp;Precup, and D.&nbsp;Meger, &ldquo;Deep
-  reinforcement learning that matters,&rdquo; 2017.
+Duan, Y., Chen, X., Houthooft, R., Schulman, J., and Abbeel, P. (2016).
+ Benchmarking deep reinforcement learning for continuous control.
+ <em>CoRR</em>.
+[&nbsp;<a href="http://arxiv.org/abs/1604.06778">http</a>&nbsp;]
+
+</dd>
+
+
+<dt>
+[<a name="henderson2017">Henderson et&nbsp;al., 2017</a>]
+</dt>
+<dd>
+Henderson, P., Islam, R., Bachman, P., Pineau, J., Precup, D., and Meger, D.
+  (2017).
+ Deep reinforcement learning that matters.
 [&nbsp;<a href="http://arxiv.org/abs/1709.06560">http</a>&nbsp;]
 
 </dd>
 
 
 <dt>
-[<a name="schulman2017ppo">4</a>]
+[<a name="schulman2017ppo">Schulman et&nbsp;al., 2017</a>]
 </dt>
 <dd>
-J.&nbsp;Schulman, F.&nbsp;Wolski, P.&nbsp;Dhariwal, A.&nbsp;Radford, and O.&nbsp;Klimov, &ldquo;Proximal
-  policy optimization algorithms.,&rdquo; <em>CoRR</em>, 2017.
+Schulman, J., Wolski, F., Dhariwal, P., Radford, A., and Klimov, O. (2017).
+ Proximal policy optimization algorithms.
+ <em>CoRR</em>.
 [&nbsp;<a href="http://arxiv.org/abs/1707.06347">http</a>&nbsp;]
 
 </dd>
 
 
 <dt>
-[<a name="SpinningUp2018">5</a>]
+[<a name="SpinningUp2018">Achiam, 2018</a>]
 </dt>
 <dd>
-J.&nbsp;Achiam, &ldquo;Spinning up in deep reinforcement learning,&rdquo; 2018.
+Achiam, J. (2018).
+ Spinning up in deep reinforcement learning.
 [&nbsp;<a href="https://spinningup.openai.com">http</a>&nbsp;]
 
 </dd>

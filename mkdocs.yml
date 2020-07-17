@@ -15,7 +15,7 @@ nav:
   - Simulation:
       - URDF description: urdf_description.md
       - Learning environments: gym_environments.md
-      - Proximal Policy Optimization: implementations_ppo.md
+      - Learning algorithm: implementations_ppo.md
       - Training one leg: training_one_leg.md
       - Transfer to the real world: transfer_real_world.md
   - About:
@@ -29,7 +29,11 @@ theme:
 extra_css:
   - css/extra.css
 
+extra_javascript:
+  - https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML
+
 markdown_extensions:
+  - pymdownx.arithmatex
   - attr_list
   - smarty
   - footnotes

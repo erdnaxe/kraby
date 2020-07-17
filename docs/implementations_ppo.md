@@ -1,8 +1,15 @@
 # Learning algorithm
 
+[TOC]
+
 ## Choosing a learning algorithm
 
-This project choose to use **Proximal Policy Optimization** which is an **on-policy** algorithm.
+This project choose to use **Proximal Policy Optimization** which is an **on-policy**, policy gradient method.
+Other popular algorithm are:
+
+-   **Deep Q-learning** (DQN) which works well on environments with discrete action spaces but performs less well on continuous control benchmarks. "Q-learning quickly become infeasible when naive discretization of the action space is performed, due to the curse  of  dimensionality", [[Duan et al., 2016](references.md#DuanCHSA16)].
+-   **"Vanilla" Policy Gradient** methods which have poor data efficiency and robustness.
+-   **Trust Region / natural Policy gradient** methods (such as TRPO) which has a similar data efficiency and performance compared to PPO, while being more complicated [[Schulman et al., 2017](references.md#schulman2017ppo)].
 
 ### On-policy vs Off-policy
 
@@ -14,7 +21,26 @@ This implies that on-policy algorithms are less sample efficient compared to off
 Nonetheless it increases learning stability.
 
 > These algorithms directly optimize [...] policy performance and it works out mathematically that you need on-policy data to calculate the updates. So, this family of algorithms trades off sample efficiency in favor of stability—but you can see the progression of techniques (from VPG to TRPO to PPO) working to make up the deficit on sample efficiency. <br/>
-> -- [Algorithms, OpenAI SpinningUp](https://spinningup.openai.com/en/latest/user/algorithms.html#the-on-policy-algorithms)
+> \-- [Algorithms, OpenAI SpinningUp](https://spinningup.openai.com/en/latest/user/algorithms.html#the-on-policy-algorithms)
+
+### Policy Gradient Methods
+
+Let's define some common notations in reinforcement learning:
+
+-   $\theta$ contains parameters to optimize,
+-   $a_t$ is the action taken and $s_t$ the observation at step $t$.
+-   $\pi_θ$ is a stochastic policy,
+-   $\hat A_t$ is an estimator of the advantage function at time step t.
+
+Policy Gradient Methods estimate the gradient estimator $g$ at the step $t$ with an empirical average over a **batch of sample**,
+$$
+\hat g = \hat{\mathbb E}_t \left[ \nabla_θ \log \pi_θ (a_t|s_t) \hat A_t \right]
+$$
+
+Then this gradient estimate is used in a stochastic gradient ascent algorithm. The one our implementation uses is **Adaptive Moment Estimation** [[Kingma and Ba, 2014](references.md#kingma2014method)].
+
+When training we will alternate between running simulation environments to generate a batch of sample (CPU/RAM bottlenecked)
+and optimization (GPU).
 
 ## Proximal Policy Optimization
 
@@ -52,6 +78,9 @@ and is more intended for experimented users.
 for Tensorflow 2 which gives access to the new profiler and tools compared to the other toolkits.
 It also provides a hyperparameter tuner. Like Garage, it is also geared towards
 more experimented users.
+
+[RLlib](https://docs.ray.io/en/latest/rllib-algorithms.html#ppo) implements PPO
+in a scalable way with PyTorch. This implementation looks promising but has not been tested.
 
 ### Using pytorch-a2c-ppo-acktr-gail PPO (PyTorch)
 
