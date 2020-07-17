@@ -1,3 +1,9 @@
+**Table of content**:
+
+[TOC]
+
+* * *
+
 # PCB
 
 PCB were designed using Eagle 9, which demo version is sufficient.
@@ -10,6 +16,11 @@ PCB design files are available here :
     and connects all servomotors to one UART bus.
 
 ![Boards](img/boards.png)
+
+!!! Warning "Only one serial port"
+
+    These PCB connect all servomotors serial ports together.
+    This may bottleneck your communication speed later, so if your board have more serial ports you may remix those files.
 
 * * *
 
@@ -27,10 +38,10 @@ but you may go with a Lithium battery
 that will have a better capacity over mass, thus being more dangerous.
 With the NiMH cells, we measured around 2 hours of autonomy using the robot.
 
-### Battery protection and connection
+!!! Danger "Battery protection and connection"
 
-For the battery, **you should use a fuse** and a switch in series
-and then connect onto the large battery connector of the power board.
+    For the battery, **you should use a fuse** and a switch in series
+    and then connect onto the large battery connector of the power board.
 
 ### Powering the embedded computer
 

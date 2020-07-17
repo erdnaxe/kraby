@@ -1,3 +1,9 @@
+**Table of content**:
+
+[TOC]
+
+* * *
+
 # Training one robot leg
 
 This section gives some example and draws some conclusions about

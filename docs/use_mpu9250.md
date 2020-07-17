@@ -1,3 +1,9 @@
+**Table of content**:
+
+[TOC]
+
+* * *
+
 # Fetch raw data from MPU9250 sensors
 
 Download, install and enable `iiod` server on NanoPi,

@@ -1,3 +1,9 @@
+**Table of content**:
+
+[TOC]
+
+* * *
+
 # Send and receive data from servomotors
 
 The NanoPi NEO4 has five 3.3V UART that can go up to 1.5 Mbauds/s.

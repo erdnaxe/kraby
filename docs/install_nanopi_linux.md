@@ -1,3 +1,9 @@
+**Table of content**:
+
+[TOC]
+
+* * *
+
 # Compile NanoPi linux kernel with MPU9250 module
 
 As of may 2020, only the official NanoPi kernel supports NanoPi Neo4 GPU and VPU.
@@ -103,7 +109,7 @@ then `ssh pi@10.42.0.1`.
 !!! Note
 
     You can plug wired Internet access
-	and NetworkManager will automatically use and share this connection.
+    and NetworkManager will automatically use and share this connection.
 
 ## Test the MPU9250
 

@@ -31,13 +31,19 @@ serial communications capability.
 These servomotors are able to measure motor torque and speed, and are easy to
 use with a serial port.
 
+Even though the embedded computer has two free serial ports, getting all sensors values of 18 servomotors take an average of 40 ms, see [more details there](use_motors.md#how-slow-is-it).
+This means Kraby may be too slow to do proper torque control, that is why we try to use them in position control.
+
 These servomotors are similar to the more popular **Dynamixel AX-12**.
 
 ### Simulation environment included
 
-An [OpenAI Gym](https://gym.openai.com/) environment is available.
+[OpenAI Gym](https://gym.openai.com/) environments are available and packaged as [gym-kraby](https://pypi.org/project/gym-kraby/) on PyPi.
 It uses [BulletPhysics](https://github.com/bulletphysics/bullet3) simulator
-with [an URDF description](https://github.com/erdnaxe/kraby/blob/master/gym_kraby/data/hexapod.urdf) of the robot.
+with [an URDF description](https://github.com/erdnaxe/kraby/blob/master/gym_kraby/data/hexapod.urdf) of the robot,
+see [more details there](gym_environments.md).
+
+![OpenAI Gym environment](img/env_demo.jpg)
 
 * * *
 

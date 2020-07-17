@@ -1,8 +1,10 @@
-# Learning algorithm
+**Table of content**:
 
 [TOC]
 
-## Choosing a learning algorithm
+* * *
+
+# Choosing a learning algorithm
 
 This project choose to use **Proximal Policy Optimization** which is an **on-policy**, policy gradient method.
 Other popular algorithm are:
@@ -11,7 +13,7 @@ Other popular algorithm are:
 -   **"Vanilla" Policy Gradient** methods which have poor data efficiency and robustness.
 -   **Trust Region / natural Policy gradient** methods (such as TRPO) which has a similar data efficiency and performance compared to PPO, while being more complicated [[Schulman et al., 2017](references.md#schulman2017ppo)].
 
-### On-policy vs Off-policy
+## On-policy vs Off-policy
 
 An **on-policy** algorithm does not use old data.
 In our case it means that one batch of simulation episodes will one be used to train the next policy,
@@ -23,7 +25,7 @@ Nonetheless it increases learning stability.
 > These algorithms directly optimize [...] policy performance and it works out mathematically that you need on-policy data to calculate the updates. So, this family of algorithms trades off sample efficiency in favor of stability—but you can see the progression of techniques (from VPG to TRPO to PPO) working to make up the deficit on sample efficiency. <br/>
 > \-- [Algorithms, OpenAI SpinningUp](https://spinningup.openai.com/en/latest/user/algorithms.html#the-on-policy-algorithms)
 
-### Policy Gradient Methods
+## Policy Gradient Methods
 
 Let's define some common notations in reinforcement learning:
 
@@ -42,7 +44,7 @@ Then this gradient estimate is used in a stochastic gradient ascent algorithm. T
 When training we will alternate between running simulation environments to generate a batch of sample (CPU/RAM bottlenecked)
 and optimization (GPU).
 
-## Proximal Policy Optimization
+# Proximal Policy Optimization
 
 Proximal Policy Optimization is a policy gradient method for reinforcement
 learning developed by OpenAI [[Schulman et al., 2017](references.md#schulman2017ppo)].

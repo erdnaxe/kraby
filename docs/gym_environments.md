@@ -1,3 +1,9 @@
+**Table of content**:
+
+[TOC]
+
+* * *
+
 # Introduction to reinforcement learning
 
 **Reinforcement learning** (RL) consists in using machine learning techniques to

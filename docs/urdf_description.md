@@ -1,3 +1,9 @@
+**Table of content**:
+
+[TOC]
+
+* * *
+
 # URDF description
 
 The **Unified Robot Description Format** (URDF) is an XML format
@@ -7,9 +13,13 @@ by the Robotic Operating System project (ROS).
 Kraby URDF description is available at
 <https://github.com/erdnaxe/kraby/blob/master/gym_kraby/data/hexapod.urdf>.
 
-* * *
+!!! Note "Do not use SDF"
 
-## Editing and building the URDF
+    This project started with a SDFormat description of the robot in Gazebo.
+    Despite PyBullet being able to load SDF files, the support is not as good as URDF files
+    and some simulation parameters were impossible to input.
+
+## Editing and building the URDF with Jinja templating
 
 To simplify URDF editing and to avoid input errors,
 the project uses Jinja2[^xacro] templates to generate the URDF.
@@ -17,8 +27,6 @@ You may edit files under
 [gym_kraby/data/src/](https://github.com/erdnaxe/kraby/tree/master/gym_kraby/data/src)
 then execute
 [gym_kraby/data/generate_urdf.py](https://github.com/erdnaxe/kraby/tree/master/gym_kraby/data).
-
-* * *
 
 ## Computing 3d-printed part inertia
 
@@ -62,3 +70,19 @@ For more information, see
 <http://gazebosim.org/tutorials?tut=inertia&cat=build_robot>.
 
 [^xacro]: [Xacro](http://wiki.ros.org/xacro) could also be an option, but it requires to install the ROS toolchain.
+
+# PyBullet integration
+
+Now that our robot is fully described in URDF, we may load it in BulletPhysics using PyBullet Python bindings.
+
+```Python
+import pybullet as p
+
+p.connect(p.GUI)  # Open new physic server with GUI
+p.setGravity(0, 0, -9.81)  # No, we are still on earth
+p.setAdditionalSearchPath(getDataPath())  # Add pybullet_data
+p.loadURDF("plane.urdf")  # Load a ground
+p.loadURDF("hexapod.urdf")  # Load the full robot
+```
+
+You may then use `p.setJointMotorControlArray` to control motors.

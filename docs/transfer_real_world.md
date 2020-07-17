@@ -1,3 +1,9 @@
+**Table of content**:
+
+[TOC]
+
+* * *
+
 # Preparing transfer to real world
 
 ## Using bigger timesteps

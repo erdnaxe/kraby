@@ -1,3 +1,9 @@
+**Table of content**:
+
+[TOC]
+
+* * *
+
 # Build the structure
 
 This section focuses on building the base structure of the robot.

@@ -13,7 +13,7 @@ nav:
       - Use the internal motion unit: use_mpu9250.md
       - Use the servomotors: use_motors.md
   - Simulation:
-      - URDF description: urdf_description.md
+      - Robot simulation: urdf_description.md
       - Learning environments: gym_environments.md
       - Learning algorithm: implementations_ppo.md
       - Training one leg: training_one_leg.md
