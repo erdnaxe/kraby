@@ -27,14 +27,17 @@ Nonetheless it increases learning stability.
 
 ## Policy Gradient Methods
 
+Policy gradient methods directly optimize the episode return.
+
 Let's define some common notations in reinforcement learning:
 
 -   $\theta$ contains parameters to optimize,
 -   $a_t$ is the action taken and $s_t$ the observation at step $t$.
 -   $\pi_θ$ is a stochastic policy,
--   $\hat A_t$ is an estimator of the advantage function at time step t.
+-   $\hat A_t$ is an estimator of the advantage function at time step $t$, see [[Schulman et al., 2015](references.md#schulman2015high)].
 
 Policy Gradient Methods estimate the gradient estimator $g$ at the step $t$ with an empirical average over a **batch of sample**,
+for Actor-Critic algorithms (see A2C and PPO) the form is
 $$
 \hat g = \hat{\mathbb E}_t \left[ \nabla_θ \log \pi_θ (a_t|s_t) \hat A_t \right]
 $$
