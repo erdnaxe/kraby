@@ -16,4 +16,5 @@ dist
 # Training logs
 notebooks/*/tensorboard_log
 notebooks/*/trained_models
+notebooks/*/training_logs
 notebooks/*/video
