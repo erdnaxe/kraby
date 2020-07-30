@@ -197,9 +197,10 @@ class OneLegBulletEnv(gym.Env):
         target_distance = np.square(position - self.target_position).sum()
 
         # Comsuption is speed * torque
-        speeds = self.observation[1:-6:2]
-        torques = self.torques
-        comsuption = self.dt * abs(sum(speeds * torques))
+        #speeds = self.observation[1:-6:2]
+        #torques = self.torques
+        #comsuption = self.dt * abs(sum(speeds * torques))
+        comsuption = 0
         w = 0  # comsuption weight, FIXME: disabled
 
         # Compute reward
