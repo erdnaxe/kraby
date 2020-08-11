@@ -46,8 +46,8 @@ class HexapodBulletEnv(gym.Env):
                                        shape=(self.n_actions,),
                                        dtype="float32")
 
-        # 18*(position,speed,torque) + robot positions observations
-        self.n_observation = 3*18+6
+        # 18*(position,speed,torque) + robot positions observations + position target
+        self.n_observation = 3*18+6+3
         self.observation_space = spaces.Box(low=-1, high=1,
                                             shape=(self.n_observation,),
                                             dtype="float32")
@@ -106,6 +106,10 @@ class HexapodBulletEnv(gym.Env):
                            self.target_position + [0, 0.01, 0],
                            [0, 0, 0], 2)
 
+        # Last target distance
+        position, _ = p.getBasePositionAndOrientation(self.robot_id)
+        self.last_target_distance = np.square(position - self.target_position).sum()
+
         # Return observation
         self._update_observation()
         return self.observation
@@ -129,7 +133,8 @@ class HexapodBulletEnv(gym.Env):
         # Return observation, reward and done
         self._update_observation()
         reward = self._get_reward()
-        done = bool(self.observation[-4] < 0.08)  # Has fallen?
+        position, _ = p.getBasePositionAndOrientation(self.robot_id)
+        done = bool(position[2] < 0.08)  # Has fallen?
         return self.observation, reward, done, {}
 
     def render(self, mode='human'):
@@ -169,7 +174,7 @@ class HexapodBulletEnv(gym.Env):
             height=720,
             viewMatrix=view_matrix,
             projectionMatrix=proj_matrix,
-            renderer=p.ER_BULLET_HARDWARE_OPENGL,
+            renderer=p.ER_TINY_RENDERER,
         )
         rgb_array = np.array(px)
         rgb_array = rgb_array[:, :, :3]
@@ -188,37 +193,41 @@ class HexapodBulletEnv(gym.Env):
         """Compute reward function."""
         # TODO: take into account the inclinaison of base
         # Distance progress toward goal
-        position = self.observation[-6:-3]
+        position, _ = p.getBasePositionAndOrientation(self.robot_id)
         target_distance = np.square(position - self.target_position).sum()
+        diff_distance = self.last_target_distance - target_distance
+        self.last_target_distance = target_distance
 
         # Comsuption is speed * torque
-        speeds = self.observation[1:-6:3]
-        torques = self.observation[2:-6:3]
-        comsuption = self.dt * abs(sum(speeds * torques))
-        w = 0.008  # comsuption weight
+        #speeds = self.observation[1:-6:3]
+        #torques = self.observation[2:-6:3]
+        #comsuption = self.dt * abs(sum(speeds * torques))
+        comsuption = 0
+        w = 0  # comsuption weight, FIXME: disabled
 
         # Compute reward
-        # +200 to keep it positiv,
-        # else the agent will learn how to end the episode quickly
-        # 200 > max_comsuption + max_distance
-        reward = 200 - target_distance - w * comsuption
+        reward = diff_distance - w * comsuption
         return reward
 
     def _update_observation(self):
-        """Update the observation from BulletPhysics."""
+        """
+        Update the observation from BulletPhysics.
+
+        Observation contains:
+        * 18x servomotors {position, speed, torque}
+        * robot position and orientation
+        * target (x, y, z)
+        """
         # Each servomotor position, speed and torque
         all_states = p.getJointStates(self.robot_id, self.joint_list)
         for i, (pos, vel, _, tor) in enumerate(all_states):
             self.observation[3*i:3*i+3] = [
-                2 * pos / np.pi,
-                vel / self.servo_max_speed,
-                tor / self.servo_max_torque
+                pos * 2 / np.pi,
+                np.clip(vel / self.servo_max_speed, -1., 1.),
+                np.clip(tor / self.servo_max_torque, -1., 1.),
             ]
-
-        # Sometimes 1.0 is greater than 1
-        self.observation = np.clip(self.observation, -1., 1.)
 
         # Robot position and orientation
         pos, ori = p.getBasePositionAndOrientation(self.robot_id)
-        self.observation[-6:] = list(pos) + list(p.getEulerFromQuaternion(ori))
-        self.observation[-3:] /= np.pi  # normalization
+        self.observation[-9:-3] = list(pos) + list(p.getEulerFromQuaternion(ori))
+        self.observation[-6:-3] /= np.pi  # normalization
