@@ -167,3 +167,98 @@ for n_steps in [32, 64, 128, 256, 512, 1024, 2048]:
 The more `n_steps` grows, the more GPU time is needed. A too large batch size deteriorates performances. In fact one episode on 32 simulations seems plenty enough to have enough variance in the dataset.
 
 When `n_steps` is larger, the total learning time is a bit faster as the timestep limit is 250k and it does not divide well with high power of 2. It is also a bit faster because less data transfer occurs
+
+# Tweaking number of optimization epoch
+
+The number of optimization epoch (`noptepochs`) represents how many times we will use our generated data to optimize the neural network and reduce the surrogate.
+
+A higher number of optimization epoch will use more GPU and may improve sample efficiency. If too many optimization epoch are done, the learning process will be slower.
+
+<details>
+   <summary>
+    Show the code used for these learning.
+   </summary>
+
+```python
+from gym_kraby.train import train
+
+for noptepochs in [1, 5, 10, 20, 30, 50]:
+    n_envs = 32  # opti
+    n_steps = 128  # 4 simulation episodes per simulation
+    nminibatches = 1  # opti
+
+    print("[+] Train hyperparam_noptepochs_" + str(noptepochs))
+    train(
+        exp_name="hyperparam_noptepochs_" + str(noptepochs),
+        env_name="gym_kraby:OneLegBulletEnv-v0",
+        n_envs=n_envs,
+        gamma=0.90,  # Discount factor
+        n_steps=n_steps,  # batchsize = n_steps * n_envs
+        ent_coef=0.01,  # Entropy coefficient for the loss calculation
+        learning_rate=10e-4,
+        lam=0.95,  # Factor for trade-off of bias vs variance for Generalized Advantage Estimator
+        nminibatches=nminibatches,  # Number of training minibatches per update.
+        noptepochs=noptepochs,  # Number of epoch when optimizing the surrogate
+        cliprange=0.2,  # Clipping parameter, this clipping depends on the reward scaling
+    )
+```
+
+</details><br/>
+
+![png](img/training_one_leg_13_1.png)
+
+![png](img/training_one_leg_14_1.png)
+
+We observe as intended that increasing `noptepochs` makes the learning more sample efficient, but slower.
+A good compromise seems to be `noptepochs=30`.
+
+# Tweaking the discount factor
+
+**The discount factor (`gamma`, $\gamma$) is the coefficient used when summing all step rewards to get the episode return.**
+
+$$
+return = \sum_n \gamma^n~reward_n
+$$
+
+$\gamma=1$ means that the learning does not differentiate between achieving good reward early or lately in the simulation episode.
+We often see a value of $\gamma$ between 0.9 and 0.999 in literature to promote getting good rewards early.
+
+<details>
+   <summary>
+    Show the code used for these learning.
+   </summary>
+
+```python
+from gym_kraby.train import train
+
+for gamma in [0.2, 0.4, 0.6, 0.8, 0.9, 0.95, 0.98, 0.9999]:
+    n_envs = 32  # opti
+    nminibatches = 1  # opti
+    noptepochs = 30  # opti
+    n_steps = 32  # opti
+
+    print("[+] Train hyperparam_gamma_" + str(gamma))
+    train(
+        exp_name="hyperparam_gamma_" + str(gamma),
+        env_name="gym_kraby:OneLegBulletEnv-v0",
+        n_envs=n_envs,
+        gamma=gamma,  # Discount factor
+        n_steps=n_steps,  # batchsize = n_steps * n_envs
+        ent_coef=0.01,  # Entropy coefficient for the loss calculation
+        learning_rate=10e-4,
+        lam=0.95,  # Factor for trade-off of bias vs variance for Generalized Advantage Estimator
+        nminibatches=nminibatches,  # Number of training minibatches per update.
+        noptepochs=noptepochs,  # Number of epoch when optimizing the surrogate
+        cliprange=0.2,  # Clipping parameter, this clipping depends on the reward scaling
+    )
+```
+
+</details><br/>
+
+![png](img/training_one_leg_22_1.png)
+
+We observe that a discount factor between 0.8 and 0.9 gives best results. If the discount is too low or too high, then the repeatability of the learning decreases.
+
+!!! warning
+
+    We use the distance between the target and the robot leg end as reward at every step. This leads to a negative return to maximize. Much better performances might be achievable using the derivative.
