@@ -4,326 +4,166 @@
 
 * * *
 
-# Training one robot leg
+This section gives examples of hyperparameters optimization.
 
-This section gives some example and draws some conclusions about
-the training of a single robot leg.
+Let's take `ReacherBulletEnv-v0` [hyperparameters from rl-baselines-zoo](https://github.com/araffin/rl-baselines-zoo/blob/master/hyperparams/ppo2.yml#L229) as an initial base and adapt them:
 
-The environment resets the leg to a random position.
-The agent has to command each servomotors
-to move the fingertip to a random objective (visualized by the cross).
-
-```Python
-# Reset all joint using normal distribution
-for j in self.joint_list:
-    p.resetJointState(self.robot_id, j,
-                      np.random.uniform(low=-np.pi/4, high=np.pi/4))
-
-# Set random target in a 3D box
-self.target_position = np.array([
-    np.random.uniform(0.219 - 0.069*self.delta, 0.219 + 0.069*self.delta),
-    np.random.uniform(0.020 - 0.153*self.delta, 0.020 + 0.153*self.delta),
-    np.random.uniform(0.128 - 0.072*self.delta, 0.128 + 0.072*self.delta),
-])
+```yaml
+n_envs: 8 -> 32
+n_timesteps: 1e6 -> 250e3
+policy: 'MlpPolicy'
+n_steps: 2048 -> 128  # one episode ends at 32 steps, simulate 4 episodes per environment
+nminibatches: 32 -> auto
+lam: 0.95
+gamma: 0.99 -> 0.90
+noptepochs: 10 -> 30
+ent_coef: 0.0 -> 0.01
+learning_rate: 2.5e-4 -> 10e-4
+cliprange: 0.2
 ```
 
-![One leg environment](img/one_leg_env.png)
+# Observation vector comparison
 
-!!! Note
+When building the OpenAI Gym environment, many observations vectors are possible.
+On the one hand removing data from observation that was required for learning will plumbed learning sample efficiency,
+on the other hand adding useless observation will slow down the learning.
 
-    Some early tests were done on StableBaselines3
-    but as the library is currently being developed,
-    the training was failing and the average episode reward was constant.
+![png](img/training_one_leg_3_1.png)
 
-## First tests with a fixed objective
+`ReacherBulletEnv-v0` uses cosinus and sinus for their angular observation.
+In our case we only need the sinus of the servomotor position as the range go from $-\\pi/2$ to $\\pi/2$.
+We observe that this does not help with learning (yellow plot).
 
-### With pytorch-a2c-ppo-acktr-gail
+One interesting observation is that we get quite the same learning performance with and without the absolute leg endtip position.
+This means that we won't have to implement the direct mechanics of the leg when transferring this environment to reality.
+**The agent learns the direct mechanics of the leg.**
 
-The defaults hyperparameters given in the
-[pytorch-a2c-ppo-acktr-gail README](https://github.com/ikostrikov/pytorch-a2c-ppo-acktr-gail/blob/master/README.md)
-are recommanded and are able to give good results for a first training.
+**Overall tweaking the observation vector did not affect performance as much as optimizing hyperparameters.**
+It is much more interesting to optimize learning hyperparameters rather than finding the perfect observation.
 
-!!! Warning
+For all future training we will keep the following observation vector :
+$$
+obs = \\begin{pmatrix}
+\\theta_1 \\ \\omega_1 \\ \\theta_2 \\ \\omega_2 \\ \\theta_3 \\ \\omega_3 \\ target_x \\ target_y \\ target_z \\end{pmatrix}
+$$
+$\\theta_i$ being the angle normalized between -1 (-90°) and 1 (90°) and $\\omega_i$ the velocity normalized.
 
-    The reward function is only using the distance to a **fixed** objective.
-    This agent learned only to go to a fixed target.
+# Optimizing the number of parallel environments
 
-The observation vector used here is:
+Each environment instantiate a PyBullet world with one leg.
+If we instantiate only one environment (`n_envs=1`), data generation will be slow and won't use all computer resources.
 
-| Num | Observation                                    |
-| --- | ---------------------------------------------- |
-| 0   | position (first joint)                         |
-| 1   | velocity (first joint)                         |
-| 2   | torque (first joint)                           |
-| 3   | position (second joint)                        |
-| 4   | velocity (second joint)                        |
-| 5   | torque (second joint)                          |
-| 6   | position (third joint)                         |
-| 7   | velocity (third joint)                         |
-| 8   | torque (third joint)                           |
-| 9   | the x-axis component of the fingertip position |
-| 10  | the y-axis component of the fingertip position |
-| 11  | the z-axis component of the fingertip position |
+We observed that on a i7-8750H (6 physical cores, 12 logical cores), `n_envs=12` did not use the most out of the processor.
+Increasing the number of environment even higher helps gain some speed.
 
-The reward is `-target_distance`,
-`target_distance` being the distance between the fingertip and the target.
+One environment uses CPU and RAM resources. One rule of thumb is to increase `n_envs` until we utilized all the memory.
+`n_envs=32` requires approximately 12 GiB of RAM, and that is the sweet spot I used on my 16 GiB laptop.
 
-![Training results](img/training_one_leg_pytorch-a2c-ppo-acktr-gail.png)
+# Tweaking the batch size
 
-!!! note
+**The batch size represents the size of one batch of data that will be used for one learning epoch.**
+Because learning is done on GPU and we are using small dimensions, increasing batch size should use more GPU resources and increase learning speed.
 
-    16 trainings with different seeds were averaged to plot the previous figure.
-    The light blue zone corresponds to the standard error.
+Also because the target and initial position of each simulation epoch is random, we need a large-enough batch size to have some variance.
 
-**The training is successful and converges after 300k steps.**
-The `enjoy.py` script shows the leg moving to the fixed target,
-but it vibrates after reaching the objective.
+Because we fixed `n_envs` in last step, the batch size can only be changed by tweaking the number of simulation episodes in each environment, or the number of minibatches.
 
-### With StableBaselines
+$$
+batch~size = \\frac{n_{steps} \\times n_{envs}}{n\_{minibatches}}
+$$
 
-Start StableBaselines Docker as explained in [previous page](implementations_ppo.md).
-Then in Jupyter web interface,
+## Tweaking the number of minibatches
 
--   `check_env.ipynb` will check that OpenAI Gym environments are working as expected,
--   `one_leg_training.ipynb` is an example of PPO training on one leg,
--   `render.ipynb` will render the agent to a MP4 video or a GIF.
+With `nminibatches=1` we have no "mini batches", it is a **Batch Gradient Descent**.
 
-As planned, it works as well as `pytorch-a2c-ppo-acktr-gail` on PyTorch,
-but this time we get much more tools such as
-[TensorBoard](https://www.tensorflow.org/tensorboard) data and graph.
+Increasing `nminibatches` will cut the dataset generated by the simulations. This is **Mini Batch Gradient Descent**.
+You can learn more about this on [this blog post](https://towardsdatascience.com/batch-mini-batch-stochastic-gradient-descent-7a62ecba642a).
 
-As StableBaselines stands out as being an easy PPO implementation
-with a clear documentation and hyperparameters,
-all the following training were done with it.
+Having `nminibatches` over 1 should decrease performances in our case because we are not learning over a huge dataset.
 
-## Learning to go to a random target
+The following training was done with `n_envs=32` and `n_steps=128`. **So without mini batches we get the maximal batch size of 4096 simulation steps.**
 
-Now we fix `delta = 0.5` to pick the target (x, y, z) such as,
-0.1845 ≤ x ≤ 0.2535,
-\-0.0565 ≤ y ≤ 0.0965,
-0.0920 ≤ z ≤ 0.164.
+<details>
+   <summary>
+    Show the code used for these learning.
+   </summary>
 
-![Visualization](img/onde_leg_env_delta05.png)
+```python
+from gym_kraby.train import train
 
-!!! Warning "Batch size"
+for batch_size in [32, 64, 128, 256, 512, 1024, 2048, 4096]:
+    n_envs = 32  # opti
+    n_steps = 128  # 4 simulation episodes per simulation
 
-    As the target changes at each episode start,
-    the batch size need to be large enough
-    to make sure it contains some variance.
+    if n_steps * n_envs < batch_size:
+        nminibatches = 1  # limit batch_size to 32*128=4096
+    else:
+        nminibatches = int(n_steps * n_envs / batch_size)
 
-### First tests
-
-We used the following code and hyperparameters to train using StableBaselines:
-
-```Python
-from stable_baselines.common.policies import MlpPolicy
-from stable_baselines.common import set_global_seeds
-from stable_baselines import PPO2
-from stable_baselines.common.vec_env import SubprocVecEnv
-import gym
-from gym.wrappers import TimeLimit
-
-
-def make_env(rank, seed=0):
-    """
-    Init an environment
-
-    :param rank: (int) index of the subprocess
-    :param seed: (int) the inital seed for RNG
-    """
-    timestep_limit = 128
-
-    def _init():
-        env = gym.make("gym_kraby:OneLegBulletEnv-v0")
-        env = TimeLimit(env, timestep_limit)
-        env.seed(seed + rank)
-        return env
-    set_global_seeds(seed)
-    return _init
-
-seed = 1
-num_cpu = 16
-env = SubprocVecEnv([make_env(i, seed) for i in range(num_cpu)])
-
-# Use `tensorboard --logdir notebooks/stablebaselines/tensorboard_log/doc1` to inspect learning
-model = PPO2(
-    policy=MlpPolicy,
-    env=env,
-    gamma=0.99,  # Discount factor
-    n_steps=512,  # batchsize = n_steps * n_envs
-    ent_coef=0.0,  # Entropy coefficient for the loss calculation
-    learning_rate=2.5e-4,
-    lam=0.95,  # Factor for trade-off of bias vs variance for Generalized Advantage Estimator
-    nminibatches=32,  # Number of training minibatches per update.
-                      # For recurrent policies, the nb of env run in parallel should be a multiple of it.
-    noptepochs=4,  # Number of epoch when optimizing the surrogate
-    cliprange=0.2,  # Clipping parameter, this clipping depends on the reward scaling
-    verbose=False,
-    tensorboard_log="./tensorboard_log/doc1/",
-
-    seed=seed,  # Fixed seed
-    n_cpu_tf_sess=1,  # force deterministic results
-)
-model.learn(total_timesteps=int(2e6))
+    print("[+] Train hyperparam_batch_size_" + str(batch_size))
+    train(
+        exp_name="hyperparam_batch_size_" + str(batch_size),
+        env_name="gym_kraby:OneLegBulletEnv-v0",
+        n_envs=n_envs,
+        gamma=0.90,  # Discount factor
+        n_steps=n_steps,  # batchsize = n_steps * n_envs
+        ent_coef=0.01,  # Entropy coefficient for the loss calculation
+        learning_rate=10e-4,
+        lam=0.95,  # Factor for trade-off of bias vs variance for Generalized Advantage Estimator
+        nminibatches=nminibatches,  # Number of training minibatches per update.
+        noptepochs=30,  # Number of epoch when optimizing the surrogate
+        cliprange=0.2,  # Clipping parameter, this clipping depends on the reward scaling
+    )
 ```
 
-The observation vector used here is:
+</details><br/>
 
-| Num | Observation                                    |
-| --- | ---------------------------------------------- |
-| 0   | position (first joint)                         |
-| 1   | velocity (first joint)                         |
-| 2   | torque (first joint)                           |
-| 3   | position (second joint)                        |
-| 4   | velocity (second joint)                        |
-| 5   | torque (second joint)                          |
-| 6   | position (third joint)                         |
-| 7   | velocity (third joint)                         |
-| 8   | torque (third joint)                           |
-| 9   | the x-axis component of the fingertip position |
-| 10  | the y-axis component of the fingertip position |
-| 11  | the z-axis component of the fingertip position |
-| 12  | the x-axis component of the target             |
-| 13  | the y-axis component of the target             |
-| 14  | the z-axis component of the target             |
+![png](img/training_one_leg_8_1.png)
 
-The reward is `-target_distance`,
-`target_distance` being the distance between the fingertip and the target.
+![png](img/training_one_leg_9_1.png)
 
-![Training results](img/training_one_leg_random_target.png)
+Lowering batch size using mini batches make small improvement of learning sample efficiency, but plumb the overall real world learning speed.
 
-<!-- TODO video -->
+The conclusion of this experience is that we can keep `nminibatch=1` i.e. not splitting the generated data into smaller batch for the learning process. The batch size will be decided by the amount of environments multiplied by the number of simulated steps in each environments.
 
-### Removing motors torque from observations
+## Tweaking the number of simulation episodes
 
-The observation vector used here is:
+As a simulation episode contains 32 steps, so the number of steps `n_steps` generated by one environment correspond to $32 \times n_{episodes}$.
 
-| Num | Observation                                    |
-| --- | ---------------------------------------------- |
-| 0   | position (first joint)                         |
-| 1   | velocity (first joint)                         |
-| 2   | position (second joint)                        |
-| 3   | velocity (second joint)                        |
-| 4   | position (third joint)                         |
-| 5   | velocity (third joint)                         |
-| 6   | the x-axis component of the fingertip position |
-| 7   | the y-axis component of the fingertip position |
-| 8   | the z-axis component of the fingertip position |
-| 9   | the x-axis component of the target             |
-| 10  | the y-axis component of the target             |
-| 11  | the z-axis component of the target             |
+This experience change the amount of simulation episodes done in each environments (32 environments in our case). More simulation episodes will use more CPU time and create a larger batch of data.
 
-The reward is `-target_distance`,
-`target_distance` being the distance between the fingertip and the target.
+<details>
+   <summary>
+    Show the code used for these learning.
+   </summary>
 
-![Training results](img/training_one_leg_without_torque.png)
+```python
+from gym_kraby.train import train
 
-It seems that the training is a bit faster
-without motors torques as the observation vector is smaller.
+for n_steps in [32, 64, 128, 256, 512, 1024, 2048]:
+    n_envs = 32  # opti
+    nminibatches = 1  # opti
 
-<video style="max-width:100%;height:auto" preload="metadata" controls="">
-<source src="https://perso.crans.org/erdnaxe/videos/projet_hexapod/training_one_leg_without_torque.mp4" type="video/mp4">
-</video><br/>
-
-The leg does not always reach the target and vibrates.
-
-### Using cosinus and sinus of motor positions
-
-This idea comes from [OpenAI Gym Reacher-v2 environment](https://github.com/openai/gym/wiki/Reacher-v2).
-
-The observation vector used here is:
-
-| Num | Observation                                    |
-| --- | ---------------------------------------------- |
-| 0   | cos(position) (first joint)                    |
-| 1   | sin(position) (first joint)                    |
-| 2   | velocity (first joint)                         |
-| 3   | cos(position) (second joint)                   |
-| 4   | sin(position) (second joint)                   |
-| 5   | velocity (second joint)                        |
-| 6   | cos(position) (third joint)                    |
-| 7   | sin(position) (third joint)                    |
-| 8   | velocity (third joint)                         |
-| 9   | the x-axis component of the fingertip position |
-| 10  | the y-axis component of the fingertip position |
-| 11  | the z-axis component of the fingertip position |
-| 12  | the x-axis component of the target             |
-| 13  | the y-axis component of the target             |
-| 14  | the z-axis component of the target             |
-
-![Training results](img/training_one_leg_sin_cos.png)
-
-The training using cosinus and sinus is slower.
-
-### Using the vector from the target to the fingertip
-
-This idea also comes from [OpenAI Gym Reacher-v2 environment](https://github.com/openai/gym/wiki/Reacher-v2).
-
-The observation vector used here is:
-
-| Num | Observation                                                         |
-| --- | ------------------------------------------------------------------- |
-| 0   | position (first joint)                                              |
-| 1   | velocity (first joint)                                              |
-| 2   | position (second joint)                                             |
-| 3   | velocity (second joint)                                             |
-| 4   | position (third joint)                                              |
-| 5   | velocity (third joint)                                              |
-| 6   | the x-axis component of the vector from the target to the fingertip |
-| 7   | the y-axis component of the vector from the target to the fingertip |
-| 8   | the z-axis component of the vector from the target to the fingertip |
-| 9   | the x-axis component of the target                                  |
-| 10  | the y-axis component of the target                                  |
-| 11  | the z-axis component of the target                                  |
-
-![Training results](img/training_one_leg_with_diff_target.png)
-
-Putting the vector from the target to the fingertip
-rather than the fingertip position results in better learning performances.
-
-<video style="max-width:100%;height:auto" preload="metadata" controls="">
-<source src="https://perso.crans.org/erdnaxe/videos/projet_hexapod/training_one_leg_with_diff_target.mp4" type="video/mp4">
-</video><br/>
-
-### Optimizing hyperparameters
-
-The observation used here is the same as the previous section but the hyperparameters are now:
-
-```Python
-num_cpu=32
-ent_coef=0.01
-nminibatches=64
-noptepochs=30
-total_timesteps=1e6
+    print("[+] Train hyperparam_n_steps_" + str(n_steps))
+    train(
+        exp_name="hyperparam_n_steps_" + str(n_steps),
+        env_name="gym_kraby:OneLegBulletEnv-v0",
+        n_envs=n_envs,
+        gamma=0.90,  # Discount factor
+        n_steps=n_steps,  # batchsize = n_steps * n_envs
+        ent_coef=0.01,  # Entropy coefficient for the loss calculation
+        learning_rate=10e-4,
+        lam=0.95,  # Factor for trade-off of bias vs variance for Generalized Advantage Estimator
+        nminibatches=nminibatches,  # Number of training minibatches per update.
+        noptepochs=30,  # Number of epoch when optimizing the surrogate
+        cliprange=0.2,  # Clipping parameter, this clipping depends on the reward scaling
+    )
 ```
 
-![Training results](img/training_one_leg_new_hyperparams.png)
+</details><br/>
 
-Increasing `noptepochs` increases GPU usage and make the learning converge much faster.
-A learning of 1 million steps is done under 8 minutes on a Nvidia GTX1060 and an Intel i7-8750H. 
+![png](img/training_one_leg_18_1.png)
 
-### Training without fingertip position
+The more `n_steps` grows, the more GPU time is needed. A too large batch size deteriorates performances. In fact one episode on 32 simulations seems plenty enough to have enough variance in the dataset.
 
-All previous learning put the fingertip position in the observation vector.
-This is problematic to transfer from simulation to reality as this vector cannot be measured on the real system.
-It may be found by solving the dynamic of the robot leg.
-Another approach is to remove this data from the observation and see how much the learning performance fall.
-
-The observation vector used here is:
-
-| Num | Observation                        |
-| --- | ---------------------------------- |
-| 0   | position (first joint)             |
-| 1   | velocity (first joint)             |
-| 2   | position (second joint)            |
-| 3   | velocity (second joint)            |
-| 4   | position (third joint)             |
-| 5   | velocity (third joint)             |
-| 6   | the x-axis component of the target |
-| 7   | the y-axis component of the target |
-| 8   | the z-axis component of the target |
-
-![Training results](img/training_one_leg_without_fingertip_position.png)
-
-Not only the policy learned to reach the target
-but it did it with less variance between learning runs.
+When `n_steps` is larger, the total learning time is a bit faster as the timestep limit is 250k and it does not divide well with high power of 2. It is also a bit faster because less data transfer occurs
