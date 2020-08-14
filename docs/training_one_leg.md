@@ -262,3 +262,180 @@ We observe that a discount factor between 0.8 and 0.9 gives best results. If the
 !!! warning
 
     We use the distance between the target and the robot leg end as reward at every step. This leads to a negative return to maximize. Much better performances might be achievable using the derivative.
+
+# Tweaking the clip range
+
+The PPO algorithm avoid too large policy update by clipping it. It uses a ratio that tell the difference between new and old policy and clip this ratio.
+With a clip range of $\varepsilon=0.2$, the ratio will be clipped from $1-\varepsilon = 0.8$ to $1+\varepsilon = 1.2$.
+
+<details>
+   <summary>
+    Show the code used for these learning.
+   </summary>
+
+```python
+from gym_kraby.train import train
+
+for cliprange in [0.1, 0.2, 0.3, 0.4]:
+    n_envs = 32  # opti
+    nminibatches = 1  # opti
+    noptepochs = 30  # opti
+    n_steps = 32  # opti
+    gamma = 0.8  # opti
+
+    print("[+] Train hyperparam_cliprange_" + str(cliprange))
+    train(
+        exp_name="hyperparam_cliprange_" + str(cliprange),
+        env_name="gym_kraby:OneLegBulletEnv-v0",
+        n_envs=n_envs,
+        gamma=gamma,  # Discount factor
+        n_steps=n_steps,  # batchsize = n_steps * n_envs
+        ent_coef=0.01,  # Entropy coefficient for the loss calculation
+        learning_rate=10e-4,
+        lam=0.95,  # Factor for trade-off of bias vs variance for Generalized Advantage Estimator
+        nminibatches=nminibatches,  # Number of training minibatches per update.
+        noptepochs=noptepochs,  # Number of epoch when optimizing the surrogate
+        cliprange=cliprange,  # Clipping parameter, this clipping depends on the reward scaling
+    )
+```
+
+</details><br/>
+
+![png](img/training_one_leg_26_1.png)
+
+It seams that a clip range of 0.1 clips the update too much and degrade learning performance.
+On the contrary, a clip range over 0.2 makes the policy updates too far and also degrade performance and repeatability.
+
+# Tweaking the learning rate
+
+The learning rate is another important hyperparameter. **It represents the size of learning steps done by the Adam optimizer.**
+A bigger learning rate will increase learning speed but the learning might not converge as well as with a smaller rate.
+
+<details>
+   <summary>
+    Show the code used for these learning.
+   </summary>
+
+```python
+from gym_kraby.train import train
+
+for learning_rate in [1e-4, 1e-3, 1e-2, 1e-1, 1]:
+    n_envs = 32  # opti
+    nminibatches = 1  # opti
+    noptepochs = 30  # opti
+    n_steps = 32  # opti
+    gamma = 0.8  # opti
+    cliprange = 0.2  # opti
+
+    print("[+] Train hyperparam_learning_rate_" + str(learning_rate))
+    train(
+        exp_name="hyperparam_learning_rate_" + str(learning_rate),
+        env_name="gym_kraby:OneLegBulletEnv-v0",
+        n_envs=n_envs,
+        gamma=gamma,  # Discount factor
+        n_steps=n_steps,  # batchsize = n_steps * n_envs
+        ent_coef=0.01,  # Entropy coefficient for the loss calculation
+        learning_rate=learning_rate,
+        lam=0.95,  # Factor for trade-off of bias vs variance for Generalized Advantage Estimator
+        nminibatches=nminibatches,  # Number of training minibatches per update.
+        noptepochs=noptepochs,  # Number of epoch when optimizing the surrogate
+        cliprange=cliprange,  # Clipping parameter, this clipping depends on the reward scaling
+    )
+```
+
+</details><br/>
+
+![png](img/training_one_leg_29_1.png)
+
+A learning rate of 0.01 gives the best sample efficiency. A smaller rate makes the learning converge closer to an optimal policy. One way to address this would be to lower the learning rate during the training.
+
+# Tweaking the GAE smoothing factor
+
+**The `lam` hyperparameter represents the smoothing factor $\lambda$ in the Generalized Advantage Estimation.**
+The Generalized Advantage Estimation is a method to estimate the advantage used by PPO.
+
+<details>
+   <summary>
+    Show the code used for these learning.
+   </summary>
+
+```python
+from gym_kraby.train import train
+
+for lam in [0.8, 0.9, 0.92, 0.95, 0.98, 0.99, 1.0]:
+    n_envs = 32  # opti
+    nminibatches = 1  # opti
+    noptepochs = 30  # opti
+    n_steps = 32  # opti
+    gamma = 0.8  # opti
+    cliprange = 0.2  # opti
+    learning_rate = 0.01  # opti
+
+    print("[+] Train hyperparam_lam_" + str(lam))
+    train(
+        exp_name="hyperparam_lam_" + str(lam),
+        env_name="gym_kraby:OneLegBulletEnv-v0",
+        n_envs=n_envs,
+        gamma=gamma,  # Discount factor
+        n_steps=n_steps,  # batchsize = n_steps * n_envs
+        ent_coef=0.01,  # Entropy coefficient for the loss calculation
+        learning_rate=learning_rate,
+        lam=lam,  # Factor for trade-off of bias vs variance for Generalized Advantage Estimator
+        nminibatches=nminibatches,  # Number of training minibatches per update.
+        noptepochs=noptepochs,  # Number of epoch when optimizing the surrogate
+        cliprange=cliprange,  # Clipping parameter, this clipping depends on the reward scaling
+    )
+```
+
+</details><br/>
+
+![png](img/training_one_leg_33_1.png)
+
+On our environment, this factor does not influence much. Even going far from common values seen in literature (0.9 to 1.0) yields similar performances.
+
+# Tweaking the entropy coefficient
+
+`ent_coef` is the entropy coefficient for the loss calculation. 
+
+When optimizing the neural network, one summed term of the loss function represents the entropy of the exploration.
+Raising this coefficient of ponderation will make the learning explore a bit more.
+
+<details>
+   <summary>
+    Show the code used for these learning.
+   </summary>
+
+```python
+from gym_kraby.train import train
+
+for ent_coef in [0.00000001, 0.000001, 0.0001, 0.01, 0.1]:
+    n_envs = 32  # opti
+    nminibatches = 1  # opti
+    noptepochs = 30  # opti
+    n_steps = 32  # opti
+    gamma = 0.8  # opti
+    cliprange = 0.2  # opti
+    learning_rate = 0.01  # opti
+    lam = 0.95  # opti
+
+    print("[+] Train hyperparam_ent_coef_" + str(ent_coef))
+    train(
+        exp_name="hyperparam_ent_coef_" + str(ent_coef),
+        env_name="gym_kraby:OneLegBulletEnv-v0",
+        n_envs=n_envs,
+        gamma=gamma,  # Discount factor
+        n_steps=n_steps,  # batchsize = n_steps * n_envs
+        ent_coef=ent_coef,  # Entropy coefficient for the loss calculation
+        learning_rate=learning_rate,
+        lam=lam,  # Factor for trade-off of bias vs variance for Generalized Advantage Estimator
+        nminibatches=nminibatches,  # Number of training minibatches per update.
+        noptepochs=noptepochs,  # Number of epoch when optimizing the surrogate
+        cliprange=cliprange,  # Clipping parameter, this clipping depends on the reward scaling
+    )
+```
+
+</details><br/>
+
+![png](img/training_one_leg_36_1.png)
+
+We observe that a `ent_coef=0.01` gives good results. Going higher makes the learning slower as we are exploring too much.
